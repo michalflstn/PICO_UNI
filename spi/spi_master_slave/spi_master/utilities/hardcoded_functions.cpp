@@ -711,7 +711,8 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
     intBuf[0] = 0;
     spi_write_blocking(spi_default, intBuf, 1); 
   //  sleep_us(2);//240405 
-    intBuf[0] = (uint8_t)gain;
+   if (HARDWAREVERSION==WB) intBuf[0] = 255-(uint8_t)gain;
+   else intBuf[0] = (uint8_t)gain;
     spi_write_blocking(spi_default, intBuf, 1);
  //   sleep_us(2);//240405 
     decoder.activePort(7);
