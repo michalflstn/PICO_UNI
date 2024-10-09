@@ -1674,7 +1674,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
 
 void Scanner::start_fastscan(std::vector<int32_t> &vector)
 {
-  scan_update({
+  scan_update(
+              {
                static_cast<uint16_t>(vector[1]), static_cast<uint16_t>(vector[2]),
                static_cast<uint8_t>(vector[3]),  static_cast<uint8_t>(vector[4]),
                static_cast<uint16_t>(vector[5]), static_cast<uint16_t>(vector[6]),
@@ -2573,7 +2574,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
   GATE_Z_MIN     =(int16_t) vector[3]; // min
   NSTEPS         =(int16_t) vector[4]; // steps 
   DIR            =(bool)    vector[5]; //  int dir
-  APPROACHDIR    =(bool)    vector[6]; //  APPRoach
+  APPROACHDIR    =(bool)    vector[6]; //  APPRoach dir read from ini file
   INTDELAY       =(uint16_t)vector[7]; // initdelay
   GAIN           =(uint16_t)vector[8]; // gain  //240320
   SCANNERDECAY   =(uint16_t)vector[9]; // scannerDelay 
@@ -2687,9 +2688,8 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
       buf_status[1] = ZValue;
       buf_status[2] = SignalValue;    
     }
-    else
+    else //virtual
     {
-     // if (NSTEPS >= 0)
       if(APPROACHDIR==DIR)
       {
             ZValue -= 500;
@@ -2705,8 +2705,6 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
       buf_status[1] = ZValue;
       buf_status[2] = SignalValue;
     }
-
-   // if (NSTEPS >= 0) // test for gate approaching
     if(APPROACHDIR==DIR)
     {
       if (ZValue <= GATE_Z_MIN)
