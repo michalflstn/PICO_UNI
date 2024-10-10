@@ -1,7 +1,7 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.08.21.1 HWA_FPGA_UART";
+std::string  SOFTVERSION="24.10.10.1 main";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=1;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
