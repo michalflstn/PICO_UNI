@@ -279,8 +279,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
 void HARDWARE::GetSOFTHARDWAREVersion()
 {
   afc.clear();
-  afc = code+std::to_string(VersionCmd)+"soft "+ SOFTVERSION+" softhardware ver"+SoftHARDWAREVERSION
-  +", hardware "+std::to_string(HARDWAREVERSION);
+  afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
+  +",hardware "+std::to_string(HARDWAREVERSION);
   afc +="\n";
   std::cout << afc;
   afc.clear();
