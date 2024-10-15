@@ -30,6 +30,7 @@
 #define SET_SETPOINT             20  //DAC8563_1
 #define SET_PID_GAIN             21
 #define SET_AMPLMOD_GAIN         22
+#define SET_SIGN_LOOP            23
 //#define InitDAC_SET_POINT        23  //DAC8563_1 
 //#define InitDAC_BIAS             41
 #define ADC_GET_VALUECmd         24  // don't use

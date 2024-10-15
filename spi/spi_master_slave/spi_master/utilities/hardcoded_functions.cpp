@@ -457,23 +457,24 @@ void HARDWARE::set_BiasV(int32_t BiasV)
 //   code  22 , 2, 8, 0, 1, 1, value 
   if (!flgVirtual)
   { 
-     dacbv->writeB(BiasV+ShiftDac);
-  }	
+   //  dacbv->writeB(BiasV+ShiftDac);
+  //}	
    switch (HARDWAREVERSION)
       {
       case WB:
-        dacbv->writeA(BiasV+ShiftDac);
+        dacbv->writeB(BiasV+ShiftDac);
         break;
       case BB:
       case BBFPGA:
         dacbv->writeB(BiasV+ShiftDac);
         break;       
       }
-  /*
+  }    
+/* 
  if  (flgDebug)
  {
   afc.clear();
-  afc =code+std::to_string(DEBUG)+ "debug Bias"+ std::to_string(Bias);
+  afc =code+std::to_string(DEBUG)+ "debug Bias"+ std::to_string(BiasV);
   afc += +"\n";
   std::cout << afc;
   afc.clear();

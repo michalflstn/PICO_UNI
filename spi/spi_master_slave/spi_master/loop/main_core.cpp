@@ -352,7 +352,12 @@ case SET_SETPOINT:
                 scanner->hardware->set_SetPoint(vector[1]);
                 break; 
               }   
-  case SET_Z: { 
+case SET_SIGN_LOOP:
+               {
+                scanner->hardware->setLoopSign(vector[1]);
+                break;
+               }
+case SET_Z: { 
                 ALGCODE=ALGNONE;
                 scanner->hardware->set_DACZ(vector[1]);
                 break;

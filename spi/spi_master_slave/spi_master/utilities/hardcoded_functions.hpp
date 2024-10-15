@@ -19,8 +19,8 @@ class HARDWARE
 {
 // WARNING HARDCODED FUNCTIONS
 private:
- DAC8563    *dacspt; // DAC BIAS,SetPoint
- DAC8563    *dacbv; // DAC BIAS,SetPoint
+ DAC8563    *dacspt;  // DAC BIAS,SetPoint
+ DAC8563    *dacbv;   // DAC BIAS
  DAC8563    *dacxy;   // DAC X,Y
  DAC8563    *dacz;    // DAC Z
  InputPort  *busyport;     // FIXME TEMP!!!
@@ -104,7 +104,7 @@ public:
  
  void init_SPI(uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4); //инициирование SPI
 
- void init_DACSetPointBiasV(uint8_t spiport);  //инициирование ЦАП1  SetPoint,BIASV
+ //void init_DACSetPointBiasV(uint8_t spiport);  //инициирование ЦАП1  SetPoint,BIASV
  
  void init_DACSetPoint(uint8_t spiport);  
 
