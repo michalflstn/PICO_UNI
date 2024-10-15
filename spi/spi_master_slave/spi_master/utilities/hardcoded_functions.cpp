@@ -664,7 +664,7 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       switch (HARDWAREVERSION)
       {
       case WB:
-        dacspt->writeB(SetPoint+ShiftDac);
+        dacspt->writeA(SetPoint+ShiftDac); //B
         break;
       case BB:
         dacspt->writeA(SetPoint+ShiftDac);
@@ -954,19 +954,25 @@ void HARDWARE::set_DACXY(uint8_t channel, uint16_t value)
 
 void HARDWARE::set_DACZ(int16_t value) 
 {
-  if (HARDWAREVERSION!=BBFPGA)
-  { 
-   dacz->setSpiProps(); 
-   dacz->writeA(int32_t(value)+ShiftDac);
-   sleep_us(2);// 240405 
-  }
-  else //BBFPGA
-  {
-   FPGAWriteData writedata;
-   writedata.addr=arrModule_0.wbOutShift; //?????
-   writedata.cmd=0x01;
-   writedata.data=(uint32_t)(int32_t(value)+ShiftDac);  
-   WriteDataToFPGA(writedata);
+    switch (HARDWAREVERSION)
+      {
+      case WB:
+       dacz->setSpiProps(); 
+       dacz->writeB(int32_t(value)+ShiftDac);//A
+       sleep_us(2);// 240405 
+       break;
+      case BB: 
+       dacz->setSpiProps(); 
+       dacz->writeA(int32_t(value)+ShiftDac);//A
+       sleep_us(2);// 240405 
+       break;
+      case BBFPGA:
+        FPGAWriteData writedata;
+        writedata.addr=arrModule_0.wbOutShift; //?????
+        writedata.cmd=0x01;
+        writedata.data=(uint32_t)(int32_t(value)+ShiftDac);  
+        WriteDataToFPGA(writedata);
+        break;
   }
 }
 
