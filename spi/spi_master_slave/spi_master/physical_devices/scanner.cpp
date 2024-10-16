@@ -2063,8 +2063,8 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       if (CONFIG_UPDATE)
       {
         CONFIG_UPDATE = false;
-         ln  = vupdateparams[1]; // with sign
-        ldir = vupdateparams[2]; // with sign
+         ln  = vupdateparams[1];  //abs
+        ldir = vupdateparams[2]; 
         GATE_Z_MAX = (uint16_t)vupdateparams[3];
         GATE_Z_MIN = (uint16_t)vupdateparams[4];
      //   ldir = 0;
