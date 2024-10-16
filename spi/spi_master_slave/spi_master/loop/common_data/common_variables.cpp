@@ -1,9 +1,9 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.10.15.4 work";
+std::string  SOFTVERSION="24.10.16.1 work";
 std::string  SoftHARDWAREVERSION="0.1";
-int8_t       HARDWAREVERSION=1;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
+int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
 std::vector<int32_t> vector;

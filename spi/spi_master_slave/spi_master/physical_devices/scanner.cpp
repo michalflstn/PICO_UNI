@@ -2067,8 +2067,6 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
         ldir = vupdateparams[2]; 
         GATE_Z_MAX = (uint16_t)vupdateparams[3];
         GATE_Z_MIN = (uint16_t)vupdateparams[4];
-     //   ldir = 0;
-     //   if (ln > 0) ldir = 1;
         ln = abs(ln);
         sleep_ms(100);
         if (flgDebug)
