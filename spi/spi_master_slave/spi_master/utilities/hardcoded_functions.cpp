@@ -458,12 +458,10 @@ void HARDWARE::set_BiasV(int32_t BiasV)
 //   code  22 , 2, 8, 0, 1, 1, value 
   if (!flgVirtual)
   { 
-   //  dacbv->writeB(BiasV+ShiftDac);
-  //}	
    switch (HARDWAREVERSION)
       {
       case WB:
-              dacbv->writeB(BiasV+ShiftDac);
+              dacbv->writeB(-BiasV+ShiftDac);
               break;
       case BB:
   case BBFPGA:
@@ -471,7 +469,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
               break;       
       }
   }    
-/* 
+
  if  (flgDebug)
  {
   afc.clear();
@@ -481,7 +479,6 @@ void HARDWARE::set_BiasV(int32_t BiasV)
   afc.clear();
   sleep_ms(100);
  }
- */
 }   
 void HARDWARE::ReadDataFromFPGAArray()
 {

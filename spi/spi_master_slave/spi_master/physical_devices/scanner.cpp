@@ -2563,7 +2563,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
   int16_t  GAIN, NSTEPS;
   uint16_t INTDELAY, SCANNERDECAY;
   int16_t  flgDev;
-  int16_t  Bias;
+  int16_t  BiasV;
   bool     DIR;
   bool     APPROACHDIR ;
   // SET VALUE FROM RX_CORE
@@ -2579,7 +2579,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
   freq           =(int16_t) vector[10]; // freq
   duty           =(int16_t) vector[11]; // scv
   flgDev         =(int16_t) vector[12];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
-  Bias           =(int16_t) vector[13];// Voltage need for STM,SICM
+  BiasV          =(int16_t) vector[13];// Voltage need for STM,SICM
  //need to add channel Bias ????
  //need to add channel SetPoint ????
  // ZValue=-1000;
@@ -2592,7 +2592,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
   sendStrData(code+std::to_string(DEBUG)+" approach parameters  ",debugdata,100,true);
  } 
   hardware->set_SetPoint(SET_POINT); 
-  if (flgDev!=SFM) hardware->set_BiasV(Bias);  
+  if (flgDev!=SFM) hardware->set_BiasV(BiasV);  
   hardware->set_GainPID((uint16_t)GAIN); //240320
   if (!flgVirtual)
   {
