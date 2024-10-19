@@ -122,7 +122,7 @@ extern int16_t ZValue;        //for simulation
 extern int16_t SignalValue;   //for simulation   
 extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
-extern int32_t ShiftDac;
+extern int32_t ShiftDac; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
 extern critical_section_t criticalSection;
 #endif //PICO_EXAMPLES_COMMON_VARIABLES_HPP
