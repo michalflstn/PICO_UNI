@@ -25,7 +25,7 @@ void MainCore::launchOnCore1()
         ADC_RESET = true;
         break;
      */   
-      case VirtualCmd : //флаг симуляции работы микроконтроллера      
+  case VirtualCmd : //флаг симуляции работы микроконтроллера      
     //    flgVirtual=(bool)vector[1];
           flgVirtual=(bool)vector[1];
           afc.clear();
@@ -34,11 +34,11 @@ void MainCore::launchOnCore1()
           std::cout << afc;
           afc.clear();
           sleep_ms(100);               
-        break;
-      case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
-        flgDebugLevel=vector[1];
-        break;    
-      case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
+          break;
+  case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
+         flgDebugLevel=vector[1];
+         break;    
+  case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
         flgDebug=(bool)vector[1];
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(flgDebug);
@@ -47,26 +47,26 @@ void MainCore::launchOnCore1()
         afc.clear();
         sleep_ms(100); 
         break;
-      case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
+  case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
         flgСritical_section=(bool)vector[1]; 
         break;
   //***************************************     
-      case ADC_GET_VALUECmd:            
+  case ADC_GET_VALUECmd:            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
         break;
-      case TheadDoneCmd:
+  case TheadDoneCmd:
         TheadDone = true;
         break;
-      case DRAWDONECmd: 
+  case DRAWDONECmd: 
         DrawDone = true;
         break;  
-      case STOPCmd:
+  case STOPCmd:
         STOP=true; // stop the active algorithm 
         break; 
-      default: 
+  default: 
       {
          if (vector[0]>=0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0]; }
-                                       else ALGCODE=0;
+                                         else ALGCODE=0;
         break;
       }  
      }   
@@ -294,46 +294,6 @@ case SET_AMPLMOD_GAIN: // усиление раскачка зонда
                 scanner->hardware->set_GainApmlMod((uint8_t)vector[1]);
                 break;
               }  
-/*
-case INITCOMMMUTATION:
-              {
-               ALGCODE=ALGNONE;
-               scanner->hardware->init_commutation((uint8_t)vector[1],
-                         (uint8_t)vector[2],(uint8_t)vector[3],(uint8_t)vector[4],(uint8_t)vector[5]);
-                break;
-              }  
-              
-case InitDAC_SET_POINT:
-              {
-                ALGCODE=ALGNONE;
-                if (!flgVirtual) 
-                {
-                   scanner->hardware->init_DACSetPoint(vector[1]);            
-                }
-                break;         
-              }
-case InitDAC_BIAS:
-              {
-                ALGCODE=ALGNONE;
-                if (!flgVirtual) 
-                {      
-                   scanner->hardware->init_DACBiasV(vector[1]);       
-                }
-                break;         
-              }                 
-case InitDAC_Z:
-              {
-                ALGCODE=ALGNONE;
-                if (!flgVirtual)   scanner->hardware->init_DACZ(vector[1]);       
-                break;         
-              }   
-case InitDAC_XY:
-              {
-                ALGCODE=ALGNONE;
-                scanner->hardware->init_DACXY(vector[1]);
-                break; 
-              } 
-*/              
 case SetDACZeroCmd:
               {
                 ALGCODE=ALGNONE;
@@ -436,7 +396,6 @@ MainCore::MainCore()
             scanner=new  Scanner(confighardwarev1);
             scanner->hardware->setDefaultSettings(confighardwarev1);
             break; 
-
           }
     case BBFPGA:
           { //BB+ WBFPGA

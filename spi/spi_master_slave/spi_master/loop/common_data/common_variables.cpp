@@ -1,9 +1,9 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.10.15.4 work";
+std::string  SOFTVERSION="24.10.18.1 work_BiasVd";
 std::string  SoftHARDWAREVERSION="0.1";
-int8_t       HARDWAREVERSION=1;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
+int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
 std::vector<int32_t> vector;
@@ -45,7 +45,7 @@ int16_t ZValue      = maxint16_t;
 int16_t SignalValue = maxint16_t;
 int16_t ZMaxValue   = maxint16_t;
 int16_t SignalMaxValue   = maxint16_t; //add 240710
-int32_t ShiftDac    = 32768;
+int32_t ShiftDac    = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 int8_t  SetPointScale= 1;
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда

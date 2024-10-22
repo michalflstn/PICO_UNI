@@ -36,8 +36,8 @@ extern ADCData adcdata;
 struct ConfigHardWare //BB and BBFPGA
 {
   uint8_t DACSetPointPort;  //2 DAC8563_1  BIAS SetPoint
-  uint8_t DACBiasVPort;  //2 DAC8563_1  BIAS SetPoint
   uint8_t DACSetPointMode;  //1 DAC8563_1  BIAS SetPoint
+  uint8_t DACBiasVPort;  //2 DAC8563_1  BIAS SetPoint
   uint8_t DACBiasVMode;  //1 DAC8563_1  BIAS SetPoint
   uint8_t DACXYPort;    //3 DAC8563_2  XY
   uint8_t DACXYMode;    //2 DAC8563_2  XY
