@@ -178,6 +178,7 @@ void Scanner::readADC()
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
         debugdata.emplace_back(vector[1]);
+        debugdata.emplace_back(signLoop);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);
   } 
   else
@@ -185,6 +186,7 @@ void Scanner::readADC()
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
         debugdata.emplace_back(vector[1]);
+        debugdata.emplace_back(signLoop);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
 }

@@ -46,7 +46,7 @@
 #define SetUseCritialSectAlgCode 34
 #define RetractAlgCode           35
 #define ADC_RESET                36
-//#define INITCOMMMUTATION         37
+#define INITCOMMMUTATION         37
 #define USEPLDCmd                38  //использовать ПЛИС
 #define SET_PID_GAINFPGA         39
 #define RESONANCE                40  //AD9833 
@@ -114,6 +114,7 @@ extern bool flgParamsUpdated;
 extern bool flgСritical_section;
 extern bool flgUseUART;  
 extern bool flgUseFPGA;  //Использовать ПЛИС
+extern uint8_t signLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude
 extern uint8_t IPin;          //current

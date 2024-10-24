@@ -1,7 +1,7 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.10.18.1 work_BiasVd";
+std::string  SOFTVERSION="24.10.24.2 work_BiasVd";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
@@ -41,6 +41,7 @@ uint8_t flgDebugLevel = 3;      // уровень отладки
 bool    flgUseUART = false;     // использовать UART для передачи данных
 
 //данные для симуляции 
+ uint8_t signLoop;
 int16_t ZValue      = maxint16_t;
 int16_t SignalValue = maxint16_t;
 int16_t ZMaxValue   = maxint16_t;
