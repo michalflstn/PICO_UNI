@@ -334,6 +334,7 @@ case BBFPGA:
 case    BB:
         break;
 case    WB:
+         signLoop=value;
          switch (value)
         {
          case 0:{signloopport->disable(); break;} // +
@@ -341,6 +342,14 @@ case    WB:
         }
         break;
   } 
+ /*
+  afc.clear();
+  afc = code+std::to_string(DEBUG)+ "debug sign loop " + std::to_string(value);
+  afc += +"\n";
+  std::cout << afc;
+  afc.clear();
+  sleep_ms(100);
+ */
 }
 
 void HARDWARE::setSignal_In_Loop(int8_t value)
@@ -469,7 +478,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
               break;       
       }
   }    
-
+/*
  if  (flgDebug)
  {
   afc.clear();
@@ -479,6 +488,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
   afc.clear();
   sleep_ms(100);
  }
+ */
 }   
 void HARDWARE::ReadDataFromFPGAArray()
 {

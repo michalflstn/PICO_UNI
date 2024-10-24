@@ -165,10 +165,16 @@ case ChangeHardWare:
                 }
                break;
               } 
+case INITCOMMMUTATION:
+              {
+                ALGCODE=ALGNONE;
+                scanner->hardware->init_commutation((uint8_t)vector[1],(uint8_t)vector[2],(uint8_t)vector[3],(uint8_t)vector[4],(uint8_t)vector[5]);
+                break;
+              }              
 case ADC_RESET:
               {
              
-                
+               
               //  scanner->hardware->ADC_reset();
                 break;
               }               
@@ -314,6 +320,7 @@ case SET_SETPOINT:
               }   
 case SET_SIGN_LOOP:
                {
+                ALGCODE=ALGNONE;
                 scanner->hardware->setLoopSign(vector[1]);
                 break;
                }
