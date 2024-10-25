@@ -2099,10 +2099,10 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       if (CONFIG_UPDATE)
       { 
         CONFIG_UPDATE = false;
-                   ln = (int16_t)vector[1];
-                 ldir = (int16_t)vector[2]; 
-           GATE_Z_MAX = (uint16_t)vector[3];
-           GATE_Z_MIN = (uint16_t)vector[4];
+                   ln = (int16_t)vupdateparams[1];
+                 ldir = (int16_t)vupdateparams[2]; 
+           GATE_Z_MAX = (uint16_t)vupdateparams[3];
+           GATE_Z_MIN = (uint16_t)vupdateparams[4];
         sleep_ms(100);
         if (flgDebug)
         {  
