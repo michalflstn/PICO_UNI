@@ -114,7 +114,7 @@ extern bool flgParamsUpdated;
 extern bool flgСritical_section;
 extern bool flgUseUART;  
 extern bool flgUseFPGA;  //Использовать ПЛИС
-extern uint8_t signLoop;
+extern uint8_t SignLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude
 extern uint8_t IPin;          //current

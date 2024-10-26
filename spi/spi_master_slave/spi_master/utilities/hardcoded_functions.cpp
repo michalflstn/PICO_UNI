@@ -334,7 +334,7 @@ case BBFPGA:
 case    BB:
         break;
 case    WB:
-         signLoop=value;
+         SignLoop=value;
          switch (value)
         {
          case 0:{signloopport->disable(); break;} // +

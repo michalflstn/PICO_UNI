@@ -32,10 +32,6 @@ void Scanner::sendStrData(std::string const& header)
 }
  void Scanner::sendData(uint8_t algcode,std::vector<int16_t>  &data, const uint16_t delay,const bool flg)//TUD
  {
-
-
-
-
  }
 
 void Scanner::sendStrData(std::string const& header, std::vector<int32_t> &data, const uint16_t delay,const bool flg)
@@ -151,8 +147,6 @@ void Scanner::readFPGA()
         debugdata.emplace_back(vector[1]);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
-
-
 }
 void Scanner::readADC()
 {
@@ -178,7 +172,7 @@ void Scanner::readADC()
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
         debugdata.emplace_back(vector[1]);
-        debugdata.emplace_back(signLoop);
+        debugdata.emplace_back(SignLoop);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);
   } 
   else
@@ -186,7 +180,7 @@ void Scanner::readADC()
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
         debugdata.emplace_back(vector[1]);
-        debugdata.emplace_back(signLoop);
+        debugdata.emplace_back(SignLoop);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
 }
@@ -736,17 +730,17 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
     if (CONFIG_UPDATE)
     {
       CONFIG_UPDATE = false;
-      conf_.delayF        = vector[1];
-      conf_.delayB        = vector[2];
+      conf_.delayF        = vupdateparams[1];
+      conf_.delayB        = vupdateparams[2];
       if (flgDebug) sleep_ms(100);     
-      hardware->set_GainPID((uint16_t)vector[3]);
+      hardware->set_GainPID((uint16_t)vupdateparams[3]);
       if (flgDebug) sleep_ms(100);              
-      conf_.diskretinstep = vector[4]; 
+      conf_.diskretinstep = vupdateparams[4]; 
       if (flgDebug)
       { 
        for (int j = 0; j <= 4; ++j)
        {
-        debugdata.emplace_back(vector[j]);
+        debugdata.emplace_back(vupdateparams[j]);
        }
        sendStrData(code+std::to_string(DEBUG)+ " parameters update",debugdata,100,true);
       } 
@@ -2115,9 +2109,9 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
          sendStrData(code+std::to_string(DEBUG)+" parameters posistionXYZ update",debugdata,100,true);
         } 
       // vupdateparams.clear();
-      if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); 
+     // if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); 
        vupdateparams.clear();
-      if (flgСritical_section)  critical_section_exit(&criticalSection); 
+     // if (flgСritical_section)  critical_section_exit(&criticalSection); 
       }
       status = none;
       if (!flgVirtual) 
