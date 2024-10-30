@@ -2149,7 +2149,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
        }
        else
        {
-        if (abs(SignalValue)>200) 
+        if (abs(SignalValue)>400) 
         {
          status = ok;
          break;

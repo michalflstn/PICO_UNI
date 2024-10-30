@@ -309,7 +309,7 @@ case SetDACZeroCmd:
 case SET_BIAS:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_BiasV(vector[1]);
+                scanner->hardware->set_BiasV(vector[1],vector[2],vector[3],vector[4]);
                 break;
               }               
 case SET_SETPOINT:

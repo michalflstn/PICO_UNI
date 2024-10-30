@@ -90,7 +90,6 @@ public:
 
  void set_Freq(uint32_t freq);    // установка заданной частоты генератора
 
- void setLoopSign(int8_t value);  // 0->+ ; 1-> -1
 
  void setSignal_In_Loop(int8_t value); // Ampl=1 ; I=0
  
@@ -113,6 +112,10 @@ public:
  void init_DACZ(uint8_t spiport);    //инициирование ЦАП2  Z
 
  void set_BiasV(int32_t BiasV);      //установка заданного значения напряжения
+
+ void set_BiasV(int32_t BiasV,int8_t flg,int8_t SignLoopValue,int32_t SetPointValue); // flg=1 изменять знак ПИД
+ 
+ void setLoopSign(int8_t value);  // 0->+ ; 1-> -1
 
  void set_SetPoint(int32_t SetPoint);//установка заданной опроры для ПИД
 

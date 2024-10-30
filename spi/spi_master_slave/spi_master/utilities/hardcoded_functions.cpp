@@ -269,6 +269,64 @@ void HARDWARE::get_result_from_adc()
   sleep_us(10);
   conv->enable();
 }
+void HARDWARE::set_BiasV(int32_t BiasV)
+{
+//   code  22 , 2, 8, 0, 1, 1, value 
+  if (!flgVirtual)
+  { 
+   switch (HARDWAREVERSION)
+      {
+      case WB:
+              dacbv->writeB(-BiasV+ShiftDac);
+              break;
+      case BB:
+  case BBFPGA:
+              dacbv->writeB(BiasV+ShiftDac);
+              break;       
+      }
+  }    
+/*
+ if  (flgDebug)
+ {
+  afc.clear();
+  afc =code+std::to_string(DEBUG)+ "debug Bias"+ std::to_string(BiasV);
+  afc += +"\n";
+  std::cout << afc;
+  afc.clear();
+  sleep_ms(100);
+ }
+ */
+}   
+void HARDWARE::set_BiasV(int32_t BiasV,int8_t flg,int8_t SignLoopValue,int32_t SetPointValue)
+{
+ switch  (HARDWAREVERSION) 
+  {
+case BBFPGA:
+        break;
+case    BB:
+        break;
+case    WB:
+         SignLoop=SignLoopValue;// debug
+         //втянуть
+         if (flg==1) 
+         {
+          retract(); //241130
+          sleep_ms(50);
+          switch (SignLoopValue)
+          {
+           case 0:{signloopport->disable(); break;} // +
+           case 1:{signloopport->enable();  break;} // -
+          }
+          set_BiasV(BiasV);
+          set_SetPoint(SetPointValue);
+          //вытянуть
+           protract();
+           sleep_ms(200);
+         }
+         else set_BiasV(BiasV);
+        break;
+  } 
+}
 void HARDWARE::setLoopSign(int8_t value)
 {
    switch  (HARDWAREVERSION) 
@@ -278,7 +336,7 @@ case BBFPGA:
 case    BB:
         break;
 case    WB:
-         SignLoop=value;
+         SignLoop=value;// debug
          //втянуть
          retract(); //241130
          sleep_ms(50);
@@ -412,34 +470,7 @@ void HARDWARE::move_scannerY(int y)
  dacxy->writeB(y);
 
 }
-void HARDWARE::set_BiasV(int32_t BiasV)
-{
-//   code  22 , 2, 8, 0, 1, 1, value 
-  if (!flgVirtual)
-  { 
-   switch (HARDWAREVERSION)
-      {
-      case WB:
-              dacbv->writeB(-BiasV+ShiftDac);
-              break;
-      case BB:
-  case BBFPGA:
-              dacbv->writeB(BiasV+ShiftDac);
-              break;       
-      }
-  }    
-/*
- if  (flgDebug)
- {
-  afc.clear();
-  afc =code+std::to_string(DEBUG)+ "debug Bias"+ std::to_string(BiasV);
-  afc += +"\n";
-  std::cout << afc;
-  afc.clear();
-  sleep_ms(100);
- }
- */
-}   
+
 void HARDWARE::ReadDataFromFPGAArray()
 {
   uint8_t szread=4;
