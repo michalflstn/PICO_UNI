@@ -11,24 +11,6 @@
 
 HARDWARE::HARDWARE(ConfigHardWare confighardware)   // BB  mother BB+FPGA
 {
-   /*   _confighardware=confighardware;
-      dacbspt=new DAC8563(_confighardware.DACBiasSetPointMode); //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(_confighardware.DACXYMode);   //set mode DAC X,Y
-         dacz=new DAC8563(_confighardware.DACZMode);    //set mode DAC Z  
-     busyport=new InputPort(_confighardware.BUSYPort);
-         conv=new OutputPort(_confighardware.CONV);
-          dec=new OutputPort(_confighardware.DEC);
-    resetport=new OutputPort(_confighardware.ResetPort); 
-      ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
-       rdbLed=new OutputPort(_confighardware.RDBPort); 
-        io1_0=new OutputPort(_confighardware.IO1_0);
-        io1_1=new OutputPort(_confighardware.IO1_1);
-     gainPID0=new OutputPort(_confighardware.GainPID0);
-     gainPID1=new OutputPort(_confighardware.GainPID1); 
-     gainPID2=new OutputPort(_confighardware.GainPID2); 
-   freezeport=new OutputPort(_confighardware.FreezePort);//заморозить/разморозить ПИД 
- protractport=new OutputPort(_confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
- */
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
         dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);   //set mode DAC X,Y
@@ -50,7 +32,6 @@ HARDWARE::HARDWARE(ConfigHardWare confighardware)   // BB  mother BB+FPGA
 }
 HARDWARE::HARDWARE(ConfigHardWareNew confighardware) // WB
 {
-  //    _confighardware=confighardware;
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
         dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);   //set mode DAC X,Y
@@ -75,30 +56,6 @@ HARDWARE::HARDWARE(ConfigHardWareNew confighardware) // WB
       signloopport=new OutputPort(confighardware.SignLoopPort);    // знак ПИД // 0=+ ; 1=-
  integrator_inport=new OutputPort(confighardware.Interator_InPort);// выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
       linearDriver=new LinearDriverMotherBoard(configlineardrivev1);   
- /*
-      dacbspt=new DAC8563(_confighardware.DACBiasSetPointMode); //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(_confighardware.DACXYMode);   //set mode DAC X,Y
-         dacz=new DAC8563(_confighardware.DACZMode);    //set mode DAC Z  
-     busyport=new InputPort(_confighardware.BUSYPort);
-         conv=new OutputPort(_confighardware.CONV);
-          dec=new OutputPort(_confighardware.DEC);
-    resetport=new OutputPort(_confighardware.ResetPort); 
-      ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
-       rdbLed=new OutputPort(_confighardware.RDBPort); 
-      //  io1_0=new OutputPort(_confighardware.IO1_0);
-     //   io1_1=new OutputPort(_confighardware.IO1_1);
-     gainPID0=new OutputPort(_confighardware.GainPID0);
-     gainPID1=new OutputPort(_confighardware.GainPID1); 
-     gainPID2=new OutputPort(_confighardware.GainPID2); 
-   freezeport=new OutputPort(_confighardware.FreezePort);//заморозить/разморозить ПИД 
- protractport=new OutputPort(_confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер 
-
-modulateuport=new OutputPort(_confighardware.ModulateUPort);   // вкл=1; выкд=0 модуляцию U  
-    i_stmport=new OutputPort(_confighardware.SD_1Port);        // порты  настройки СД I_STM=1; 0 =др
-  sensorport=new OutputPort(_confighardware.SD_2Port);        // порты  настройки СД Cantilever=0; 1-Piezo
-  signloopport=new OutputPort(_confighardware.SignLoopPort);    // знак ПИД // 0=+ ; 1=-
- integrator_inport=new OutputPort(_confighardware.Interator_InPort);// выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
- */
 }
 
 HARDWARE::~HARDWARE()
@@ -120,7 +77,7 @@ HARDWARE::~HARDWARE()
     delete(gainPID2);
     delete(freezeport);
     delete(protractport);
-   if (HARDWAREVERSION>BB) //WB+WBFPGA
+   if (HARDWAREVERSION==WB) 
    {       
      delete(modulateuport);
      delete(i_stmport);
@@ -192,19 +149,12 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
 
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 
-  dec->enable();
-  conv->enable();
-  resetport->disable();
-  gpio_pull_down(resetport->getPort());
-  ledPort->enable();
-  dark();
-  /*if (HARDWAREVERSION==BB)
-  {
-    uint16_t ti=7<<8; set_GainPID(ti); //240403  ?????
-  }
-  else
-  { } //установить минимальное усиление 240209 
-  */
+   dec->enable();
+   conv->enable();
+   resetport->disable();
+   gpio_pull_down(resetport->getPort());
+   ledPort->enable();
+   dark();
    init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
@@ -251,8 +201,16 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
   dark();
-  init_commutation(0 , 1 , 1 , 1, 0);   //default afm
-    //init_commutation(1 , 1 , 1 , 0, 0);  //afm  240624
+  init_commutation(0 , 1 , 1 , 1, 0);   //default afm 
+  /*
+    default afm probe ?????
+    sensor=0           // probe=0;  cantilever =1
+    signLoop:=1;       // 1= -1 ; 0 = +1
+    signal_to_loop:=1; // sd->to loop =1 Ampl  
+    usemod_U:=0;       // use mod U; not=0
+    usenotmod_I:=1;    // use mod I not  =1 ; 
+  */  
+  //init_commutation(1 , 1 , 1 , 0, 0);  //afm  240624
   init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
   init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
   init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
@@ -261,20 +219,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
   retract();         //втянуть    
   init_DACZ(confighardwarev0.DACZPort);      //инициирование ЦАП3  DACZ
   set_DACZ(0); 
-
-//************************************************************* 
- // init_commutation(sensor,signloop,signal_to_loop,usenotmod_I,usemod_U);
- /*
-    default afm probe ?????
-    sensor=0           // probe=0;  cantilever =1
-    signLoop:=1;       // 1= -1 ; 0 = +1
-    signal_to_loop:=1; // sd->to loop =1 Ampl  
-    usemod_U:=0;       // use mod U; not=0
-    usenotmod_I:=1;       // use mod I not  =1 ; 
-  */  
-
-//  init_DACZ(dacZPort);      //инициирование ЦАП3  DACZ
-  
 }
 void HARDWARE::GetSOFTHARDWAREVersion()
 {
@@ -335,11 +279,17 @@ case    BB:
         break;
 case    WB:
          SignLoop=value;
+         //втянуть
+         retract(); //241130
+         sleep_ms(50);
          switch (value)
         {
          case 0:{signloopport->disable(); break;} // +
          case 1:{signloopport->enable();  break;} // -
         }
+        //вытянуть
+        protract();
+        sleep_ms(200);
         break;
   } 
  /*
