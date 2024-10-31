@@ -4,9 +4,7 @@
 #include "../utilities/base_types/Decoder.hpp"
 #include "../loop/common_data/device_variables.hpp"
 #include "../loop/common_data/common_variables.hpp"   
-#define AxisZ 99
-#define AxisX 99
-#define AxisY 99
+
 class LinearDriverBase
 {
  protected:

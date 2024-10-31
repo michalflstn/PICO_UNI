@@ -66,6 +66,9 @@
 #define TESTMOVER                76
 #define LID_MOVE_UNTIL_STOP      80
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
+#define AxisX                    90
+#define AxisY                    95
+#define AxisZ                    99
 
 #define portx                    0
 #define porty                    1
