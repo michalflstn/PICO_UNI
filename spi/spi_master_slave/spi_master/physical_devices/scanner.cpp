@@ -1988,7 +1988,7 @@ void Scanner::LID_move_toZ0(int lid_name, int freq, int duty, int n, int dir)  /
  {
   hardware->retract();  //втянуть сканер
   sleep_ms(50);
-  if (!flgVirtual)  hardware->linearDriver->activate(lid_name, freq,duty, std::abs(n), dir);
+  if (!flgVirtual)  hardware->linearDriver->move(lid_name, freq,duty, std::abs(n), dir);
   hardware->protract();  //вытянуть сканер
  } 
   sleep_ms(1000);
@@ -2052,7 +2052,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
                 }     
      }
    }
-  if (lid_name == 90 || lid_name == 95) //X,Y
+  if (lid_name == AxisX || lid_name == AxisY) //X,Y
   {
     while (!STOP) //LID_MOVE_UNTIL_STOP)
     {
@@ -2078,7 +2078,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       status = none;
       if (!flgVirtual) //add mf
       {
-        hardware->linearDriver->activate(lid_name, freq, duty, std::abs(ln), ldir);
+        hardware->linearDriver->move(lid_name, freq, duty, std::abs(ln), ldir);
       } 
       else  {    }
       debugdata.emplace_back(status);
@@ -2087,7 +2087,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       sendStrData(code+ std::to_string(lid_name) ,debugdata,100,true);
     }
   }
-  if (lid_name == 99) //Z
+  if (lid_name == AxisZ) //Z
   {
     status = none;
     while (!STOP) //(LID_MOVE_UNTIL_STOP)
@@ -2155,7 +2155,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
          break;
         }
        }
-        hardware->linearDriver->activate(lid_name, freq, duty, std::abs(ln), ldir);
+        hardware->linearDriver->move(lid_name, freq, duty, std::abs(ln), ldir);
       } 
       else //virtual
       {
@@ -2738,7 +2738,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
     {
       hardware->retract();  //втянуть сканнер
       sleep_ms(SCANNERDECAY);
-      hardware->linearDriver->activate(99, freq, duty, std::abs(NSTEPS), DIR);
+      hardware->linearDriver->move(AxisZ, freq, duty, std::abs(NSTEPS), DIR);
       hardware->protract(); //вытянуть
     }
   } //while
@@ -2759,8 +2759,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
   sendStrData(code+std::to_string(END)+"end");
 }
 
-void Scanner::
-testpiezomover(std::vector<int32_t> &vector)
+void Scanner::testpiezomover(std::vector<int32_t> &vector)
 {
   int8_t   flgstop;  //=1  stop
   int16_t  step,Z0;
@@ -2821,7 +2820,7 @@ testpiezomover(std::vector<int32_t> &vector)
         {
           hardware->retract();  //втянуть сканнер
           sleep_ms(SCANNERDECAY);
-          hardware->linearDriver->activate(99, freq, scv, std::abs(step), step > 0);
+          hardware->linearDriver->move(AxisZ, freq, scv, std::abs(step), step > 0);
           hardware->protract(); //вытянуть
           sleep_ms(INTDELAY);
         }  
@@ -2862,7 +2861,7 @@ testpiezomover(std::vector<int32_t> &vector)
         {
           hardware->retract();  //втянуть сканнер
           sleep_ms(SCANNERDECAY);
-          hardware->linearDriver->activate(99, freq, scv, std::abs(step), step > 0);
+          hardware->linearDriver->move(AxisZ, freq, scv, std::abs(step), step > 0);
           hardware->protract(); //вытянуть
           sleep_ms(INTDELAY);
           hardware->getValuesFromAdc(); 
@@ -2894,7 +2893,7 @@ testpiezomover(std::vector<int32_t> &vector)
          {
           hardware->retract();  //втянуть сканнер
           sleep_ms(SCANNERDECAY);
-          hardware->linearDriver->activate(99, freq, scv, std::abs(step), step > 0);
+          hardware->linearDriver->move(AxisZ, freq, scv, std::abs(step), step > 0);
           hardware->protract(); //вытянуть
           sleep_ms(INTDELAY);
           hardware->getValuesFromAdc(); 
@@ -2960,7 +2959,7 @@ testpiezomover(std::vector<int32_t> &vector)
             {
                hardware->retract();  //втянуть сканнер
                sleep_ms(SCANNERDECAY);
-               hardware->linearDriver->activate(99, freq, scv, std::abs(step), step > 0);
+               hardware->linearDriver->move(AxisZ, freq, scv, std::abs(step), step > 0);
                hardware->protract(); //вытянуть
                sleep_ms(INTDELAY);
                hardware->getValuesFromAdc(); 
@@ -2993,7 +2992,7 @@ testpiezomover(std::vector<int32_t> &vector)
               {
                hardware->retract();  //втянуть сканнер
                sleep_ms(SCANNERDECAY);
-               hardware->linearDriver->activate(99, freq, scv, std::abs(step), step > 0);
+               hardware->linearDriver->move(AxisZ, freq, scv, std::abs(step), step > 0);
                hardware->protract(); //вытянуть
                sleep_ms(INTDELAY);
                hardware->getValuesFromAdc(); 

@@ -4,7 +4,9 @@
 #include "../utilities/base_types/Decoder.hpp"
 #include "../loop/common_data/device_variables.hpp"
 #include "../loop/common_data/common_variables.hpp"   
-
+#define AxisZ 99
+#define AxisX 99
+#define AxisY 99
 class LinearDriverBase
 {
  protected:
@@ -13,7 +15,7 @@ class LinearDriverBase
  public:
    LinearDriverBase();
    virtual ~LinearDriverBase();
-   virtual void activate(int command, int freq, int p, int n, bool dir) const;
+   virtual void move(int command, int freq, int p, int n, bool dir) const;
 };
 
 class LinearDriverPico2040: public LinearDriverBase
@@ -27,7 +29,7 @@ class LinearDriverPico2040: public LinearDriverBase
  public:
    LinearDriverPico2040(bool flgOnlyZ,ConfigLinearDrive configlineardrive);  
   ~LinearDriverPico2040();
-   void activate(int command, int freq, int duty, int n, bool dir) const override;
+   void move(int command, int freq, int duty, int n, bool dir) const override;
 };
 
 class LinearDriverMotherBoard: public LinearDriverBase
@@ -41,6 +43,6 @@ class LinearDriverMotherBoard: public LinearDriverBase
  public:
    LinearDriverMotherBoard(ConfigLinearDriveNew configlineardrive);
    ~LinearDriverMotherBoard();
-   void activate(int command, int freq, int p, int n, bool dir) const override;
+   void move(int command, int freq, int p, int n, bool dir) const override;
 };
 #endif
