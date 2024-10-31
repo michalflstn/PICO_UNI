@@ -113,7 +113,7 @@ public:
 
  void set_BiasV(int32_t BiasV);      //установка заданного значения напряжения
 
- void set_BiasV(int32_t BiasV,int8_t flg,int8_t SignLoopValue,int32_t SetPointValue); // flg=1 изменять знак ПИД
+ void set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue); // flg=1 изменять знак ПИД
  
  void setLoopSign(int8_t value);  // 0->+ ; 1-> -1
 

@@ -297,7 +297,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
  }
  */
 }   
-void HARDWARE::set_BiasV(int32_t BiasV,int8_t flg,int8_t SignLoopValue,int32_t SetPointValue)
+void HARDWARE::set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue)
 {
  switch  (HARDWAREVERSION) 
   {
@@ -326,6 +326,16 @@ case    WB:
          else set_BiasV(BiasV);
         break;
   } 
+  if  (flgDebug)
+ {
+  afc.clear();
+  afc =code+std::to_string(DEBUG)+ "debug Bias+"+ std::to_string(BiasV)+" "+std::to_string(flg)+" "+std::to_string(SignLoopValue)
+  +" "+std::to_string(SetPointValue);
+  afc += +"\n";
+  std::cout << afc;
+  afc.clear();
+  sleep_ms(100);
+ }
 }
 void HARDWARE::setLoopSign(int8_t value)
 {

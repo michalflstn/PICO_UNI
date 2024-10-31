@@ -1,7 +1,7 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.10.25.2 BiasV_for_WB";
+std::string  SOFTVERSION="24.10.31.1 BiasV_for_WB";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
