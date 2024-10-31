@@ -318,6 +318,7 @@ case    WB:
            case 1:{signloopport->enable();  break;} // -
           }
           set_BiasV(BiasV);
+          sleep_ms(100);
           set_SetPoint(SetPointValue);
           //вытянуть
            protract();
@@ -326,7 +327,7 @@ case    WB:
          else set_BiasV(BiasV);
         break;
   } 
-  if  (flgDebug)
+ /* if  (flgDebug)
  {
   afc.clear();
   afc =code+std::to_string(DEBUG)+ "debug Bias+"+ std::to_string(BiasV)+" "+std::to_string(flg)+" "+std::to_string(SignLoopValue)
@@ -336,6 +337,7 @@ case    WB:
   afc.clear();
   sleep_ms(100);
  }
+ */
 }
 void HARDWARE::setLoopSign(int8_t value)
 {
