@@ -385,7 +385,7 @@ void HARDWARE::useModulateI(int8_t value)
   switch (value)
  {
   case 0:{i_stmport->disable(); break;} 
-  case 1:{i_stmport->enable(); break;} //Loop use модуляцию I->SD
+  case 1:{i_stmport->enable();  break;} //Loop use модуляцию I->SD
  }
 }
  
@@ -403,7 +403,7 @@ void HARDWARE::setModulateU(int8_t value)
   switch (value)
  {
   case 0:{modulateuport->disable(); break;}
-  case 1:{modulateuport->enable(); break;}// вкл модуляцию U
+  case 1:{modulateuport->enable();  break;}// вкл модуляцию U
  }
 }
 
