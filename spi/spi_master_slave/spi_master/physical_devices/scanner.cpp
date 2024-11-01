@@ -2001,14 +2001,14 @@ void Scanner::LID_move_toZ0(int lid_name, int freq, int duty, int n, int dir)  /
 }
 void Scanner::positioningXYZ(std::vector<int32_t> &vector)
 {
-  uint8_t lid_name;
+  uint8_t  lid_name;
   uint16_t flgSICMPrePos;
   uint16_t GATE_Z_MAX, GATE_Z_MIN;
   int8_t status;
   const int none = 30;
   const int ok = 3;
   const int touch = 2;
-  int16_t ln;  
+  int16_t lnsteps;  
   bool ldir;
   bool APPROACHDIR;
   int16_t freq, duty;
@@ -2017,7 +2017,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
           lid_name=(uint8_t)vector[1]; //  int lid_name
               freq=vector[2]; 
               duty=vector[3]; 
-                ln=abs((int16_t)vector[4]); //  int nsteps
+           lnsteps=abs((int16_t)vector[4]); //  int nsteps
               ldir=(bool)vector[5]; //  int dir
        APPROACHDIR=(bool)vector[6]; // approach direction set in ini files main delphi program  
         GATE_Z_MAX=(uint16_t)vector[7]; //  int Z gate max
@@ -2059,11 +2059,11 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       if (CONFIG_UPDATE)
       {
         CONFIG_UPDATE = false;
-         ln  = vupdateparams[1];  //abs
-        ldir = vupdateparams[2]; 
+          lnsteps  = vupdateparams[1];  //abs
+              ldir = vupdateparams[2]; 
         GATE_Z_MAX = (uint16_t)vupdateparams[3];
         GATE_Z_MIN = (uint16_t)vupdateparams[4];
-        ln = abs(ln);
+        lnsteps = abs(lnsteps);
         sleep_ms(100);
         if (flgDebug)
         {  
@@ -2076,9 +2076,9 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
         vupdateparams.clear();
       }
       status = none;
-      if (!flgVirtual) //add mf
+      if (!flgVirtual) 
       {
-        hardware->linearDriver->move(lid_name, freq, duty, std::abs(ln), ldir);
+        hardware->linearDriver->move(lid_name, freq, duty, std::abs(lnsteps), ldir);
       } 
       else  {    }
       debugdata.emplace_back(status);
@@ -2095,7 +2095,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       if (CONFIG_UPDATE)
       { 
         CONFIG_UPDATE = false;
-                   ln =  (int16_t)vupdateparams[1];
+              lnsteps =  (int16_t)vupdateparams[1];
                  ldir =  (int16_t)vupdateparams[2]; 
            GATE_Z_MAX = (uint16_t)vupdateparams[3];
            GATE_Z_MIN = (uint16_t)vupdateparams[4];
@@ -2155,15 +2155,15 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
          break;
         }
        }
-        hardware->linearDriver->move(lid_name, freq, duty, std::abs(ln), ldir);
+        hardware->linearDriver->move(lid_name, freq, duty, std::abs(lnsteps), ldir);
       } 
       else //virtual
       {
-        if (ldir == APPROACHDIR) { ZValue -= ln; }
+        if (ldir == APPROACHDIR) { ZValue -= lnsteps; }
         else
         {
-          if (ZValue < (ZMaxValue - ln)) { ZValue += ln;       }
-          else                           { ZValue = ZMaxValue; }
+          if (ZValue < (ZMaxValue - lnsteps)) { ZValue += lnsteps; }
+          else                                { ZValue = ZMaxValue;}
         }
         if (ZValue < GATE_Z_MIN)
         {
@@ -2180,14 +2180,14 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       debugdata.emplace_back(status);
       debugdata.emplace_back(ZValue);
       debugdata.emplace_back(SignalValue);
-      sendStrData(code+ std::to_string(lid_name) ,debugdata,100,true);
+      sendStrData(code+ std::to_string(lid_name),debugdata,100,true);
     }
   }
    STOP=false;
    debugdata.emplace_back(status);
    debugdata.emplace_back(ZValue);
    debugdata.emplace_back(SignalValue);
-   sendStrData(code+ std::to_string(lid_name) ,debugdata,200,true);
+   sendStrData(code+ std::to_string(lid_name),debugdata,200,true);
    sendStrData(code+std::to_string(STOPPED)+"stopped");
    int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
@@ -2227,7 +2227,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       } 
     //   Zt=Zt+stepsize;         
       if (!flgVirtual) hardware->set_DACZ(Zt);    
-      sleep_us(10);  //240405     
+      sleep_us(10);      
       for(int16_t k=0; k < delay; k++) { }// задержка в каждом дискрете  ?????
 	  }
     if (nreststeps!=0)
@@ -2243,7 +2243,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
         else Zt=Zt-nreststeps;
       } 
       if (!flgVirtual) hardware->set_DACZ(Zt);   
-      sleep_us(300);     //240405
+      sleep_us(300);     
     }   
     return(Zt);
 	}
@@ -2323,9 +2323,9 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &vector) // спектрос�
    {
            switch (flgModa)
     {
-     case SFM:     { SignalValue=ZMaxValue-abs(deltaZ);/*ZMaxValue-dacZ;*/ break;}  
+     case SFM:     { SignalValue=ZMaxValue-abs(deltaZ); break;}  
      case STM:   
-     case SICMDC:  { SignalValue=ZMaxValue-abs(deltaZ);/*ZMaxValue-dacZ*/ break;}  
+     case SICMDC:  { SignalValue=ZMaxValue-abs(deltaZ); break;}  
     } 
    }
      vectorA_Z.emplace_back(SignalValue); 
@@ -2524,7 +2524,7 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &vector)
     dacU+=rest;
   if (!flgVirtual) hardware->set_BiasV(dacU);  
   sleep_ms(10);  
-  if (!flgVirtual) hardware->set_BiasV(UBackup);  //240206
+  if (!flgVirtual) hardware->set_BiasV(UBackup);  
   sleep_ms(10);
  ///////////////////////////////////////////////
  //  if(!flgVirtual)  unfreezeLOOP(500); //240322
@@ -2545,7 +2545,7 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &vector)
   sendStrData(code+std::to_string(END)+"end");  
 }
 
-void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
+void Scanner::approacphm(std::vector<int32_t> &vector) 
 {
   const int none = 30;
   const int ok = 3;
@@ -2589,7 +2589,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
  } 
   hardware->set_SetPoint(SET_POINT); 
   if (flgDev!=SFM) hardware->set_BiasV(BiasV);  
-  hardware->set_GainPID((uint16_t)GAIN); //240320
+  hardware->set_GainPID((uint16_t)GAIN); 
   if (!flgVirtual)
   {
     hardware->getValuesFromAdc(); 
@@ -2692,9 +2692,9 @@ void Scanner::approacphm(std::vector<int32_t> &vector) //uint16_t
       else
       {
         if ((ZMaxValue - ZValue) > 0) { ZValue += 500; }
-                                 else { ZValue = maxint16_t; }
+                                 else { ZValue  = maxint16_t; }
         if ((SignalMaxValue - SignalValue) > 0) { SignalValue += 500; }
-                                           else { SignalValue = maxint16_t; }                                 
+                                           else { SignalValue  = maxint16_t; }                                 
       }
       buf_status[1] = ZValue;
       buf_status[2] = SignalValue;

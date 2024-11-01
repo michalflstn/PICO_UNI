@@ -15,7 +15,7 @@
 #define BB                        0
 #define WB                        1
 #define BBFPGA                    2
-
+// algorithm codes
 #define ALGNONE                   0
 #define VersionCmd               10
 #define ChangeHardWare           11
@@ -31,12 +31,12 @@
 #define SET_PID_GAIN             21
 #define SET_AMPLMOD_GAIN         22
 #define SET_SIGN_LOOP            23
-//#define InitDAC_SET_POINT        23  //DAC8563_1 
-//#define InitDAC_BIAS             41
+//#define InitDAC_SET_POINT      23  //DAC8563_1 
+//#define InitDAC_BIAS           41
 #define ADC_GET_VALUECmd         24  // don't use
 #define SetDACZeroCmd            25
-//#define InitDAC_Z                26  //DAC8563_3
-//#define InitDAC_XY               27  //DAC8563_2
+//#define InitDAC_Z              26  //DAC8563_3
+//#define InitDAC_XY             27  //DAC8563_2
 #define SET_Z                    28  //DAC8563_3
 #define SET_XY                   29  //DAC8563_SET_VOLTAGE_2
 #define FREQ_SET                 30  //AD9833
@@ -66,10 +66,10 @@
 #define TESTMOVER                76
 #define LID_MOVE_UNTIL_STOP      80
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
+// const
 #define AxisX                    90
 #define AxisY                    95
 #define AxisZ                    99
-
 #define portx                    0
 #define porty                    1
 
@@ -93,7 +93,7 @@ extern bool AD8400_SET_GAIN;   // AD8400
 extern bool AD5664;            
 
 extern bool ADC_ENABLE_DISABLE;//AD7606
-//extern bool ADC_RESET;         //AD7606     
+//extern bool ADC_RESET;       //AD7606     
 extern bool ADC_READ_FOREVER;  //AD7606
 extern bool ADC_GET_VALUE;     //AD7606
 
@@ -116,17 +116,17 @@ extern bool flgParamsUpdated;
 //extern bool flgVirtual;  // Virtual device for debuging and simulation
 extern bool flgСritical_section;
 extern bool flgUseUART;  
-extern bool flgUseFPGA;  //Использовать ПЛИС
+extern bool flgUseFPGA;       //Использовать ПЛИС
 extern uint8_t SignLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude
 extern uint8_t IPin;          //current
-extern uint8_t flgDebugLevel; //  leveldebug
+extern uint8_t flgDebugLevel; //leveldebug
 extern int16_t ZValue;        //for simulation
 extern int16_t SignalValue;   //for simulation   
 extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
-extern int32_t ShiftDac; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
+extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
 extern critical_section_t criticalSection;
 #endif //PICO_EXAMPLES_COMMON_VARIABLES_HPP

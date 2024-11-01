@@ -84,8 +84,8 @@ void RX_core::launchOnCore1()
         break; 
       default: 
       {
-         if (vector[0]>=0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0]; }
-                                       else ALGCODE=0;
+         if (vector[0]>0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0]; }
+                                         else ALGCODE=ALGNONE;
         break;
       }  
      }   

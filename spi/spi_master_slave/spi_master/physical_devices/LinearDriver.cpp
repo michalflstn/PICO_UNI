@@ -77,22 +77,23 @@ LinearDriverMotherBoard::~LinearDriverMotherBoard()
    turnon_z->disable();
  }
 
-void LinearDriverPico2040::move(int command, int freq, int duty, int n, bool dir)  const ///
+void LinearDriverPico2040::move(int command, int freq, int duty, int nsteps, bool dir)  const ///
 {
   OutputPort *ptrA = z_a;
   OutputPort *ptrB = z_b;
-  if (command == 90)
+  if (command==AxisX)
   {
     ptrA = x_a;
     ptrB = x_b;
   }
   else
-  if (command == 95)
+  if (command==AxisY)
   {
     ptrA = y_a;
     ptrB = y_b;
   } 
-  else if (command == 99)
+  else
+  if (command==AxisZ)
   {
     ptrA = z_a;
     ptrB = z_b;
@@ -109,7 +110,7 @@ void LinearDriverPico2040::move(int command, int freq, int duty, int n, bool dir
   ptrA->enable();
   ptrB->enable(); 
   sleep_ms(2);
-  for (int i = 0; i < n; ++i)
+  for (int i = 0; i < nsteps; ++i)
   {
     ptrB->disable();
     sleep_us(t_low);
@@ -125,7 +126,7 @@ void LinearDriverPico2040::move(int command, int freq, int duty, int n, bool dir
   }
 }
 
-void LinearDriverMotherBoard::move(int command, int freq, int p, int n, bool dir) const ///
+void LinearDriverMotherBoard::move(int command, int freq, int duty, int nsteps, bool dir) const ///
 {
  /*
   if  (flgDebug)
@@ -140,27 +141,27 @@ void LinearDriverMotherBoard::move(int command, int freq, int p, int n, bool dir
   */
   OutputPort *ptrA = z_a; 
   OutputPort *ptrB = z_b;
-  if (command == 90)//x
+  if (command==AxisX)//x
   {
    turnon_x->enable();
    turnon_y->disable();
    turnon_z->disable();
   }
-  if (command == 95)//y
+  if (command==AxisY)//y
   {
    turnon_y->enable();
    turnon_x->disable();
    turnon_z->disable();
   }
   else
-  if (command == 99)//z
+  if (command==AxisZ)//z
   {
    turnon_z->enable();
    turnon_x->disable();
    turnon_y->disable(); 
   }
   double t_abs =(double)(1000000 / freq);        // 2000                     // mf 23108
-  double t_low =(double)(p * t_abs / 1000);  //  750 * 2000 / 1000000 = 1.5 // mf 23108
+  double t_low =(double)(duty * t_abs / 1000);  //  750 * 2000 / 1000000 = 1.5 // mf 23108
   double t_high = t_abs - t_low;    // 2 - 1.5 = 0.5
 
   if (dir)
@@ -171,7 +172,7 @@ void LinearDriverMotherBoard::move(int command, int freq, int p, int n, bool dir
   ptrA->enable();
   ptrB->enable(); 
   sleep_ms(2); 
-  for (int i = 0; i < n; ++i)
+  for (int i = 0; i < nsteps; ++i)
   {
     ptrB->disable();
     sleep_us(t_low);

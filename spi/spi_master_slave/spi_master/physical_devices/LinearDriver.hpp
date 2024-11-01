@@ -13,7 +13,7 @@ class LinearDriverBase
  public:
    LinearDriverBase();
    virtual ~LinearDriverBase();
-   virtual void move(int command, int freq, int p, int n, bool dir) const;
+   virtual void move(int command, int freq, int duty, int nsteps, bool dir) const;
 };
 
 class LinearDriverPico2040: public LinearDriverBase
@@ -27,7 +27,7 @@ class LinearDriverPico2040: public LinearDriverBase
  public:
    LinearDriverPico2040(bool flgOnlyZ,ConfigLinearDrive configlineardrive);  
   ~LinearDriverPico2040();
-   void move(int command, int freq, int duty, int n, bool dir) const override;
+   void move(int command, int freq, int duty, int nsteps, bool dir) const override;
 };
 
 class LinearDriverMotherBoard: public LinearDriverBase
@@ -41,6 +41,6 @@ class LinearDriverMotherBoard: public LinearDriverBase
  public:
    LinearDriverMotherBoard(ConfigLinearDriveNew configlineardrive);
    ~LinearDriverMotherBoard();
-   void move(int command, int freq, int p, int n, bool dir) const override;
+   void move(int command, int freq, int duty, int nsteps, bool dir) const override;
 };
 #endif

@@ -172,9 +172,7 @@ case INITCOMMMUTATION:
                 break;
               }              
 case ADC_RESET:
-              {
-             
-               
+              {          
               //  scanner->hardware->ADC_reset();
                 break;
               }               
