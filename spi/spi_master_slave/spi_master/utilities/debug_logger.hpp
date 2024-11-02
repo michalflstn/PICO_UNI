@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <iostream>
+#include "../loop/common_data/common_variables.hpp"
 
 template<class T>
 
@@ -32,6 +33,5 @@ inline void logger(std::string msg, uint level_debug = 2)
   }
   critical_section_exit(&criticalSection);
 }
-
 
 #endif
