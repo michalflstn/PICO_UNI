@@ -154,7 +154,6 @@ struct ConfigLinearDriveNew
 };
 
 extern Spi                  spi;
-//extern LinearDriver      *linearDriver;
 extern Decoder              decoder;
 extern ConfigHardWare       confighardwarev0;
 extern ConfigHardWareNew    confighardwarev1;

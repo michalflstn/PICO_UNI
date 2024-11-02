@@ -239,8 +239,6 @@ case SCANNING:
                              static_cast<int16_t>(vector[23])
                             }
                            );  
-
-
                 if (flgСritical_section) critical_section_exit(&criticalSection);
                 if (!scanner->getHoppingFlg()){
                                               if (!scanner->getLinearFlg()) {scanner->start_scan(vector);   }
@@ -317,12 +315,12 @@ case SET_SETPOINT:
                 break; 
               }   
 case SET_SIGN_LOOP:
-               {
+              {
                 ALGCODE=ALGNONE;
                 scanner->hardware->setLoopSign(vector[1]);
                 break;
-               }
-case SET_Z: { 
+              }
+  case SET_Z: { 
                 ALGCODE=ALGNONE;
                 scanner->hardware->set_DACZ(vector[1]);
                 break;
@@ -397,17 +395,17 @@ MainCore::MainCore()
             break; 
            }
     case WB:
-          {
+           {
             scanner=new  Scanner(confighardwarev1);
             scanner->hardware->setDefaultSettings(confighardwarev1);
             break; 
-          }
+           }
     case BBFPGA:
-          { //BB+ WBFPGA
+           { //BB+ WBFPGA
             scanner=new  Scanner(confighardwarev0); 
             scanner->hardware->setDefaultSettings(confighardwarev0);                 
             break; 
-          }
+           }
    } 
    if (scanner==nullptr) 
    {

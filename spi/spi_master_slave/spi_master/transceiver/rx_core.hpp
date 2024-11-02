@@ -18,6 +18,4 @@ class RX_core
 private:
  // queue_t parseqeue;
  };
-
-
 #endif

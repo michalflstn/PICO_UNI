@@ -1,13 +1,13 @@
-#include "hardcoded_functions.hpp"
-#include <pico/multicore.h>
 #include <iostream>
+#include <bitset>
+#include <pico/multicore.h>
+#include <pico/multicore.h>
 //#include "../loop/common_data/common_variables.hpp"
 #include "../transceiver/rx_core.hpp"
 #include "../utilities/debug_logger.hpp"
 #include "peripheral_functions.hpp"
+#include "hardcoded_functions.hpp"
 
-#include <pico/multicore.h>
-#include <bitset>
 
 HARDWARE::HARDWARE(ConfigHardWare confighardware)   // BB  mother BB+FPGA
 {

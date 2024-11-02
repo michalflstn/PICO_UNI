@@ -1,9 +1,8 @@
-#include "parser.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <vector>
 #include "../../loop/common_data/common_variables.hpp"
-
+#include "parser.hpp"
 
 
 Parser::Parser(char *data, char newDiv)

@@ -1,8 +1,8 @@
-#include "scanner.hpp"
 #include <iostream>
-#include "../loop/common_data/common_variables.hpp"
 #include <cmath>
 #include <time.h>
+#include "../loop/common_data/common_variables.hpp"
+#include "scanner.hpp"
 
 Scanner *scanner;
 
