@@ -5,7 +5,6 @@
 //#include "../loop/common_data/common_variables.hpp"
 #include "../transceiver/rx_core.hpp"
 #include "../utilities/debug_logger.hpp"
-#include "peripheral_functions.hpp"
 #include "hardcoded_functions.hpp"
 
 

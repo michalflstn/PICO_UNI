@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include "LinearDriver.hpp"
+
 LinearDriverBase::LinearDriverBase()
 {
 }

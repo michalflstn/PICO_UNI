@@ -2,9 +2,8 @@
 #define PICO_EXAMPLES_LINEARDRIVER_HPP
 #include <cstring>
 #include "../utilities/base_types/Decoder.hpp"
-#include "../loop/common_data/device_variables.hpp"
-#include "../loop/common_data/common_variables.hpp"   
-
+#include "../loop/common_data/device_variables.hpp"  
+#include "../loop/common_data/common_variables.hpp"
 class LinearDriverBase
 {
  protected:
