@@ -309,7 +309,7 @@ case    WB:
          //втянуть
          if (flg==1) 
          {
-          retract(); //241130
+          retract(); 
           sleep_ms(50);
           switch (SignLoopValue)
           {
@@ -349,7 +349,7 @@ case    BB:
 case    WB:
          SignLoop=value;// debug
          //втянуть
-         retract(); //241130
+         retract(); 
          sleep_ms(50);
          switch (value)
         {
