@@ -206,9 +206,9 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
     sensor=0           // probe=0;  cantilever =1
     signLoop:=1;       // 1= -1 ; 0 = +1
     signal_to_loop:=1; // sd->to loop =1 Ampl  
+    useSD:=1;          // use SD  =1 ;
     usemod_U:=0;       // use mod U; not=0
-    usenotmod_I:=1;    // use mod I not  =1 ; 
-  */  
+   */  
   //init_commutation(1 , 1 , 1 , 0, 0);  //afm  240624
   init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
   init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
@@ -303,6 +303,7 @@ void HARDWARE::set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t
 case BBFPGA:
         break;
 case    BB:
+          set_BiasV(BiasV);
         break;
 case    WB:
          SignLoop=SignLoopValue;// debug
@@ -379,7 +380,7 @@ void HARDWARE::setSignal_In_Loop(int8_t value)
   case 1:{integrator_inport->enable();  break;}// I
  }
 } 
-void HARDWARE::useModulateI(int8_t value)
+void HARDWARE::setUseSD(int8_t value)
 { 
   switch (value)
  {
@@ -406,13 +407,13 @@ void HARDWARE::setModulateU(int8_t value)
  }
 }
 
-void HARDWARE::init_commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t usenotmod_I,uint8_t usemod_U)
+void HARDWARE::init_Commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_U)
 { 
  setSensor(sensor); 
  setLoopSign(loopsign);
  setSignal_In_Loop(signal_in_loop); //Ampl or I
- useModulateI(usenotmod_I);
- setModulateU(usemod_U);
+ setUseSD(useSD);
+ setModulateU(useMod_U);
 }
 void HARDWARE::init_SPI( uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4 )
 {

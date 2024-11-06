@@ -88,16 +88,15 @@ public:
 
  void set_Freq(uint32_t freq);    // установка заданной частоты генератора
 
-
  void setSignal_In_Loop(int8_t value); // Ampl=1 ; I=0
  
- void useModulateI(int8_t value); // 1-> none; 0->use
+ void setUseSD(int8_t value);      // 1-> yes; 0->none use syncrodetector
  
  void setSensor(int8_t value);    // cantilever=1;  probe =0
  
  void setModulateU(int8_t value); // 0-> none; 1->use
 
- void init_commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t usemod_i,uint8_t usemod_u);
+ void init_Commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_u);
  
  void init_SPI(uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4); //инициирование SPI
 
