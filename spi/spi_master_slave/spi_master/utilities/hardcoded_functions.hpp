@@ -3,13 +3,13 @@
 #include <vector>
 #include <ctime>
 #include <cstdint>
-#include <iostream> //add
+#include <iostream> 
 #include <hardware/clocks.h>
 
 #include "../utilities/base_types/io_ports.h"
 #include "../devices/ad5664.hpp"
 #include "../devices/DAC8563.hpp"
-#include "../physical_devices/LinearDriver.hpp"  
+#include "../physical_devices/LinearDriver.hpp"  //240505
 #include "../loop/common_data/device_variables.hpp"
 #include "../loop/common_data/common_variables.hpp"
 
@@ -87,6 +87,7 @@ public:
  void GetSOFTHARDWAREVersion();
 
  void set_Freq(uint32_t freq);    // установка заданной частоты генератора
+
 
  void setSignal_In_Loop(int8_t value); // Ampl=1 ; I=0
  
