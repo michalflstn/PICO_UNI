@@ -35,7 +35,7 @@
 //#define InitDAC_BIAS           41
 #define ADC_GET_VALUECmd         24  // don't use
 #define SetDACZeroCmd            25
-//#define InitDAC_Z              26  //DAC8563_3
+#define Set_SIGN_LOOP_BIASV      26  //DAC8563_3
 //#define InitDAC_XY             27  //DAC8563_2
 #define SET_Z                    28  //DAC8563_3
 #define SET_XY                   29  //DAC8563_SET_VOLTAGE_2

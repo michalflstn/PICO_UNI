@@ -109,9 +109,9 @@ public:
  void init_DACZ(uint8_t spiport);    //инициирование ЦАП2  Z
 
  void set_BiasV(int32_t BiasV);      //установка заданного значения напряжения
+ //void set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue); // flg=1 изменять знак ПИД
+ void setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue);
 
- void set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue); // flg=1 изменять знак ПИД
- 
  void setLoopSign(int8_t value);  // 0->+ ; 1-> -1
 
  void set_SetPoint(int32_t SetPoint);//установка заданной опроры для ПИД

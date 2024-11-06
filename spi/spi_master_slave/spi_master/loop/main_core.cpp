@@ -131,12 +131,13 @@ case ChangeHardWare:
                   HARDWAREVERSION= (int8_t)vector[1];   
                   switch (HARDWAREVERSION)
                   {       
-                    case 0:{
+                case BBFPGA:
+                   case BB:{
                              scanner=new  Scanner(confighardwarev0); 
                              scanner->hardware->setDefaultSettings(confighardwarev0);                 
                              break; 
                            }
-                    case 1:{
+                    case WB:{
                              scanner=new  Scanner(confighardwarev1);
                              scanner->hardware->setDefaultSettings(confighardwarev1);
                              break;
@@ -168,7 +169,7 @@ case ChangeHardWare:
 case INITCOMMMUTATION:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->init_commutation((uint8_t)vector[1],(uint8_t)vector[2],(uint8_t)vector[3],(uint8_t)vector[4],(uint8_t)vector[5]);
+                scanner->hardware->init_Commutation((uint8_t)vector[1],(uint8_t)vector[2],(uint8_t)vector[3],(uint8_t)vector[4],(uint8_t)vector[5]);
                 break;
               }              
 case ADC_RESET:
@@ -305,7 +306,7 @@ case SetDACZeroCmd:
 case SET_BIAS:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_BiasV(vector[1],vector[2],vector[3],vector[4]);
+                scanner->hardware->set_BiasV(vector[1]);
                 break;
               }               
 case SET_SETPOINT:
@@ -319,6 +320,12 @@ case SET_SIGN_LOOP:
                 ALGCODE=ALGNONE;
                 scanner->hardware->setLoopSign(vector[1]);
                 break;
+              }
+case Set_SIGN_LOOP_BIASV:              
+              {
+               ALGCODE=ALGNONE;
+               scanner->hardware->setLoopSign_BiasV(vector[1],vector[2],vector[3],vector[4]);
+               break;
               }
   case SET_Z: { 
                 ALGCODE=ALGNONE;

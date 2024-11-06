@@ -200,7 +200,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
   dark();
-  init_commutation(0 , 1 , 1 , 1, 0);   //default afm 
+  init_Commutation(0 , 1 , 1 , 1, 0);   //default afm 
   /*
     default afm probe ?????
     sensor=0           // probe=0;  cantilever =1
@@ -296,15 +296,14 @@ void HARDWARE::set_BiasV(int32_t BiasV)
  }
  */
 }   
-void HARDWARE::set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue)
+void HARDWARE::setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue)
 {
  switch  (HARDWAREVERSION) 
   {
 case BBFPGA:
-        break;
+         break;
 case    BB:
-          set_BiasV(BiasV);
-        break;
+         break;
 case    WB:
          SignLoop=SignLoopValue;// debug
          //втянуть
@@ -348,18 +347,18 @@ case BBFPGA:
 case    BB:
          break;
 case    WB:
-         SignLoop=value;// debug
+        // SignLoop=value;// debug
          //втянуть
-         retract(); 
-         sleep_ms(50);
+       //  retract(); 
+       //  sleep_ms(50);
          switch (value)
         {
          case 0:{signloopport->disable(); break;} // +
          case 1:{signloopport->enable();  break;} // -
         }
         //вытянуть
-        protract();
-        sleep_ms(200);
+      //  protract();
+      //  sleep_ms(200);
         break;
   } 
  /*
