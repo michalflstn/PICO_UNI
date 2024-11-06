@@ -343,9 +343,9 @@ void HARDWARE::setLoopSign(int8_t value)
    switch  (HARDWAREVERSION) 
   {
 case BBFPGA:
-        break;
+         break;
 case    BB:
-        break;
+         break;
 case    WB:
          SignLoop=value;// debug
          //втянуть
