@@ -2108,8 +2108,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
          }
          sendStrData(code+std::to_string(DEBUG)+" parameters posistionXYZ update",debugdata,100,true);
         } 
-      // vupdateparams.clear();
-     // if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); 
+     // if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); ???? 241110
        vupdateparams.clear();
      // if (flgСritical_section)  critical_section_exit(&criticalSection); 
       }

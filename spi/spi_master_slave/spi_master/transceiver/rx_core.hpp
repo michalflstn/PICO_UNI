@@ -3,6 +3,7 @@
 
 #include <ctime>
 #include <vector>
+#include "../physical_devices/scanner.hpp"
 //#include "pico/util/queue.h"
 
 class RX_core

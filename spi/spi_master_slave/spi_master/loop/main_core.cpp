@@ -27,6 +27,7 @@ void MainCore::launchOnCore1()
      */   
   case VirtualCmd : //флаг симуляции работы микроконтроллера      
     //    flgVirtual=(bool)vector[1];
+          ALGCODE=ALGNONE;
           flgVirtual=(bool)vector[1];
           afc.clear();
           afc = code+std::to_string(DEBUG)+"set virtual "+ std::to_string(vector[1]);
@@ -39,6 +40,7 @@ void MainCore::launchOnCore1()
          flgDebugLevel=vector[1];
          break;    
   case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
+        ALGCODE=ALGNONE;
         flgDebug=(bool)vector[1];
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(flgDebug);
@@ -50,23 +52,32 @@ void MainCore::launchOnCore1()
   case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
         flgСritical_section=(bool)vector[1]; 
         break;
-  //***************************************     
-  case ADC_GET_VALUECmd:            
+  //***************************************  
+  case SET_PID_GAIN:
+        ALGCODE=ALGNONE;
+        if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint16_t)vector[1]);
+        else                         scanner->hardware->set_GainPID((uint32_t)vector[1]); 
+        break;      
+  case ADC_GET_VALUECmd:
+        ALGCODE=ALGNONE;            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
         break;
   case TheadDoneCmd:
+        ALGCODE=ALGNONE;
         TheadDone = true;
         break;
-  case DRAWDONECmd: 
+  case DRAWDONECmd:
+        ALGCODE=ALGNONE;  
         DrawDone = true;
         break;  
   case STOPCmd:
+        ALGCODE=ALGNONE;
         STOP=true; // stop the active algorithm 
         break; 
   default: 
       {
-         if (vector[0]>=0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0]; }
-                                         else ALGCODE=0;
+        if (vector[0]>=0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0];}
+                                       else {ALGCODE=ALGNONE;           }  
         break;
       }  
      }   
@@ -220,10 +231,10 @@ case LID_MOVE_TOZ0:
                break; 
               }            
 case SCANNING:
-              {
+              {  
+                ALGCODE=ALGNONE;
+                DrawDone=true;
                 if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-                 ALGCODE=ALGNONE;
-                 DrawDone=true;
                  scanner->scan_update
                           ({
                              static_cast<uint16_t>(vector[1]), static_cast<uint16_t>(vector[2]),
@@ -249,9 +260,7 @@ case SCANNING:
                                               if (!scanner->getLinearFlg()) {scanner->start_hopingscan(vector);   }
                                               else                          {scanner->start_hopingscanlin(vector);}
                                              }
-                if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-                 DrawDone=true;
-                if (flgСritical_section)critical_section_exit(&criticalSection); 
+                DrawDone=true;
                 break; 
               }
 case FASTSCANNING:
