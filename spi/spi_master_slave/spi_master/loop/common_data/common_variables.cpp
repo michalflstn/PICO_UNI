@@ -20,6 +20,8 @@ std::atomic<bool>  flgVirtual = false; // start value!!! setPIDGain
 std::atomic<bool>  flgDebug   = false; // strat value!!!
 std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
 std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
+std::atomic<uint16_t> delayHope;  
+std::atomic<uint16_t> ZJump;  
 
 const std::string  code="code";  
 const std::string  endln="\n";

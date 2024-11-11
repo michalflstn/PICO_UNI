@@ -628,7 +628,8 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
         }
         else
         { pos_fast += conf_.diskretinstep; }
-        sleep_us(conf_.delayF);
+       // sleep_us(conf_.delayF);
+         sleep_us(delayFW);
       }
       if (reststepfast != 0)// добирание остатка
       {
@@ -638,7 +639,8 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
           hardware->set_DACXY(portfast, pos_fast);
         } else
         { pos_fast += reststepfast; }
-        sleep_us(conf_.delayF); 
+        //sleep_us(conf_.delayF); 
+        sleep_us(delayFW);
       }
       //******************************************************************************
       sleep_us(conf_.pause);    // 50 CONST 50ms wait for start get data
@@ -712,7 +714,8 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
         hardware->set_DACXY(portfast, pos_fast);
       }
       else { pos_fast -= conf_.diskretinstep; }
-      sleep_us(conf_.delayB);
+//      sleep_us(conf_.delayB);
+      sleep_us(delayBW);
     }
     if (reststepfast != 0)// добирание остатка
     {
@@ -722,8 +725,9 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
         hardware->set_DACXY(portfast, pos_fast);
       }
       else { pos_fast -= reststepfast; }
-      sleep_us(conf_.delayB);
-    }
+//      sleep_us(conf_.delayB);
+      sleep_us(delayBW);
+     }
     int16_t count0 = 0;
     while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
     {
@@ -739,6 +743,8 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
       CONFIG_UPDATE = false;
       conf_.delayF        = vupdateparams[1];
       conf_.delayB        = vupdateparams[2];
+      delayFW=conf_.delayF;//241111
+      delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100);     
       hardware->set_GainPID((uint16_t)vupdateparams[3]);
       if (flgDebug) sleep_ms(100);              
@@ -893,7 +899,7 @@ struct Config
   uint8_t  portslow;
   uint16_t pos_fast;
   uint16_t pos_slow;
-  int16_t  ZJump;
+ // int16_t  ZJump;
   int16_t  ISatCur;
   int16_t  ZCur;
   int16_t  ISatCurPrev;
@@ -985,7 +991,8 @@ struct Config
           pos_fast += conf_.diskretinstep;
         } 
         else { pos_fast += conf_.diskretinstep; }
-        sleep_us(conf_.delayF);
+       // sleep_us(conf_.delayF);
+        sleep_us(delayFW);
       }
       if (reststepfast != 0)
       {
@@ -995,7 +1002,8 @@ struct Config
           hardware->set_DACXY(portfast, pos_fast);
         }
         else { pos_fast += reststepfast; }
-        sleep_us(conf_.delayF);
+       // sleep_us(conf_.delayF);
+         sleep_us(delayFW);
       }
   //******************************************************************************
       if (!flgVirtual)
@@ -1003,7 +1011,8 @@ struct Config
         if (flgMaxJump) hardware->protract();// вытянуться
         else            hardware->protract();// protract(0, ZJump);// вытянуться на ZJump
       }
-      sleep_ms(conf_.HopeDelay);
+    //  sleep_ms(conf_.HopeDelay);
+      sleep_ms(delayHope);   
       sleep_us(conf_.pause);    // CONST 50ms wait for start get data
   //*******************************************************************************
       if (!flgVirtual)
@@ -1061,7 +1070,9 @@ struct Config
       {
        pos_fast -= conf_.diskretinstep * stepsfastline * nfastline;
       }
-      sleep_us(conf_.delayB);
+//      sleep_us(conf_.delayB);
+      sleep_us(delayBW);
+
       if (reststepfast != 0)
       {
         if (!flgVirtual)
@@ -1070,7 +1081,8 @@ struct Config
          hardware->set_DACXY(portfast, pos_fast);
         }
         else { pos_fast -= reststepfast; }
-        sleep_us(conf_.delayB);
+        //sleep_us(conf_.delayB);
+        sleep_us(delayBW);
       }// move backward 
       //next line
      if ((nslowline - 1 - i) > 0)  //если не последняя линия
@@ -1085,7 +1097,8 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += conf_.diskretinstep; }
-          sleep_us(conf_.delayF);
+         // sleep_us(conf_.delayF);
+         sleep_us(delayFW);
         }
         if (reststepslow != 0)
         {
@@ -1095,7 +1108,8 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += reststepslow; }  // -240404
-          sleep_us(conf_.delayF);
+        //  sleep_us(conf_.delayF);
+          sleep_us(delayFW);
         }
       }
      }   //next line 
@@ -1124,7 +1138,8 @@ struct Config
           conf_.SetPoint=round(ISatCur*conf_.KoeffCorrectISat*0.01 );
           ISatCurPrev=ISatCur;
           hardware->set_SetPoint(conf_.SetPoint);
-          sleep_ms(conf_.HopeDelay);
+        //  sleep_ms(conf_.HopeDelay);
+            sleep_ms(delayHope);   
          }
        }
        else
@@ -1132,7 +1147,8 @@ struct Config
         conf_.SetPoint=round(ISatCur*conf_.KoeffCorrectISat*0.01 );
         hardware->set_SetPoint(conf_.SetPoint);
         ISatCurPrev=ISatCur;
-        sleep_ms(conf_.HopeDelay);
+ //       sleep_ms(conf_.HopeDelay);
+        sleep_ms(delayHope);   
        }
      }
      
@@ -1160,10 +1176,13 @@ struct Config
        CONFIG_UPDATE              = false;
       conf_.delayF               = vupdateparams[1];
       conf_.delayB               = vupdateparams[2];
+      delayFW                    =  conf_.delayF;
+      delayBW                    =  conf_.delayB;
       conf_.diskretinstep        = vupdateparams[3];
       sleep_ms(100);             //240314
       hardware->set_GainPID((uint16_t)vupdateparams[4]); //240320
       conf_.HopeDelay            = vupdateparams[5];
+      delayHope                  =  conf_.HopeDelay;  
       conf_.HopeZ                = vupdateparams[6];
       conf_.flgAutoUpdateSP      = vupdateparams[7];; // автообновление опоры на каждой линии                     19
       conf_.flgAutoUpdateSPDelta = vupdateparams[8];; // обновление опоры , если изменение тока превысило порог 20
@@ -1288,7 +1307,7 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
   uint8_t  portslow;
   uint16_t pos_fast;
   uint16_t pos_slow;
-  int16_t  ZJump;
+  //int16_t  ZJump;
   int16_t  ISatCur;
   int16_t  ZCur;
   int16_t  ISatCurPrev;
@@ -1389,7 +1408,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
           pos_fast += conf_.diskretinstep;
         }
         else { pos_fast += conf_.diskretinstep; }
-        sleep_us(conf_.delayF);
+       // sleep_us(conf_.delayF);
+        sleep_us(delayFW);
       }
       if (reststepfast != 0)
       {
@@ -1399,8 +1419,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
           hardware->set_DACXY(portfast, pos_fast);
         }
         else { pos_fast += reststepfast; }
-
-        sleep_us(conf_.delayF);
+//        sleep_us(conf_.delayF);
+        sleep_us(delayFW);
       }
   //******************************************************************************
       if (!flgVirtual)
@@ -1408,7 +1428,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
         if (flgMaxJump) hardware->protract();  //вытянуться
         else            hardware->protract();//  protract(0, ZJump);// ;//вытянуться на ZJump
       }
-      sleep_ms(conf_.HopeDelay);
+     // sleep_ms(conf_.HopeDelay);
+      sleep_ms(delayHope);   
       sleep_us(conf_.pause);    // CONST 50ms wait for start get data
   //*******************************************************************************
   
@@ -1484,7 +1505,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
     {
       pos_fast -= conf_.diskretinstep * stepsfastline * nfastline; 
     }
-     sleep_us(conf_.delayB);
+//     sleep_us(conf_.delayB);
+     sleep_us(delayBW);
      if (reststepfast != 0)
      {
       if (!flgVirtual)
@@ -1493,7 +1515,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
         hardware->set_DACXY(portfast, pos_fast);
       } 
       else { pos_fast -= reststepfast; }
-      sleep_us(conf_.delayB);
+     // sleep_us(conf_.delayB);
+       sleep_us(delayBW);
      }
       sleep_ms(conf_.HopeDelayFP);// 240503
       sleep_us(conf_.pause);  
@@ -1520,7 +1543,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
           conf_.SetPoint=round(ISatCur*conf_.KoeffCorrectISat*0.01 );
           ISatCurPrev=ISatCur;
           hardware->set_SetPoint(conf_.SetPoint);
-          sleep_ms(conf_.HopeDelay);
+         // sleep_ms(conf_.HopeDelay);
+          sleep_ms(delayHope);    
          }
        }
        else
@@ -1528,7 +1552,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
         conf_.SetPoint=round(ISatCur*conf_.KoeffCorrectISat*0.01 );
         hardware->set_SetPoint(conf_.SetPoint);
         ISatCurPrev=ISatCur;
-        sleep_ms(conf_.HopeDelay);
+      //  sleep_ms(conf_.HopeDelay);
+        sleep_ms(delayHope);   
        }
      }   
      vector_data.emplace_back(round(conf_.SetPoint));
@@ -1554,10 +1579,13 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
       CONFIG_UPDATE              = false;
       conf_.delayF               = vupdateparams[1];
       conf_.delayB               = vupdateparams[2];
+      delayFW                    =  conf_.delayF;
+      delayBW                    =  conf_.delayB;
       conf_.diskretinstep        = vupdateparams[3];
       sleep_ms(100);             //240314
       hardware->set_GainPID((uint16_t)vupdateparams[4]); //240320
       conf_.HopeDelay            = vupdateparams[5];
+      delayHope                  = conf_.HopeDelay;   
       conf_.HopeZ                = vupdateparams[6];
       conf_.flgAutoUpdateSP      = vupdateparams[7];; // автообновление опоры на каждой линии                     19
       conf_.flgAutoUpdateSPDelta = vupdateparams[8];; // обновление опоры , если изменение тока превысило порог 20
@@ -1609,7 +1637,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
             hardware->set_DACXY(portslow, pos_slow);
           } 
           else { pos_slow += conf_.diskretinstep; }
-          sleep_us(conf_.delayF);
+         // sleep_us(conf_.delayF);
+           sleep_us(delayFW);
         }
         if (reststepslow != 0)
         {
@@ -1619,7 +1648,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += reststepslow; }
-          sleep_us(conf_.delayF);
+        //  sleep_us(conf_.delayF);
+          sleep_us(delayFW);
         }
       }
     } 
@@ -1904,7 +1934,9 @@ void Scanner::scan_update(const Config &config)
 {
   conf_ = config;
   delayFW=conf_.delayF; //241111
-  delayBW=conf_.delayB;           
+  delayBW=conf_.delayB; 
+  delayHope=conf_.HopeDelay; 
+  ZJump=conf_.HopeZ;        
 }
 
 Point Scanner::getX0Y0()

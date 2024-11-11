@@ -53,6 +53,7 @@
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
 #define ChangeSpeed              52  //изменение скорости сканирования в процессе сканирования и тд
+#define ChangeHopeParams         53  //изменение прыжки при hopeсканирования в процессе сканирования и тд
 #define CONFIG_UPDATECmd         55
 #define FASTSCANNING             56
 #define SENDDATALIN              57  //данные линеализации
@@ -112,6 +113,9 @@ extern std::atomic<bool> flgVirtual;
 extern std::atomic<bool> flgDebug;
 extern std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
 extern std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
+extern std::atomic<uint16_t> delayHope;  
+extern std::atomic<uint16_t> ZJump;  
+
 extern bool flgUseTUD;
 extern bool flgParamsUpdated;
 //extern bool flgDebug;    // output diagnostics

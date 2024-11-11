@@ -62,7 +62,11 @@ void MainCore::launchOnCore1()
         ALGCODE=ALGNONE;
         delayFW=(uint16_t)vector[1];
         delayBW=(uint16_t)vector[2];
-        break;          
+        break;  
+  case ChangeHopeParams:              
+        delayHope=(uint16_t)vector[1];
+        ZJump    =(uint16_t)vector[2];
+        break;
   case ADC_GET_VALUECmd:
         ALGCODE=ALGNONE;            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
