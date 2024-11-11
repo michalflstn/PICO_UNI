@@ -312,7 +312,8 @@ struct Config
         } 
         else
         { pos_fast += conf_.diskretinstep; }
-        sleep_us(conf_.delayF);
+       // sleep_us(conf_.delayF);
+       sleep_us(delayFW);//241111
       }
       if (reststepfast != 0)// добирание остатка
       {
@@ -323,7 +324,8 @@ struct Config
         } 
         else
         { pos_fast += reststepfast; }
-        sleep_us(conf_.delayF);
+       // sleep_us(conf_.delayF);
+        sleep_us(delayFW);//241111
       }
       //******************************************************************************
       sleep_us(conf_.pause);    // 50 CONST 50ms wait for start get data
@@ -400,7 +402,8 @@ struct Config
         hardware->set_DACXY(portfast, pos_fast);
       }
       else  { pos_fast -= conf_.diskretinstep; }
-      sleep_us(conf_.delayB);
+      //sleep_us(conf_.delayB);//241111
+      sleep_us(delayBW);
     }
 
     if (reststepfast != 0)// добирание остатка
@@ -411,8 +414,8 @@ struct Config
         hardware->set_DACXY(portfast, pos_fast);
       }
       else  { pos_fast -= reststepfast; }
-
-      sleep_us(conf_.delayB);
+      sleep_us(delayBW);//241111
+     // sleep_us(conf_.delayB);
     }
     int16_t count0 = 0;
     while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
@@ -427,7 +430,9 @@ struct Config
     {
       CONFIG_UPDATE = false;
       conf_.delayF  = vupdateparams[1];
+      delayFW=conf_.delayF;//241111
       conf_.delayB  = vupdateparams[2];
+      delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100); 
       hardware->set_GainPID((uint16_t)vupdateparams[3]);//240320
       conf_.diskretinstep = vupdateparams[4]; 
@@ -440,9 +445,9 @@ struct Config
        }
        sendStrData(code+std::to_string(DEBUG)+" scan parameters update",debugdata,100,true); //240314 100
       }
-     if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); 
+     if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); //???
       vupdateparams.clear();
-     if (flgСritical_section)  critical_section_exit(&criticalSection);  
+     if (flgСritical_section)  critical_section_exit(&criticalSection);  //???
 
      stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
      stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
@@ -490,7 +495,8 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += conf_.diskretinstep; }
-          sleep_us(conf_.delayF);
+          //sleep_us(conf_.delayF);//241111
+          sleep_us(delayFW);
         }
         if (reststepslow != 0)
         {
@@ -500,7 +506,8 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           } 
           else { pos_slow += reststepslow; } //-240404
-          sleep_us(conf_.delayF);
+          //sleep_us(conf_.delayF); //241111
+          sleep_us(delayFW);
         }
       }
     }
@@ -631,7 +638,7 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
           hardware->set_DACXY(portfast, pos_fast);
         } else
         { pos_fast += reststepfast; }
-        sleep_us(conf_.delayF);
+        sleep_us(conf_.delayF); 
       }
       //******************************************************************************
       sleep_us(conf_.pause);    // 50 CONST 50ms wait for start get data
@@ -1896,6 +1903,8 @@ void Scanner::stop_scan()
 void Scanner::scan_update(const Config &config)
 {
   conf_ = config;
+  delayFW=conf_.delayF; //241111
+  delayBW=conf_.delayB;           
 }
 
 Point Scanner::getX0Y0()

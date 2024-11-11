@@ -57,7 +57,12 @@ void MainCore::launchOnCore1()
         ALGCODE=ALGNONE;
         if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint16_t)vector[1]);
         else                         scanner->hardware->set_GainPID((uint32_t)vector[1]); 
-        break;      
+        break;  
+  case ChangeSpeed:
+        ALGCODE=ALGNONE;
+        delayFW=(uint16_t)vector[1];
+        delayBW=(uint16_t)vector[2];
+        break;          
   case ADC_GET_VALUECmd:
         ALGCODE=ALGNONE;            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
