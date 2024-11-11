@@ -362,7 +362,7 @@ struct Config
        else   vector_data.emplace_back(int16_t(10000.0 * (sin(w * j)))); 
         if (conf_.size == 2)  //дополнительный сигнал
         {
-           vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
+          vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
         }
       }
     }
@@ -798,7 +798,8 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
             hardware->set_DACXY(portslow, pos_slow);
           } 
           else { pos_slow += conf_.diskretinstep; }
-          sleep_us(conf_.delayF);
+        //  sleep_us(conf_.delayF);
+          sleep_us(delayFW)
         }
         if (reststepslow != 0)
         {
@@ -808,7 +809,8 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += reststepslow; }
-          sleep_us(conf_.delayF);
+          //sleep_us(conf_.delayF);
+          sleep_us(delayFW)
         }
       }
     }
