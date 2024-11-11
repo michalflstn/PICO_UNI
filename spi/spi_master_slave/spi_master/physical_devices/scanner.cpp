@@ -799,7 +799,7 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
           } 
           else { pos_slow += conf_.diskretinstep; }
         //  sleep_us(conf_.delayF);
-          sleep_us(delayFW)
+          sleep_us(delayFW);
         }
         if (reststepslow != 0)
         {
@@ -810,7 +810,7 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
           }
           else { pos_slow += reststepslow; }
           //sleep_us(conf_.delayF);
-          sleep_us(delayFW)
+          sleep_us(delayFW);
         }
       }
     }
