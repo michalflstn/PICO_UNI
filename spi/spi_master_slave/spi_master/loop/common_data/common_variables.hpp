@@ -47,22 +47,27 @@
 #define USEPLDCmd                38  //использовать ПЛИС
 #define SET_PID_GAINFPGA         39
 #define RESONANCE                40  //AD9833 
+
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
 #define ChangeSpeed              52  //изменение скорости сканирования в процессе сканирования и тд
+
 #define ChangeHopeParams         53  //изменение высота прыжков+ задержки при hopeсканирования в процессе сканирования и тд
 #define CONFIG_UPDATECmd         55  //изменения параметров алгоритма в процессе выполнения
 #define FASTSCANNING             56
 #define SENDDATALIN              57  //данные линеализации
+
 #define ProtractAlgCode          61
 #define FreezePIDAlgCode         62
 #define UnFreezePIDAlgCode       63
 #define SPECTROSOPY_IV           65
 #define SPECTROSOPY_AIZ          66
+
 #define STOPCmd                  70 //остановка алгоритма
 #define DRAWDONECmd              71 //окончание отрисовки данных алгоритма
 #define APPROACH                 75
 #define TESTMOVER                76
+
 #define LID_MOVE_UNTIL_STOP      80
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
 // const
