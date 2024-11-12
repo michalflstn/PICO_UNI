@@ -26,7 +26,6 @@ void MainCore::launchOnCore1()
         break;
      */   
   case VirtualCmd : //флаг симуляции работы микроконтроллера      
-    //    flgVirtual=(bool)vector[1];
           ALGCODE=ALGNONE;
           flgVirtual=(bool)vector[1];
           afc.clear();
@@ -34,7 +33,7 @@ void MainCore::launchOnCore1()
           afc +=endln;//"\n";
           std::cout << afc;
           afc.clear();
-          sleep_ms(100);               
+          sleep_ms(100);              
           break;
   case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
          flgDebugLevel=vector[1];
@@ -63,7 +62,8 @@ void MainCore::launchOnCore1()
         delayFW=(uint16_t)vector[1];
         delayBW=(uint16_t)vector[2];
         break;  
-  case ChangeHopeParams:              
+  case ChangeHopeParams:
+        ALGCODE=ALGNONE;              
         delayHope=(uint16_t)vector[1];
         ZJump    =(uint16_t)vector[2];
         break;

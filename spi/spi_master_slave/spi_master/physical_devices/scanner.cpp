@@ -445,10 +445,9 @@ struct Config
        }
        sendStrData(code+std::to_string(DEBUG)+" scan parameters update",debugdata,100,true); //240314 100
       }
-     if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); //???
+    // if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); //???
       vupdateparams.clear();
-     if (flgСritical_section)  critical_section_exit(&criticalSection);  //???
-
+    // if (flgСritical_section)  critical_section_exit(&criticalSection);  //???
      stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
      stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
      reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
@@ -473,8 +472,9 @@ struct Config
       }
       //    dark();
      } 
-      sendStrData(code+std::to_string(PARAMUPDATEDCmd)); //!!!!!!!!!!!!!!!!!240314
-    }
+     // sendStrData(code+std::to_string(PARAMUPDATEDCmd)); // 241112 //test !!!!!!!!!!!!!!!!!240314
+    } // update parameters
+
     if (STOP)  
     {
       STOP = false;
@@ -1230,7 +1230,9 @@ struct Config
       }
      }
       if (flgDebug)
-      { sendStrData(code+std::to_string(PARAMUPDATEDCmd));} //240314
+      {
+       //   sendStrData(code+std::to_string(PARAMUPDATEDCmd)); //241112
+      } //240314
     } //update
       if (!flgVirtual)
       {

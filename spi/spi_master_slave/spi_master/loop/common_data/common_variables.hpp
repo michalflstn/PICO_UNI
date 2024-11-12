@@ -6,41 +6,38 @@
 #include <vector>
 #include <atomic>
 
-#define SFM                      0
+#define SFM                      0  // методики
 #define STM                      1
 #define SICMDC                   3  
 #define maxint16_t               32767
 #define minint16_t              -32768
 
-#define BB                        0
+#define BB                        0  // код mother board
 #define WB                        1
 #define BBFPGA                    2
 // algorithm codes
 #define ALGNONE                   0
-#define VersionCmd               10
+#define VersionCmd               10  // версия ПО контроллера
 #define ChangeHardWare           11
 #define ADC_READCmd              12  //AD7606 timer
 #define DebugCmd                 13
-#define VirtualCmd               14
+#define VirtualCmd               14  // виртуальный режим работы контроллера
 #define DebugLevelCmd            15
-#define DEBUG                    16
-#define END                      17
+#define DEBUG                    16  // вывод отладки
+#define END                      17  // выполнение алгоритма закончено
 #define GET_CURRENTX0Y0          18
 #define SET_BIAS                 19
 #define SET_SETPOINT             20  //DAC8563_1
 #define SET_PID_GAIN             21
 #define SET_AMPLMOD_GAIN         22
 #define SET_SIGN_LOOP            23
-//#define InitDAC_SET_POINT      23  //DAC8563_1 
-//#define InitDAC_BIAS           41
 #define ADC_GET_VALUECmd         24  // don't use
 #define SetDACZeroCmd            25
 #define Set_SIGN_LOOP_BIASV      26  //DAC8563_3
-//#define InitDAC_XY             27  //DAC8563_2
 #define SET_Z                    28  //DAC8563_3
 #define SET_XY                   29  //DAC8563_SET_VOLTAGE_2
 #define FREQ_SET                 30  //AD9833
-#define STOPPED                  31
+#define STOPPED                  31  //остановка выполнения алгоритма
 #define PARAMUPDATEDCmd          32
 #define TheadDoneCmd             33
 #define SetUseCritialSectAlgCode 34
@@ -53,8 +50,8 @@
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
 #define ChangeSpeed              52  //изменение скорости сканирования в процессе сканирования и тд
-#define ChangeHopeParams         53  //изменение прыжки при hopeсканирования в процессе сканирования и тд
-#define CONFIG_UPDATECmd         55
+#define ChangeHopeParams         53  //изменение высота прыжков+ задержки при hopeсканирования в процессе сканирования и тд
+#define CONFIG_UPDATECmd         55  //изменения параметров алгоритма в процессе выполнения
 #define FASTSCANNING             56
 #define SENDDATALIN              57  //данные линеализации
 #define ProtractAlgCode          61
@@ -62,14 +59,14 @@
 #define UnFreezePIDAlgCode       63
 #define SPECTROSOPY_IV           65
 #define SPECTROSOPY_AIZ          66
-#define STOPCmd                  70
-#define DRAWDONECmd              71
+#define STOPCmd                  70 //остановка алгоритма
+#define DRAWDONECmd              71 //окончание отрисовки данных алгоритма
 #define APPROACH                 75
 #define TESTMOVER                76
 #define LID_MOVE_UNTIL_STOP      80
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
 // const
-#define AxisX                    90
+#define AxisX                    90 //коды осей
 #define AxisY                    95
 #define AxisZ                    99
 #define portx                    0

@@ -1,7 +1,7 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.11.11.1 BiasV_for_WB";
+std::string  SOFTVERSION="24.11.12.1 BiasV_for_WB";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
@@ -20,8 +20,8 @@ std::atomic<bool>  flgVirtual = false; // start value!!! setPIDGain
 std::atomic<bool>  flgDebug   = false; // strat value!!!
 std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
 std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
-std::atomic<uint16_t> delayHope;  
-std::atomic<uint16_t> ZJump;  
+std::atomic<uint16_t> delayHope;    //hopping
+std::atomic<uint16_t> ZJump;        //hopping   
 
 const std::string  code="code";  
 const std::string  endln="\n";
