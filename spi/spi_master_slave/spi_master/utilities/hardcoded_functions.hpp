@@ -141,9 +141,9 @@ public:
  //uint16_t *getValuesFromAdc();  // чтение АЦП
  void      getValuesFromAdc();  // чтение АЦП
 
- uint32_t  ReadDataFromFPGA(FPGAReadData readdata);
+ int32_t  ReadDataFromFPGA(FPGAReadData readdata);
  
- void ReadDataFromFPGAArray();
+ uint8_t ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout);
  
  void retract();       // втянуть сканер
 

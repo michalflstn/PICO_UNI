@@ -20,7 +20,9 @@
 extern uint8_t FPGADELIM;
 extern uint8_t FPGACRCPAR;
 extern uint8_t FPGAREAD;
+extern uint8_t FPGAREADOK;
 extern uint8_t FPGAREADADC;
+extern uint8_t FPGAREADADCM;
 extern uint8_t FPGAWRITE;
 extern uint8_t FPGAASC;
 extern uint32_t ZAdress;
@@ -33,6 +35,7 @@ struct ADCData
  int16_t Signal;
 };
 extern ADCData adcdata;
+
 struct ConfigHardWare //BB and BBFPGA
 {
   uint8_t DACSetPointPort;  //2 DAC8563_1  BIAS SetPoint
@@ -92,7 +95,9 @@ struct FPGAReadData
 struct FPGAReadDataArray
 {
  uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAREADADC;
+ uint8_t  cmd=FPGAREADADCM;
+ uint32_t addr=0x08410004; //dataBufferRd[0]
+ uint8_t  count;
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
  };

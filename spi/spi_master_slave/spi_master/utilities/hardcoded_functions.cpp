@@ -482,17 +482,22 @@ void HARDWARE::move_scannerY(int y)
 
 }
 
-void HARDWARE::ReadDataFromFPGAArray()
+//uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count)
+uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
 {
-  uint8_t szread=4;
-  uint8_t szasc=40;  //array adc
+  uint8_t szread=8;
+  uint8_t szasc=count*4+5;  //40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
   FPGAReadDataArray readdata;
   outbuffer[0]=readdata.delimbegin;
-  outbuffer[1]=readdata.cmd;
-  outbuffer[2]=readdata.crcpar;
-  outbuffer[3]=readdata.delimend;
+  outbuffer[1]=readdata.cmd+(count&0x3F); //?????
+  outbuffer[2]=(readdata.addr&0xFF000000)>>24;
+  outbuffer[3]=(readdata.addr&0x00FF0000)>>16;  
+  outbuffer[4]=(readdata.addr&0x0000FF00)>>8;
+  outbuffer[5]=(readdata.addr&0x000000FF);
+  outbuffer[6]=readdata.crcpar;
+  outbuffer[7]=readdata.delimend;
   if (flgDebug)  
   {
     std::string afcc;
@@ -516,17 +521,25 @@ void HARDWARE::ReadDataFromFPGAArray()
   {
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   }
-  uint8_t k=0;
-  for (size_t i = 0; i < 8; i++)
-  {
-   spiBuf[i]=(inbuffer[k+1]<<24)+(inbuffer[k+2]<<16)+(inbuffer[k+3]<<8)+inbuffer[k+4];
-   k+=4;
-  }
+  uint8_t k=6; //0A 80 adress
+   if(inbuffer[1]==(FPGAREADOK+readdata.cmd+(count&0x3F))) //???? get array adc 0A 80 adress dataarray BB 0A
+    {
+   //  for (size_t j = 0; j < sizeof(spiBuf);j++)
+     for (size_t j = 0; j < count;j++)
+      for (size_t i = 0; i < count; i++)
+      {
+    //   spiBuf[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+       arrayout[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+       k+=4;
+      }
+     return 0; //ok
+    }
+   else return 1;// error 
 }
-uint32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
+int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
 {
   uint8_t szread=8;
-  uint8_t szasc=12;
+  uint8_t szasc=12; //get array adc 0A 80 adress data BB 0A
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
   outbuffer[0]=readdata.delimbegin;
@@ -560,9 +573,13 @@ uint32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   {
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   }
-  uint32_t res;
-  res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
-  return res;
+  int32_t res;  //int32_t
+  uint32_t ures;
+ // res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
+ //get array adc 0A 80 adress data BB 0A
+  if(inbuffer[1]==FPGAREADOK) {ures=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[7]<<8)+inbuffer[9];} //ok
+    else ures=0; //error ????
+  return int32_t(res);
 }
 void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
 {
@@ -707,6 +724,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
   uint8_t intBuf[1]; 
   if (!flgVirtual)
   { 
+  /*  241113
     decoder.activePort(5);
     Spi::setProperties(8, 0, 0);
     intBuf[0] = 0;
@@ -718,6 +736,43 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
  //   sleep_us(2);//240405 
     decoder.activePort(7);
   } 
+*/
+    switch (HARDWAREVERSION)
+      {
+      case WB:
+             decoder.activePort(5);
+             Spi::setProperties(8, 0, 0);
+             intBuf[0] = 0;
+             spi_write_blocking(spi_default, intBuf, 1); 
+             intBuf[0] = 255-(uint8_t)gain;               
+             spi_write_blocking(spi_default, intBuf, 1);
+ //   sleep_us(2);//240405 
+             decoder.activePort(7); intBuf[0] = (uint8_t)gain;
+             break;
+      case BB:
+             decoder.activePort(5);
+             Spi::setProperties(8, 0, 0);
+             intBuf[0] = 0;
+             spi_write_blocking(spi_default, intBuf, 1); 
+  //  sleep_us(2);//240405 
+             intBuf[0] = (uint8_t)gain;
+             spi_write_blocking(spi_default, intBuf, 1);
+  //   sleep_us(2);//240405 
+             decoder.activePort(7);
+             break;       
+  case BBFPGA:
+             decoder.activePort(5);
+             Spi::setProperties(8, 0, 0);
+             intBuf[0] = 0;
+             spi_write_blocking(spi_default, intBuf, 1); 
+  //  sleep_us(2);//240405 
+             intBuf[0] = (uint8_t)gain;
+             spi_write_blocking(spi_default, intBuf, 1);
+  //   sleep_us(2);//240405 
+             decoder.activePort(7);
+              break;
+     }
+  }   
      // отладка
   if (flgDebug)  
   {
@@ -971,7 +1026,7 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
   }
   else
   {
-   ReadDataFromFPGAArray();         
+   ReadDataFromFPGAArray(uint8_t(sizeof(spiBuf)),spiBuf);         
   }
 }
 
