@@ -7,11 +7,11 @@ uint8_t   FPGAREAD=0x00;
 uint8_t FPGAREADOK=0x80; // если выполнена команда чтения и ОК
 uint8_t  FPGAWRITE=0x01;
 uint8_t    FPGAASC=0x80;
-uint8_t  FPGAREADADC=0x03; ///?????????????????   Согласовать
+uint8_t   FPGAREADADC=0x03; ///?????????????????   Согласовать
 uint8_t  FPGAREADADCM=0x40; //read array
-uint32_t ZAdress=0x08410004;
+uint32_t    ZAdress=0x08410004;
 uint32_t AmplAdress=0x08410008;
-uint32_t IAdress=0x0841000C;
+uint32_t    IAdress=0x0841000C;
 
 Spi                  spi;
 Decoder              decoder(4, 5, 6);  
@@ -80,9 +80,9 @@ FPGAAdress           arrModule_0(
                        0x08430004,//wbKx[1] //интегратор
                        0x08430008,//wbKx[2]
                        0x0843000C,//wbInMulKoef
-                       0x08430010,//wbInShift
+                       0x08430010,//wbInShift //?
                        0x08430014,//wbOutMulKoef
-                       0x08430018,//wbOutShift
+                       0x08430018,//wbOutShift //DACZ
                        0x0843001C,//wbSetpoint
-                       0x08430020 //pidControl
+                       0x08430020 //pidControl // protract /retract
                        });

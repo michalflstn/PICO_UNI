@@ -652,7 +652,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     sleep_ms(30);
     //uart_write_blocking(uart_inst_t *uart, const uint8_t *src, size_t len)
   }
-
+/*
   while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}
   {
    uart_read_blocking(FPGA_UART_ID, outbuffer,szasc);
@@ -673,6 +673,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     sleep_ms(200);
     afcc.clear();
   }
+  */
 }
 
 void HARDWARE::set_SetPoint( int32_t SetPoint)

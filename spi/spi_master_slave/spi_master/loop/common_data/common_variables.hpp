@@ -34,25 +34,26 @@
 #define ADC_GET_VALUECmd         24  // don't use
 #define SetDACZeroCmd            25
 #define Set_SIGN_LOOP_BIASV      26  //DAC8563_3
+
 #define SET_Z                    28  //DAC8563_3
 #define SET_XY                   29  //DAC8563_SET_VOLTAGE_2
 #define FREQ_SET                 30  //AD9833
 #define STOPPED                  31  //остановка выполнения алгоритма
-#define PARAMUPDATEDCmd          32
+#define PARAMUPDATEDCmd          32  // do not used
 #define TheadDoneCmd             33
 #define SetUseCritialSectAlgCode 34
 #define RetractAlgCode           35
 #define ADC_RESET                36
 #define INITCOMMMUTATION         37
-#define USEPLDCmd                38  //использовать ПЛИС
+#define USEPLDCmd                38  //использовать ПЛИСС
 #define SET_PID_GAINFPGA         39
 #define RESONANCE                40  //AD9833 
 
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
 #define ChangeSpeed              52  //изменение скорости сканирования в процессе сканирования и тд
-
 #define ChangeHopeParams         53  //изменение высота прыжков+ задержки при hopeсканирования в процессе сканирования и тд
+
 #define CONFIG_UPDATECmd         55  //изменения параметров алгоритма в процессе выполнения
 #define FASTSCANNING             56
 #define SENDDATALIN              57  //данные линеализации
@@ -60,21 +61,25 @@
 #define ProtractAlgCode          61
 #define FreezePIDAlgCode         62
 #define UnFreezePIDAlgCode       63
+
 #define SPECTROSOPY_IV           65
 #define SPECTROSOPY_AIZ          66
 
 #define STOPCmd                  70 //остановка алгоритма
 #define DRAWDONECmd              71 //окончание отрисовки данных алгоритма
+
 #define APPROACH                 75
 #define TESTMOVER                76
 
 #define LID_MOVE_UNTIL_STOP      80
+
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
 // const
 #define AxisX                    90 //коды осей
 #define AxisY                    95
 #define AxisZ                    99
-#define portx                    0
+
+#define portx                    0 //порты пьезодвижетеля
 #define porty                    1
 
 extern const std::string  code;  
