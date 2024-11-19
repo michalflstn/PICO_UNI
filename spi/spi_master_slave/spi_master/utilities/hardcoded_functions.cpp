@@ -130,7 +130,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
   if (HARDWAREVERSION==BBFPGA)
   {
     ShiftDac=0;
-    SetPointScale=2;
+    SetPointScale=2;  ////????????
     uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); //add  240627
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(FPGAUART_RX_PIN, GPIO_FUNC_UART);  

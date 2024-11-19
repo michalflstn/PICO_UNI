@@ -39,14 +39,14 @@
 #define SET_XY                   29  //DAC8563_SET_VOLTAGE_2
 #define FREQ_SET                 30  //AD9833
 #define STOPPED                  31  //остановка выполнения алгоритма
-#define PARAMUPDATEDCmd          32  // do not used
+#define PARAMUPDATEDCmd          32  //do not used
 #define TheadDoneCmd             33
 #define SetUseCritialSectAlgCode 34
 #define RetractAlgCode           35
 #define ADC_RESET                36
 #define INITCOMMMUTATION         37
 #define USEPLDCmd                38  //использовать ПЛИСС
-#define SET_PID_GAINFPGA         39
+#define SET_PID_GAINFPGA         39  //не нужен 
 #define RESONANCE                40  //AD9833 
 
 #define SCANNING                 50
