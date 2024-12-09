@@ -48,6 +48,7 @@
 #define USEPLDCmd                38  //использовать ПЛИСС
 #define SET_PID_GAINFPGA         39  //не нужен 
 #define RESONANCE                40  //AD9833 
+#define GridMovetoNextScan       41
 
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана

@@ -2044,6 +2044,23 @@ void Scanner::LID_move_toZ0(int lid_name, int freq, int duty, int n, int dir)  /
   sendStrData(code+std::to_string(DEBUG)+" autorising done ",debugdata,100,true);
  } 
 }
+
+void Scanner::LID_move_toNextGridScan(int StepsNmbX,int StepsNmbY,int  StepsNmbZ,int TiApproach, int TiScan)
+{
+ if (!flgVirtual)
+ {
+ // LID_move_toZ0(lid_name, freq,  duty,  n,  dir);
+
+
+ }
+ else
+ {
+
+
+ } 
+  sendStrData(code+std::to_string(GridMovetoNextScan));
+}
+
 void Scanner::positioningXYZ(std::vector<int32_t> &vector)
 {
   uint8_t  lid_name;

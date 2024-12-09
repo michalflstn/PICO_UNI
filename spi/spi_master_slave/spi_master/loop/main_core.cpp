@@ -238,7 +238,14 @@ case LID_MOVE_TOZ0:
                 ALGCODE=ALGNONE;
                 scanner->LID_move_toZ0(vector[1], vector[2], vector[3], vector[4], vector[5]);
                break; 
-              }            
+              }    
+case GridMovetoNextScan:                      
+              {
+                ALGCODE=ALGNONE;
+                scanner->LID_move_toNextGridScan(vector[1], vector[2], vector[3], vector[4], vector[5]);
+                //GridParams.StepsCurNmbX,GridParams.StepsCurNmbY,GridParams.StepsCurNmbZ,PidParams.TiApproach, PidParams.TiScan;
+                break;
+              }
 case SCANNING:
               {  
                 ALGCODE=ALGNONE;

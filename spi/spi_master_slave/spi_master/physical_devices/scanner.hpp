@@ -98,6 +98,8 @@ public:
   
   void LID_move_toZ0(int lid_name, int freq, int duty, int n, int dir);// отвестись в безопасную начальную точку по Z при старте и выходе из программы
 
+  void LID_move_toNextGridScan(int StepsNmbX,int StepsNmbY,int  StepsNmbZ,int TiApproach, int TiScan);
+
   void readADC();
 
   void readFPGA();
