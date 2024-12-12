@@ -617,7 +617,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
   size_t szasc=8; //for ASC FPGA
   szwrite=sizeof(writedata);
   uint8_t buffer[szwrite];
-  uint8_t outbuffer[szasc];
+  //uint8_t outbuffer[szasc];
   buffer[0]=writedata.delimbegin;
   buffer[1]=writedata.cmd;
   buffer[2]=(writedata.addr&0xFF000000)>>24;
@@ -885,8 +885,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
  }
 void HARDWARE::set_GainPID(uint16_t gain)
 {
-  uint8_t ti;
-  if (HARDWAREVERSION==BB)  //BB
+   uint8_t ti;
+   if (HARDWAREVERSION==BB)  //BB
   {
    uint8_t tiadd;
    ti=(uint8_t)(gain>>8);
@@ -959,7 +959,8 @@ void HARDWARE::set_GainPID(uint16_t gain)
       afc = code+std::to_string(DEBUG)+"debug PID Gain "+ std::to_string(255-ti); 
      } 
     } 
-  }  
+  }
+    
   if (flgDebug)  
   {
    afc += endln;

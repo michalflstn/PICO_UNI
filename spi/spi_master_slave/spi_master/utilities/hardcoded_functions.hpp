@@ -43,6 +43,8 @@ private:
 
  uint16_t *repeatTwoTimes(); 
 
+ uint16_t gainPID;
+  
  void get_result_from_adc();       // чтение АЦП
 
  void set_clock_enable();
