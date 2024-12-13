@@ -36,6 +36,7 @@ struct Config
   uint16_t KoeffCorrectISat;    // опора  %  от тока насыщения                            22
   int16_t  SetPoint;            // опора  ток                                             23
   uint16_t HopeDelayFP;         // Задержка  в первой точке линии                         24  //add 24/05/02
+
 };
 
 struct ConfigCurrent
@@ -67,15 +68,15 @@ public:
 
   ~Scanner();
 
-  void start_scan(std::vector<int32_t> &vector);
+  void start_scan();
   
-  void start_scanlin(std::vector<int32_t> &vector);
+  void start_scanlin();
 
-  void start_hopingscan(std::vector<int32_t> &vector); //сканирование прыжками
+  void start_hopingscan(); //сканирование прыжками
   
-  void start_hopingscanlin(std::vector<int32_t> &vector); //сканирование прыжками
+  void start_hopingscanlin(); //сканирование прыжками
 
-  void start_fastscan(std::vector<int32_t> &vector);  // быстрое сканирование и вывод скана целиком, а не по линиям
+  void start_fastscan();  // быстрое сканирование и вывод скана целиком, а не по линиям
 
   void approacphm(std::vector<int32_t> &vector);      // захват взаимодействия с контролем ворот
 
@@ -91,8 +92,8 @@ public:
 
   void spectroscopyAIZ(std::vector<int32_t> &vector); // спектроскопия Ampl-Z актуальный вариант
 
-  void scan_update(const Config &config);             // обновить параметры скaнирования
-  
+  //void scan_update(const Config &config);             // обновить параметры скaнирования
+  void scanparams_update(const  std::vector<int32_t> &vector);// обновить параметры скaнирования
  //переместиться в начальную точку скана из начальной точке предыдущего скана flg=1 Hopping?
   void move_toX0Y0(uint16_t x, uint16_t y, uint16_t delay, int8_t flg); 
   

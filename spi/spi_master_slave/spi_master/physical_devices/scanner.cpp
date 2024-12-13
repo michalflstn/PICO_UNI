@@ -192,7 +192,7 @@ bool Scanner::getLinearFlg()
 {
   return (bool)conf_.flgLin;
 }
-void Scanner::start_scan(std::vector<int32_t> &vector) //сканирование
+void Scanner::start_scan() //сканирование
 {
   const int8_t oneline=11;
 /*
@@ -543,7 +543,7 @@ struct Config
   hardware->activateDark();
   hardware->dark();
 }
-void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирование
+void Scanner::start_scanlin() //сканирование
 {
   const int8_t oneline=11;
   prev_point = pos_; //запоминание начальной точки скана
@@ -846,7 +846,7 @@ void Scanner::start_scanlin(std::vector<int32_t> &vector) //сканирован
    hardware->dark();
 }
 
-void Scanner::start_hopingscan(std::vector<int32_t> &vector)
+void Scanner::start_hopingscan()
 {
   /*
 struct Config
@@ -1286,7 +1286,7 @@ struct Config
  // activateDark();
 }
 
-void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
+void Scanner::start_hopingscanlin()
 {
   const int8_t oneline=11;
   prev_point = pos_; //запоминание начальной точки скана
@@ -1709,22 +1709,8 @@ void Scanner::start_hopingscanlin(std::vector<int32_t> &vector)
   hardware->activateDark();
 } //hoppinglin
 
-void Scanner::start_fastscan(std::vector<int32_t> &vector)
+void Scanner::start_fastscan()
 {
-  scan_update(
-              {
-               static_cast<uint16_t>(vector[1]), static_cast<uint16_t>(vector[2]),
-               static_cast<uint8_t>(vector[3]),  static_cast<uint8_t>(vector[4]),
-               static_cast<uint16_t>(vector[5]), static_cast<uint16_t>(vector[6]),
-               static_cast<uint16_t>(vector[7]), static_cast<uint16_t>(vector[8]),
-               static_cast<uint8_t>(vector[9]),  static_cast<uint8_t>(vector[10]),
-               static_cast<uint16_t>(vector[11]),static_cast<uint16_t>(vector[12]),
-               static_cast<uint8_t>(vector[13]), static_cast<int16_t>(vector[14]),  //add 240122            
-               static_cast<uint8_t>(vector[15]), static_cast<uint8_t>(vector[16]),
-               static_cast<uint16_t>(vector[17])
-              }
-             );  
-
   prev_point = pos_; //запоминание начальной точки скана
   vector_data.clear();
   if(flgDebug)
@@ -1934,9 +1920,54 @@ void Scanner::stop_scan()
   }
 }
 
-void Scanner::scan_update(const Config &config)
+void Scanner::scanparams_update(const std::vector<int32_t> &vector)
 {
-  conf_ = config;
+//  conf_ = config;
+ if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
+  conf_.nPoints_x=(uint16_t)vector[0]; //uint16_t nPoints_x;        // точек по оси  X                                            1
+  conf_.nPoints_y=(uint16_t)vector[1];        // точек по оси  Y                                            2 
+  conf_.path=(uint16_t)vector[2];             // сканирование  0 - по оси X, 1 - по оси Y                   3
+  conf_.method=(uint16_t)vector[3];           // что измерять Topo=0,Phase=1, Ampl=2...                     4
+  conf_.delayF=(uint16_t)vector[4];           // задержка при сканировании вперёд                           5
+  conf_.delayB=(uint16_t)vector[5];           // задержка при сканировании назад                            6
+  conf_.betweenPoints_x=(uint16_t)vector[6];  // расстояние между точками по X в дискретах                  7 
+  conf_.betweenPoints_y=(uint16_t)vector[7];  // расстояние между точками по Y в дискретах                  8 
+  conf_.size=(uint16_t)vector[8];             // size=1  -Z; size=2 - Z,Амплитуда                           9
+  conf_.Ti=(uint16_t)vector[9];               // усиление ПИД                                              10
+  conf_.diskretinstep=(uint16_t)vector[10];    // размер шага в дискретах                                   11
+  conf_.pause=(uint16_t)vector[11];            // время ожидания в точке измерения  мксек                   12  
+  conf_.flgLin=(uint8_t)vector[12];           // флаг линеализации                                         13   
+  conf_.lineshift=(uint16_t)vector[13];        //сдвиг линии -учет неортогональности сканнера               14
+  conf_.flgOneFrame=(uint8_t)vector[14];      // быстрое сканирование один кадр=1                          15
+  conf_.flgHoping=(uint8_t)vector[15];        // сканирование прыжками                                     16
+ //hoping
+  conf_.HopeDelay=(uint16_t)vector[16];        // задержка в точке измерения при прыжках                    17
+// add hoping params  
+ if (sizeof(vector)>17) 
+ {
+  conf_.HopeZ=(uint16_t)vector[17];            // прыжок по Z,если=0,то прыжок по максимуму                 18
+  conf_.flgAutoUpdateSP=(uint8_t)vector[18];   // автообновление опоры на каждой линии                     19
+  conf_.flgAutoUpdateSPDelta=(uint8_t)vector[19];// обновление опоры , если изменение тока превысило порог 20
+  conf_.ThresholdAutoUpdate=(uint8_t)vector[20];//изменения опоры, если изменение тока превысило порог     21
+  conf_.KoeffCorrectISat=(uint16_t)vector[21];    // опора  %  от тока насыщения                            22
+  conf_.SetPoint=(uint16_t)vector[22];            // опора  ток                                             23
+  conf_.HopeDelayFP=(uint16_t)vector[23];         // Задержка  в первой точке линии                         24  //add 24/05/02
+ } 
+ if (flgСritical_section) critical_section_exit(&criticalSection);
+   /*
+            static_cast<uint16_t>(vector[1]), static_cast<uint16_t>(vector[2]),
+                             static_cast<uint8_t>(vector[3]),  static_cast<uint8_t>(vector[4]),
+                             static_cast<uint16_t>(vector[5]), static_cast<uint16_t>(vector[6]),
+                             static_cast<uint16_t>(vector[7]), static_cast<uint16_t>(vector[8]),
+                             static_cast<uint8_t>(vector[9]),  static_cast<uint16_t>(vector[10]),
+                             static_cast<uint16_t>(vector[11]),static_cast<uint16_t>(vector[12]),
+                             static_cast<uint8_t>(vector[13]), static_cast<int16_t>(vector[14]),  
+                             static_cast<uint8_t>(vector[15]), static_cast<uint8_t>(vector[16]),
+                             static_cast<uint16_t>(vector[17]),static_cast<uint16_t>(vector[18]),
+                             static_cast<uint8_t>(vector[19]), static_cast<uint8_t>(vector[20]),
+                             static_cast<uint16_t>(vector[21]),static_cast<uint16_t>(vector[22]),
+                             static_cast<int16_t>(vector[23])
+     */       
   delayFW=conf_.delayF; //241111
   delayBW=conf_.delayB; 
   delayHope=conf_.HopeDelay; 
