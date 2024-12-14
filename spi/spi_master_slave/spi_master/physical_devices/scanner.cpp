@@ -1812,8 +1812,8 @@ void Scanner::start_fastscan()
           vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
         }
       } //j
-
-      for (uint32_t j = 0; j < stepfastline * nfastline; ++j) // возврат в начальную точку линии
+ // возврат в начальную точку линии
+      for (uint32_t j = 0; j < stepfastline * nfastline; ++j)
       {
         if (!flgVirtual)
         {
@@ -1831,10 +1831,9 @@ void Scanner::start_fastscan()
           hardware->set_DACXY(portfast, pos_fast);
         }
         else { pos_fast -= reststepfast; }
-
         sleep_us(conf_.delayB);
       }
-      if ((nslowline - 1 - i) > 0)  //если непослелняя лниия
+      if ((nslowline - 1 - i) > 0)  //если непоследняя линия
       {
         for (uint32_t n = 0; n < stepslowline; ++n) 
         {
@@ -1885,16 +1884,16 @@ void Scanner::start_fastscan()
     }
   }
   stop_scan();  //возврат в начальную точку скана
-  sleep_ms(200);
+  sleep_ms(100);
   int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {
-    sleep_ms(100);
+    sleep_ms(50);
     count++;
   } 
   TheadDone = false;
   sendStrData(code+std::to_string(END)+"end");
-  hardware->activateDark();
+ // hardware->activateDark();
 }
 
 void Scanner::stop_scan()
