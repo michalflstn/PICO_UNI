@@ -1,4 +1,7 @@
 // 241214
+optimize!
+getValuesFromAdc() 
+repeatTwoTimes()
 SetDacXY
 //241210
 сделать плавное управление усилением ПИДом

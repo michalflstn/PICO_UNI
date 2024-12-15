@@ -67,7 +67,9 @@ public:
    Scanner(ConfigHardWareNew confighardware);
 
   ~Scanner();
-
+  //void scan_update(const Config &config);             // обновить параметры скaнирования
+  void scanparams_update(const  std::vector<int32_t> &vector);// обновить параметры скaнирования
+  
   void start_scan();
   
   void start_scanlin();
@@ -92,8 +94,6 @@ public:
 
   void spectroscopyAIZ(std::vector<int32_t> &vector); // спектроскопия Ampl-Z актуальный вариант
 
-  //void scan_update(const Config &config);             // обновить параметры скaнирования
-  void scanparams_update(const  std::vector<int32_t> &vector);// обновить параметры скaнирования
  //переместиться в начальную точку скана из начальной точке предыдущего скана flg=1 Hopping?
   void move_toX0Y0(uint16_t x, uint16_t y, uint16_t delay, int8_t flg); 
   

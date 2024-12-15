@@ -312,7 +312,6 @@ struct Config
         } 
         else
         { pos_fast += conf_.diskretinstep; }
-       // sleep_us(conf_.delayF);
        sleep_us(delayFW);//241111
       }
       if (reststepfast != 0)// добирание остатка
@@ -324,7 +323,6 @@ struct Config
         } 
         else
         { pos_fast += reststepfast; }
-       // sleep_us(conf_.delayF);
         sleep_us(delayFW);//241111
       }
       //******************************************************************************
@@ -402,7 +400,6 @@ struct Config
         hardware->set_DACXY(portfast, pos_fast);
       }
       else  { pos_fast -= conf_.diskretinstep; }
-      //sleep_us(conf_.delayB);//241111
       sleep_us(delayBW);
     }
 
@@ -415,7 +412,6 @@ struct Config
       }
       else  { pos_fast -= reststepfast; }
       sleep_us(delayBW);//241111
-     // sleep_us(conf_.delayB);
     }
     int16_t count0 = 0;
     while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
@@ -470,7 +466,6 @@ struct Config
         reststepslow  = reststepx;
         break;
       }
-      //    dark();
      } 
      // sendStrData(code+std::to_string(PARAMUPDATEDCmd)); // 241112 //test !!!!!!!!!!!!!!!!!240314
     } // update parameters
@@ -495,7 +490,6 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += conf_.diskretinstep; }
-          //sleep_us(conf_.delayF);//241111
           sleep_us(delayFW);
         }
         if (reststepslow != 0)
@@ -506,13 +500,11 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           } 
           else { pos_slow += reststepslow; } //-240404
-          //sleep_us(conf_.delayF); //241111
           sleep_us(delayFW);
         }
       }
     }
   } 
-//  blue();
   switch (conf_.path) 
   {
     case 0:
@@ -530,7 +522,6 @@ struct Config
   }
   stop_scan();  //возврат в начальную точку скана
   sleep_ms(300); //200
-  //red();
   int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {
@@ -1923,34 +1914,34 @@ void Scanner::scanparams_update(const std::vector<int32_t> &vector)
 {
 //  conf_ = config;
  if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-  conf_.nPoints_x=(uint16_t)vector[0]; //uint16_t nPoints_x;        // точек по оси  X                                            1
-  conf_.nPoints_y=(uint16_t)vector[1];        // точек по оси  Y                                            2 
-  conf_.path=(uint16_t)vector[2];             // сканирование  0 - по оси X, 1 - по оси Y                   3
-  conf_.method=(uint16_t)vector[3];           // что измерять Topo=0,Phase=1, Ampl=2...                     4
-  conf_.delayF=(uint16_t)vector[4];           // задержка при сканировании вперёд                           5
-  conf_.delayB=(uint16_t)vector[5];           // задержка при сканировании назад                            6
-  conf_.betweenPoints_x=(uint16_t)vector[6];  // расстояние между точками по X в дискретах                  7 
-  conf_.betweenPoints_y=(uint16_t)vector[7];  // расстояние между точками по Y в дискретах                  8 
-  conf_.size=(uint16_t)vector[8];             // size=1  -Z; size=2 - Z,Амплитуда                           9
-  conf_.Ti=(uint16_t)vector[9];               // усиление ПИД                                              10
-  conf_.diskretinstep=(uint16_t)vector[10];    // размер шага в дискретах                                   11
-  conf_.pause=(uint16_t)vector[11];            // время ожидания в точке измерения  мксек                   12  
-  conf_.flgLin=(uint8_t)vector[12];           // флаг линеализации                                         13   
-  conf_.lineshift=(uint16_t)vector[13];        //сдвиг линии -учет неортогональности сканнера               14
-  conf_.flgOneFrame=(uint8_t)vector[14];      // быстрое сканирование один кадр=1                          15
-  conf_.flgHoping=(uint8_t)vector[15];        // сканирование прыжками                                     16
+  conf_.nPoints_x=(uint16_t)vector[1]; //uint16_t nPoints_x;        // точек по оси  X                                            1
+  conf_.nPoints_y=(uint16_t)vector[2];        // точек по оси  Y                                            2 
+  conf_.path=(uint16_t)vector[3];             // сканирование  0 - по оси X, 1 - по оси Y                   3
+  conf_.method=(uint16_t)vector[4];           // что измерять Topo=0,Phase=1, Ampl=2...                     4
+  conf_.delayF=(uint16_t)vector[5];           // задержка при сканировании вперёд                           5
+  conf_.delayB=(uint16_t)vector[6];           // задержка при сканировании назад                            6
+  conf_.betweenPoints_x=(uint16_t)vector[7];  // расстояние между точками по X в дискретах                  7 
+  conf_.betweenPoints_y=(uint16_t)vector[8];  // расстояние между точками по Y в дискретах                  8 
+  conf_.size=(uint16_t)vector[9];             // size=1  -Z; size=2 - Z,Амплитуда                           9
+  conf_.Ti=(uint16_t)vector[10];               // усиление ПИД                                              10
+  conf_.diskretinstep=(uint16_t)vector[11];    // размер шага в дискретах                                   11
+  conf_.pause=(uint16_t)vector[12];            // время ожидания в точке измерения  мксек                   12  
+  conf_.flgLin=(uint8_t)vector[13];           // флаг линеализации                                         13   
+  conf_.lineshift=(uint16_t)vector[14];        //сдвиг линии -учет неортогональности сканнера               14
+  conf_.flgOneFrame=(uint8_t)vector[15];      // быстрое сканирование один кадр=1                          15
+  conf_.flgHoping=(uint8_t)vector[16];        // сканирование прыжками                                     16
  //hoping
-  conf_.HopeDelay=(uint16_t)vector[16];        // задержка в точке измерения при прыжках                    17
+  conf_.HopeDelay=(uint16_t)vector[17];        // задержка в точке измерения при прыжках                    17
 // add hoping params  
- if (sizeof(vector)>17) 
+ if (sizeof(vector)>18) 
  {
-  conf_.HopeZ=(uint16_t)vector[17];            // прыжок по Z,если=0,то прыжок по максимуму                 18
-  conf_.flgAutoUpdateSP=(uint8_t)vector[18];   // автообновление опоры на каждой линии                     19
-  conf_.flgAutoUpdateSPDelta=(uint8_t)vector[19];// обновление опоры , если изменение тока превысило порог 20
-  conf_.ThresholdAutoUpdate=(uint8_t)vector[20];//изменения опоры, если изменение тока превысило порог     21
-  conf_.KoeffCorrectISat=(uint16_t)vector[21];    // опора  %  от тока насыщения                            22
-  conf_.SetPoint=(uint16_t)vector[22];            // опора  ток                                             23
-  conf_.HopeDelayFP=(uint16_t)vector[23];         // Задержка  в первой точке линии                         24  //add 24/05/02
+  conf_.HopeZ=(uint16_t)vector[19];            // прыжок по Z,если=0,то прыжок по максимуму                 18
+  conf_.flgAutoUpdateSP=(uint8_t)vector[20];   // автообновление опоры на каждой линии                     19
+  conf_.flgAutoUpdateSPDelta=(uint8_t)vector[21];// обновление опоры , если изменение тока превысило порог 20
+  conf_.ThresholdAutoUpdate=(uint8_t)vector[22];//изменения опоры, если изменение тока превысило порог     21
+  conf_.KoeffCorrectISat=(uint16_t)vector[23];    // опора  %  от тока насыщения                            22
+  conf_.SetPoint=(uint16_t)vector[24];            // опора  ток                                             23
+  conf_.HopeDelayFP=(uint16_t)vector[25];         // Задержка  в первой точке линии                         24  //add 24/05/02
  } 
  if (flgСritical_section) critical_section_exit(&criticalSection);
    /*

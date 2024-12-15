@@ -1024,8 +1024,7 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
   if (HARDWAREVERSION!=BBFPGA)
   { 
    repeatTwoTimes();
-  // return repeatTwoTimes();
-   repeatTwoTimes();
+   repeatTwoTimes(); //241215 delete!!
   }
   else
   {
@@ -1039,7 +1038,7 @@ uint16_t *HARDWARE::repeatTwoTimes()
   int j = 0;
   while (!ADC_IS_READY_TO_READ && j++ < 3)
   {
-    sleep_us(100);
+    sleep_us(100); //241215 decrease!!
   }
   return spiBuf;
 }
