@@ -1722,55 +1722,66 @@ void Scanner::start_fastscan()
   uint16_t reststepx;
   uint16_t reststepy;
   uint16_t nfastline, nslowline;
-  uint16_t stepslowline, stepfastline;
+  uint16_t stepsslowline, stepsfastline;
   uint8_t  portfast;
   uint8_t  portslow;
   uint16_t pos_fast;
   uint16_t pos_slow;
 
-  stepsx    = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
-  stepsy    = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
-  reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
-  reststepy = conf_.betweenPoints_y % conf_.diskretinstep;
-
+   DrawDone=true;
   switch (conf_.path)
   {
     case 0://X+
     {
-      portfast  = portx;
-      portslow  = porty;
-      pos_fast  = pos_.x;
-      pos_slow  = pos_.y;
+       portfast = portx;
+       portslow = porty;
+       pos_fast = pos_.x;
+       pos_slow = pos_.y;
       nfastline = conf_.nPoints_x;
       nslowline = conf_.nPoints_y;
-      stepslowline = stepsx;
-      stepfastline = stepsy;
-      reststepfast = reststepx;
-      reststepslow = reststepy;
       break;
     }
     case 1: //Y+
     {
-      portfast  = porty;
-      portslow  = portx;
-      pos_fast  = pos_.y;
-      pos_slow  = pos_.x;
+       portfast = porty;
+       portslow = portx;
+       pos_fast = pos_.y;
+       pos_slow = pos_.x;
       nfastline = conf_.nPoints_y;
       nslowline = conf_.nPoints_x;
-      stepslowline = stepsy;
-      stepfastline = stepsx;
-      reststepfast = reststepy;
-      reststepslow = reststepx;
       break;
     }
   }
+    stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
+    stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
+    reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
+    reststepy = conf_.betweenPoints_y % conf_.diskretinstep;
+    switch (conf_.path)
+    {
+      case 0://X+
+      {
+        stepsslowline = stepsy;
+        stepsfastline = stepsx;
+        reststepfast  = reststepx;
+        reststepslow  = reststepy;
+        break;
+      }
+      case 1: //Y+
+      {
+        stepsslowline = stepsx;
+        stepsfastline = stepsy;
+        reststepfast  = reststepy;
+        reststepslow  = reststepx;
+        break;
+      }
+    }   
   while (!STOP)
   {
     for (uint32_t i = 0; i < nslowline; ++i)
     {
       for (uint32_t j = 0; j < nfastline; ++j)
       {
-        for (uint32_t k = 0; k < stepfastline; ++k) 
+        for (uint32_t k = 0; k < stepsfastline; ++k) 
         {
           if (!flgVirtual)
           {
@@ -1804,7 +1815,7 @@ void Scanner::start_fastscan()
         }
       } //j
  // возврат в начальную точку линии
-      for (uint32_t j = 0; j < stepfastline * nfastline; ++j)
+      for (uint32_t j = 0; j < stepsfastline * nfastline; ++j)
       {
         if (!flgVirtual)
         {
@@ -1826,7 +1837,7 @@ void Scanner::start_fastscan()
       }
       if ((nslowline - 1 - i) > 0)  //если непоследняя линия
       {
-        for (uint32_t n = 0; n < stepslowline; ++n) 
+        for (uint32_t n = 0; n < stepsslowline; ++n) 
         {
           if (!flgVirtual)
           {
@@ -1856,7 +1867,7 @@ void Scanner::start_fastscan()
     { 
       STOP = true;
     };
-  } 
+  } //stop
 //  blue();
    STOP=false;
    switch (conf_.path)
@@ -1874,7 +1885,7 @@ void Scanner::start_fastscan()
       break;
     }
   }
-  stop_scan();  //возврат в начальную точку скана
+  stop_scan();                      //возврат в начальную точку скана
   sleep_ms(100);
   int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
@@ -1926,22 +1937,22 @@ void Scanner::scanparams_update(const std::vector<int32_t> &vector)
   conf_.Ti=(uint16_t)vector[10];               // усиление ПИД                                              10
   conf_.diskretinstep=(uint16_t)vector[11];    // размер шага в дискретах                                   11
   conf_.pause=(uint16_t)vector[12];            // время ожидания в точке измерения  мксек                   12  
-  conf_.flgLin=(uint8_t)vector[13];           // флаг линеализации                                         13   
+  conf_.flgLin=(uint8_t)vector[13];           // флаг линеализации                                          13   
   conf_.lineshift=(uint16_t)vector[14];        //сдвиг линии -учет неортогональности сканнера               14
-  conf_.flgOneFrame=(uint8_t)vector[15];      // быстрое сканирование один кадр=1                          15
-  conf_.flgHoping=(uint8_t)vector[16];        // сканирование прыжками                                     16
+  conf_.flgOneFrame=(uint8_t)vector[15];      // быстрое сканирование один кадр=1                           15
+  conf_.flgHoping=(uint8_t)vector[16];        // сканирование прыжками                                      16
  //hoping
   conf_.HopeDelay=(uint16_t)vector[17];        // задержка в точке измерения при прыжках                    17
 // add hoping params  
  if (sizeof(vector)>18) 
  {
-  conf_.HopeZ=(uint16_t)vector[19];            // прыжок по Z,если=0,то прыжок по максимуму                 18
-  conf_.flgAutoUpdateSP=(uint8_t)vector[20];   // автообновление опоры на каждой линии                     19
-  conf_.flgAutoUpdateSPDelta=(uint8_t)vector[21];// обновление опоры , если изменение тока превысило порог 20
-  conf_.ThresholdAutoUpdate=(uint8_t)vector[22];//изменения опоры, если изменение тока превысило порог     21
-  conf_.KoeffCorrectISat=(uint16_t)vector[23];    // опора  %  от тока насыщения                            22
-  conf_.SetPoint=(uint16_t)vector[24];            // опора  ток                                             23
-  conf_.HopeDelayFP=(uint16_t)vector[25];         // Задержка  в первой точке линии                         24  //add 24/05/02
+  conf_.HopeZ=(uint16_t)vector[18];             // прыжок по Z,если=0,то прыжок по максимуму                18
+  conf_.flgAutoUpdateSP=(uint8_t)vector[19];     // автообновление опоры на каждой линии                    19
+  conf_.flgAutoUpdateSPDelta=(uint8_t)vector[20]; // обновление опоры , если изменение тока превысило порог 20
+  conf_.ThresholdAutoUpdate=(uint8_t)vector[21];  //изменения опоры, если изменение тока превысило порог    21
+  conf_.KoeffCorrectISat=(uint16_t)vector[22];    // опора  %  от тока насыщения                            22
+  conf_.SetPoint=(uint16_t)vector[23];            // опора  ток                                             23
+  conf_.HopeDelayFP=(uint16_t)vector[24];         // Задержка  в первой точке линии                         24  //add 24/05/02
  } 
  if (flgСritical_section) critical_section_exit(&criticalSection);
    /*
@@ -3114,18 +3125,18 @@ void Scanner::testpiezomover(std::vector<int32_t> &vector)
 void Scanner::start_frqscan()
 {
   int16_t  SignalValue;
-  uint32_t  res_freq = 10000;
+  int32_t  res_freq = 10000;
   double_t a = 10000;
   int16_t  scan_index = 0;
-  uint32_t  current_freq = 0;
-  uint32_t freq;
+  int32_t  current_freq = 0;
+  int32_t freq;
   uint32_t freqstep;
   int16_t  delay;
-  uint32_t freqstart;
+  int32_t freqstart;
   int16_t  npoint;
     npoint=vector[1];
- freqstart=(uint32_t)vector[2];
-  freqstep=(uint32_t)vector[3];
+ freqstart=(int32_t)vector[2];
+  freqstep=(int32_t)vector[3];
      delay=vector[4];
   if (flgDebug)
   {  
@@ -3144,7 +3155,7 @@ void Scanner::start_frqscan()
       hardware->set_Freq(freq);
       sleep_ms(delay);
       hardware->getValuesFromAdc();
-      SignalValue = (int16_t)spiBuf[AmplPin];
+      SignalValue = (int32_t)spiBuf[AmplPin];
       data.emplace_back(freq);
       data.emplace_back(SignalValue); 
     }
@@ -3152,7 +3163,7 @@ void Scanner::start_frqscan()
     {
       current_freq =freq;
       sleep_ms(delay);
-      SignalValue = (int16_t) std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
+      SignalValue = (int32_t) std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
       data.emplace_back(current_freq);
       data.emplace_back(SignalValue);
     }

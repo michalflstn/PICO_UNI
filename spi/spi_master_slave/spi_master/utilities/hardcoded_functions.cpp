@@ -462,7 +462,7 @@ void HARDWARE::init_DACXY(uint8_t spiport) //spi port
 void HARDWARE::init_DACZ(uint8_t spiport)
 {
   dacz->initialize(spiport); //code 27
-  //dacz->setSpiProps();  // 241214
+  dacz->setSpiProps();  // 241214
 //  set_DACZ(0); //240921
  /*
   afc.clear();
@@ -987,7 +987,7 @@ void HARDWARE::set_DACZero()
 }
 void HARDWARE::set_DACXY(uint8_t channel, uint16_t value) 
 {
-//  dacxy->setSpiProps(); //241214 ??
+  dacxy->setSpiProps(); //241214 ??
   if (channel == 0)  dacxy->writeA(value);
   if (channel == 1)  dacxy->writeB(value);
   sleep_us(2);// 240405
