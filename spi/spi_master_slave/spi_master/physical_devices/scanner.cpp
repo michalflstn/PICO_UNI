@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
-#include <time.h>
+#include <chrono>
+//#include <time.h>
 #include "../loop/common_data/common_variables.hpp"
 #include "scanner.hpp"
 
@@ -73,13 +74,11 @@ void Scanner::sendStrData(std::string const& header,std::vector<uint16_t> &data,
   std::string afcc;
   afcc.clear();
   afcc=header;
-   //for (auto & element :data) 
   for (size_t j = 0; j < data.size(); ++j)
   {
- // afc +=',' + std::to_string(element);
    afcc +=separator + std::to_string(data[j]);
   }
-  afcc +=endln;//"\n";
+  afcc +=endln;
   std::cout << afcc;
   afcc.clear();
   sleep_ms(delay);
@@ -119,8 +118,7 @@ void Scanner::readFPGA()
   if (!flgVirtual)
   {
      hardware->getValuesFromAdc();
-  //logger(ptr, 8);
-   ZValue = (int16_t)spiBuf[ZPin];
+     ZValue = (int16_t)spiBuf[ZPin];
       switch (vector[1]) //прибор
    {
         case SFM: //SFM=0
@@ -152,8 +150,7 @@ void Scanner::readADC()
 {
   if (!flgVirtual)
   {
-     hardware->getValuesFromAdc();
-  //logger(ptr, 8);
+   hardware->getValuesFromAdc();
    ZValue = (int16_t)spiBuf[ZPin];
       switch (vector[1]) //прибор
    {
@@ -278,10 +275,24 @@ struct Config
 //main cycle
   for (uint32_t i = 0; i < nslowline; ++i)
   {
+    /*
+    #include <chrono>
+    auto begin = chrono::high_resolution_clock::now();    
+    int x;
+    cin >> x;      // wait for user input
+    auto end = chrono::high_resolution_clock::now();    
+    auto dur = end - begin;
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+
+*/
+  //  if (flgLocalDebug) 
+  
+    auto begin = std::chrono::high_resolution_clock::now();  
+   
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
     stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
-    reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
-    reststepy = conf_.betweenPoints_y % conf_.diskretinstep;
+    reststepx =         conf_.betweenPoints_x % conf_.diskretinstep;
+    reststepy =         conf_.betweenPoints_y % conf_.diskretinstep;
     switch (conf_.path)
     {
       case 0://X+
@@ -312,7 +323,7 @@ struct Config
         } 
         else
         { pos_fast += conf_.diskretinstep; }
-       sleep_us(delayFW);//241111
+       sleep_us(delayFW);
       }
       if (reststepfast != 0)// добирание остатка
       {
@@ -323,7 +334,7 @@ struct Config
         } 
         else
         { pos_fast += reststepfast; }
-        sleep_us(delayFW);//241111
+        sleep_us(delayFW);
       }
       //******************************************************************************
       sleep_us(conf_.pause);    // 50 CONST 50ms wait for start get data
@@ -414,6 +425,14 @@ struct Config
       sleep_us(delayBW);//241111
     }
     int16_t count0 = 0;
+    //if (flgLocalDebug) 
+     
+     auto end = std::chrono::high_resolution_clock::now();  
+     auto dur = end - begin;
+      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+     debugdata.emplace_back(ms);
+     sendStrData(code+std::to_string(DEBUG)+"time ",debugdata,100,true); 
+     
     while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
     {
      sleep_ms(10);
@@ -1777,6 +1796,7 @@ void Scanner::start_fastscan()
     }   
   while (!STOP)
   {
+    auto begin = std::chrono::high_resolution_clock::now();  
     for (uint32_t i = 0; i < nslowline; ++i)
     {
       for (uint32_t j = 0; j < nfastline; ++j)
@@ -1859,7 +1879,11 @@ void Scanner::start_fastscan()
         }
       }
     } //i
-  //  sendStrData("debug end fastscan");
+     auto end = std::chrono::high_resolution_clock::now();  
+     auto dur = end - begin;
+      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+     debugdata.emplace_back(ms);
+     sendStrData(code+std::to_string(DEBUG)+"time",debugdata,100,true); 
     std::string str=code+std::to_string(FASTSCANNING);
     sendStrData(str,vector_data,100,true);
     stop_scan();  //возврат в начальную точку скана

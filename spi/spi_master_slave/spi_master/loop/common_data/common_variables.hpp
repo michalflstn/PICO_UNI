@@ -49,6 +49,7 @@
 #define SET_PID_GAINFPGA         39  //не нужен 
 #define RESONANCE                40  //AD9833 
 #define GridMovetoNextScan       41
+#define LOCALDEBUG               42 // debug  в конкретном месте
 
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
@@ -131,6 +132,7 @@ extern bool flgParamsUpdated;
 extern bool flgСritical_section;
 extern bool flgUseUART;  
 extern bool flgUseFPGA;       //Использовать ПЛИС
+extern bool flgLocalDebug;  
 extern uint8_t SignLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude

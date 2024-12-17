@@ -1,7 +1,7 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.12.16.3 BiasV_for_WB_new delphi UseCore1";
+std::string  SOFTVERSION="24.12.17.1 BiasV_for_WB_new delphi UseCore1";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=BB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
@@ -43,6 +43,7 @@ bool    flgParamsUpdated=false;
 bool    flgСritical_section=true;
 uint8_t flgDebugLevel = 3;      // уровень отладки
 bool    flgUseUART = false;     // использовать UART для передачи данных
+bool    flgLocalDebug=false;    // локальная отладка
 
 //данные для симуляции 
 uint8_t SignLoop;
