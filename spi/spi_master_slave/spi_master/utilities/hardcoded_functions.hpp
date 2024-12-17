@@ -62,6 +62,7 @@ private:
  void AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len);
 
 public:
+   uint32_t LOOPGain;
    LinearDriverBase  *linearDriver;
 
    HARDWARE(ConfigHardWare confighardware);

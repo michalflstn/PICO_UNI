@@ -158,6 +158,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
    init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
    uint32_t gain=7; 
+   LOOPGain=gain;
    set_GainPID(gain); // not virtual; not debug!
    retract();         //втянуть    
    init_DACZ(confighardwarev0.DACZPort);      //инициирование ЦАП3  DACZ
@@ -214,6 +215,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
   init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
   init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
   uint32_t gain=7; 
+  LOOPGain=gain;
   set_GainPID(gain); // not virtual; not debug!
   retract();         //втянуть    
   init_DACZ(confighardwarev0.DACZPort);      //инициирование ЦАП3  DACZ
@@ -789,6 +791,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
 void HARDWARE::set_GainPID(uint32_t gain)
 { 
     uint8_t ti; 
+
    switch (HARDWAREVERSION)  
   {
   case BB:
@@ -819,16 +822,39 @@ void HARDWARE::set_GainPID(uint32_t gain)
   case WB:  
      if (!flgVirtual) 
      { 
-      ti=(uint8_t)gain;
-      uint8_t intBuf[1]; 
-      decoder.activePort(6);
-      Spi::setProperties(8, 0, 0);
-      intBuf[0] = 0;
-      spi_write_blocking(spi_default, intBuf, 1); 
-      intBuf[0] = ti;
-      spi_write_blocking(spi_default, intBuf, 1); 
-      decoder.activePort(7);
-     }
+      if (LOOPGain<=gain)
+      {
+       for (size_t i = LOOPGain; i <= gain; i++)
+       {
+        ti=(uint8_t)i;
+        uint8_t intBuf[1]; 
+        decoder.activePort(6);
+        Spi::setProperties(8, 0, 0);
+        intBuf[0] = 0;
+        spi_write_blocking(spi_default, intBuf, 1); 
+        intBuf[0] = ti;
+        spi_write_blocking(spi_default, intBuf, 1); 
+        decoder.activePort(7);  
+        sleep_ms(10);
+       }
+      }
+      else
+      {      
+        for (size_t i = LOOPGain; i > gain; i--)
+        {
+         ti=(uint8_t)i;
+         uint8_t intBuf[1]; 
+         decoder.activePort(6);
+         Spi::setProperties(8, 0, 0);
+         intBuf[0] = 0;
+         spi_write_blocking(spi_default, intBuf, 1); 
+         intBuf[0] = ti;
+         spi_write_blocking(spi_default, intBuf, 1); 
+         decoder.activePort(7);
+          sleep_ms(10);  
+        }
+      }
+      }
      if (flgDebug)  
      {
        afc.clear();
@@ -852,6 +878,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
    afc.clear();
    sleep_ms(100); 
   }  
+  LOOPGain=gain;
  }
  void HARDWARE::set_GainPIDFPGA(uint32_t gain)
  { 
@@ -926,14 +953,38 @@ void HARDWARE::set_GainPID(uint16_t gain)
     { 
      if (HARDWAREVERSION==WB)
      {
-      uint8_t intBuf[1]; 
-      decoder.activePort(6);
-      Spi::setProperties(8, 0, 0);
-      intBuf[0] = 0;
-      spi_write_blocking(spi_default, intBuf, 1); 
-      intBuf[0] = ti;
-      spi_write_blocking(spi_default, intBuf, 1); 
-      decoder.activePort(7);
+       if (LOOPGain<=gain)
+      {
+       for (size_t i = LOOPGain; i <= gain; i++)
+       {
+        ti=(uint8_t)i;
+        uint8_t intBuf[1]; 
+        decoder.activePort(6);
+        Spi::setProperties(8, 0, 0);
+        intBuf[0] = 0;
+        spi_write_blocking(spi_default, intBuf, 1); 
+        intBuf[0] = ti;
+        spi_write_blocking(spi_default, intBuf, 1); 
+        decoder.activePort(7);  
+        sleep_ms(10);
+       }
+      }
+      else
+      {      
+        for (size_t i = LOOPGain; i > gain; i--)
+        {
+         ti=(uint8_t)i;
+         uint8_t intBuf[1]; 
+         decoder.activePort(6);
+         Spi::setProperties(8, 0, 0);
+         intBuf[0] = 0;
+         spi_write_blocking(spi_default, intBuf, 1); 
+         intBuf[0] = ti;
+         spi_write_blocking(spi_default, intBuf, 1); 
+         decoder.activePort(7);
+          sleep_ms(10);  
+        }
+      }
      }
      else //Use FPGA
      {

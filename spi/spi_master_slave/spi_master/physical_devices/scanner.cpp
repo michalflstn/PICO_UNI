@@ -431,7 +431,7 @@ struct Config
      auto dur = end - begin;
       auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
      debugdata.emplace_back(ms);
-     sendStrData(code+std::to_string(DEBUG)+"time ",debugdata,100,true); 
+     sendStrData(code+std::to_string(DEBUG)+"time ms ",debugdata,100,true); 
      
     while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
     {
@@ -1746,7 +1746,8 @@ void Scanner::start_fastscan()
   uint8_t  portslow;
   uint16_t pos_fast;
   uint16_t pos_slow;
-
+  uint16_t pos_fast_start;
+  uint16_t pos_slow_start;
    DrawDone=true;
   switch (conf_.path)
   {
@@ -1756,6 +1757,8 @@ void Scanner::start_fastscan()
        portslow = porty;
        pos_fast = pos_.x;
        pos_slow = pos_.y;
+       pos_slow_start=pos_slow;
+       pos_fast_start=pos_fast;
       nfastline = conf_.nPoints_x;
       nslowline = conf_.nPoints_y;
       break;
@@ -1766,6 +1769,8 @@ void Scanner::start_fastscan()
        portslow = portx;
        pos_fast = pos_.y;
        pos_slow = pos_.x;
+       pos_slow_start=pos_slow;
+       pos_fast_start=pos_fast;
       nfastline = conf_.nPoints_y;
       nslowline = conf_.nPoints_x;
       break;
@@ -1797,9 +1802,9 @@ void Scanner::start_fastscan()
   while (!STOP)
   {
     auto begin = std::chrono::high_resolution_clock::now();  
-    for (uint32_t i = 0; i < nslowline; ++i)
+    for (uint32_t i = 0; i < nslowline; ++i) //slow
     {
-      for (uint32_t j = 0; j < nfastline; ++j)
+      for (uint32_t j = 0; j < nfastline; ++j) //fast
       {
         for (uint32_t k = 0; k < stepsfastline; ++k) 
         {
@@ -1833,9 +1838,10 @@ void Scanner::start_fastscan()
         {
           vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
         }
-      } //j
+      } //j fast
  // возврат в начальную точку линии
-      for (uint32_t j = 0; j < stepsfastline * nfastline; ++j)
+      for (uint32_t j = 0; j < stepsfastline * nfastline; ++j)//??
+ //     for (uint32_t j = 0; j < stepsfastline; ++j)
       {
         if (!flgVirtual)
         {
@@ -1854,7 +1860,7 @@ void Scanner::start_fastscan()
         }
         else { pos_fast -= reststepfast; }
         sleep_us(conf_.delayB);
-      }
+      } // x0
       if ((nslowline - 1 - i) > 0)  //если непоследняя линия
       {
         for (uint32_t n = 0; n < stepsslowline; ++n) 
@@ -1871,22 +1877,39 @@ void Scanner::start_fastscan()
         {
           if (!flgVirtual) 
           {
-            pos_slow -= reststepslow;
+            pos_slow += reststepslow;
             hardware->set_DACXY(portslow, pos_slow);
           }
-          else { pos_slow -= reststepslow; }
+          else { pos_slow += reststepslow; }
           sleep_us(conf_.delayF);
         }
-      }
-    } //i
+      } //y next
+    } // fast i
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
       auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
      debugdata.emplace_back(ms);
-     sendStrData(code+std::to_string(DEBUG)+"time",debugdata,100,true); 
+     sendStrData(code+std::to_string(DEBUG)+"time ms ",debugdata,200,true); 
     std::string str=code+std::to_string(FASTSCANNING);
     sendStrData(str,vector_data,100,true);
+   switch (conf_.path) //add 241217
+   {
+    case 0:
+    {
+      pos_.x = pos_fast;
+      pos_.y = pos_slow;
+      break;
+    }
+    case 1:
+    {
+      pos_.x = pos_slow;
+      pos_.y = pos_fast;
+      break;
+    }
+   }
     stop_scan();  //возврат в начальную точку скана
+    pos_slow=pos_slow_start; //add 241217
+    pos_fast=pos_fast_start;
     if (conf_.flgOneFrame == 1) 
     { 
       STOP = true;
