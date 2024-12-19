@@ -224,12 +224,13 @@ struct Config
 */
   prev_point = pos_; //запоминание начальной точки скана
   vector_data.clear();
-  if (flgDebug)
+ // if (flgDebug)
   {
-   for (int j = 0; j <= 17; ++j)
+  /* for (int j = 0; j <= 17; ++j)
    {
     debugdata.emplace_back(vector[j]);
    }
+   */
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
    sendStrData(code+std::to_string(DEBUG)+" scan parameters",debugdata,100,true);
@@ -273,6 +274,7 @@ struct Config
     }
   }
 //main cycle
+auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   {
     /*
@@ -430,9 +432,13 @@ struct Config
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
       auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+    if (flgTiming)
+    {
      debugdata.emplace_back(ms);
-     sendStrData(code+std::to_string(DEBUG)+"time ms ",debugdata,100,true); 
-     
+     debugdata.emplace_back(pos_fast);
+     debugdata.emplace_back(pos_slow);
+     sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
+    } 
     while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
     {
      sleep_ms(10);
@@ -524,6 +530,7 @@ struct Config
       }
     }
   } 
+// end scan;  
   switch (conf_.path) 
   {
     case 0:
@@ -540,6 +547,17 @@ struct Config
     }
   }
   stop_scan();  //возврат в начальную точку скана
+   
+    if (flgTiming)
+    {  
+     auto endscan = std::chrono::high_resolution_clock::now();  
+     auto dur = endscan - beginscan;
+      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+     debugdata.emplace_back(ms);
+     debugdata.emplace_back(pos_.x);
+     debugdata.emplace_back(pos_.y);
+     sendStrData(code+std::to_string(DEBUG)+"time per scan  ms ",debugdata,100,true); 
+    } 
   sleep_ms(300); //200
   int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
@@ -548,10 +566,10 @@ struct Config
     count++;
   } 
   TheadDone = false;
-  hardware->green();
+//  hardware->green();
   sendStrData(code+std::to_string(END)+"end"); 
-  hardware->activateDark();
-  hardware->dark();
+//  hardware->activateDark();
+ // hardware->dark();
 }
 void Scanner::start_scanlin() //сканирование
 {
@@ -825,7 +843,8 @@ void Scanner::start_scanlin() //сканирование
       }
     }
   } 
-  hardware->blue();
+  //end scan
+ // hardware->blue();
   switch (conf_.path)
   {
     case 0:
@@ -851,9 +870,9 @@ void Scanner::start_scanlin() //сканирование
     count++;
   } 
   TheadDone = false;
-  hardware->green();
+//  hardware->green();
   sendStrData(code+std::to_string(END)+"end"); 
-   hardware->dark();
+//   hardware->dark();
 }
 
 void Scanner::start_hopingscan()
@@ -1731,7 +1750,7 @@ void Scanner::start_fastscan()
    }
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
-   debugdata.emplace_back(conf_.flgOneFrame);
+  // debugdata.emplace_back(conf_.flgOneFrame);
    sendStrData(code+std::to_string(DEBUG)+" fastscan parameters",debugdata,100,true);
   }
   uint16_t stepsx;
@@ -1798,7 +1817,8 @@ void Scanner::start_fastscan()
         reststepslow  = reststepx;
         break;
       }
-    }   
+    } 
+     auto beginscan = std::chrono::high_resolution_clock::now();    
   while (!STOP)
   {
     auto begin = std::chrono::high_resolution_clock::now();  
@@ -1841,7 +1861,6 @@ void Scanner::start_fastscan()
       } //j fast
  // возврат в начальную точку линии
       for (uint32_t j = 0; j < stepsfastline * nfastline; ++j)//??
- //     for (uint32_t j = 0; j < stepsfastline; ++j)
       {
         if (!flgVirtual)
         {
@@ -1884,14 +1903,17 @@ void Scanner::start_fastscan()
           sleep_us(conf_.delayF);
         }
       } //y next
-    } // fast i
-     auto end = std::chrono::high_resolution_clock::now();  
-     auto dur = end - begin;
-      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-     debugdata.emplace_back(ms);
-     sendStrData(code+std::to_string(DEBUG)+"time ms ",debugdata,200,true); 
+    } // slow i
+     if (flgTiming)
+     { 
+       auto end = std::chrono::high_resolution_clock::now();  
+       auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+       debugdata.emplace_back(ms);
+       sendStrData(code+std::to_string(DEBUG)+"time per scan ms ",debugdata,200,true); 
+     } 
     std::string str=code+std::to_string(FASTSCANNING);
-    sendStrData(str,vector_data,100,true);
+    sendStrData(str,vector_data,200,true);  //100
    switch (conf_.path) //add 241217
    {
     case 0:
@@ -1914,6 +1936,17 @@ void Scanner::start_fastscan()
     { 
       STOP = true;
     };
+    if (flgTiming)
+     { 
+       auto end = std::chrono::high_resolution_clock::now();  
+       auto dur = end - beginscan;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+       debugdata.emplace_back(ms);
+       debugdata.emplace_back(pos_.x);
+       debugdata.emplace_back(pos_.y);
+      sendStrData(code+std::to_string(DEBUG)+"time per scan2 ms ",debugdata,200,true); 
+     } 
+
   } //stop
 //  blue();
    STOP=false;

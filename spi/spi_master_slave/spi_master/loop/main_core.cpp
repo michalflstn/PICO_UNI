@@ -48,6 +48,10 @@ void MainCore::launchOnCore1()
         afc.clear();
         sleep_ms(100); 
         break;
+  case LOCALTIMING:
+        ALGCODE=ALGNONE;
+        flgTiming=(bool)vector[1];
+        break;
   case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
         flgСritical_section=(bool)vector[1]; 
         break;
