@@ -67,6 +67,18 @@ void Scanner::sendStrData(std::string const& header,std::vector<int16_t> &data, 
   sleep_ms(delay);
   if (flg) data.clear();
 }
+void Scanner::sendStrData(std::string const& header,std::string  data,const uint16_t delay,const bool flg)
+{
+  std::string afcc;
+  afcc.clear();
+  afcc=header;
+  afcc +=data;
+  afcc +=endln;
+  std::cout << afcc;
+  afcc.clear();
+  sleep_ms(delay);
+  if (flg) data.clear();
+}
 
 void Scanner::sendStrData(std::string const& header,std::vector<uint16_t> &data, const uint16_t delay, const bool flg)
 {
@@ -249,6 +261,8 @@ struct Config
   uint8_t  portslow;
   uint16_t pos_fast;
   uint16_t pos_slow;
+  
+  std::string string_data;
 
    DrawDone=true;
   switch (conf_.path)
@@ -289,8 +303,10 @@ auto beginscan = std::chrono::high_resolution_clock::now();
 
 */
  
-    auto begin = std::chrono::high_resolution_clock::now();  
-   
+    auto begin = std::chrono::high_resolution_clock::now(); 
+
+   std::string string_dataout;
+
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
     stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
     reststepx =         conf_.betweenPoints_x % conf_.diskretinstep;
@@ -344,23 +360,32 @@ auto beginscan = std::chrono::high_resolution_clock::now();
       if (!flgVirtual)
       {
         hardware->getValuesFromAdc();
-        vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // get Z from adc
+       // vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // get Z from adc
+        int32_t ZValue=ZMaxValue-(int16_t) spiBuf[ZPin];
+        int32_t SignalValue;
+        string_dataout+=separator+std::to_string(ZValue);
         if (conf_.size == 2)
           switch (conf_.method)
           {
             case 3://phase 
             {
-              vector_data.emplace_back((int16_t) spiBuf[1]); 
+              SignalValue=(int16_t) spiBuf[ZPin];
+              string_dataout+=separator+std::to_string(SignalValue);
+            //  vector_data.emplace_back((int16_t) spiBuf[1]); 
               break;
             }
             case 4://ampl
             {
-              vector_data.emplace_back((int16_t) spiBuf[AmplPin]); 
+              SignalValue=(int16_t) spiBuf[AmplPin];
+              string_dataout+=separator+std::to_string(SignalValue); 
+            //  vector_data.emplace_back((int16_t) spiBuf[AmplPin]); 
               break;
             }
             case 7://current
             {
-              vector_data.emplace_back((int16_t) spiBuf[IPin]); 
+              SignalValue=(int16_t) spiBuf[IPin];
+              string_dataout+=separator+std::to_string(SignalValue);
+            //  vector_data.emplace_back((int16_t) spiBuf[IPin]); 
               break;
             }
           }
@@ -369,11 +394,15 @@ auto beginscan = std::chrono::high_resolution_clock::now();
       {
        double_t w;
        w= 10*M_PI/(nfastline);   
-       if (conf_.method!=oneline) vector_data.emplace_back(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));  // get Z from adc
-       else   vector_data.emplace_back(int16_t(10000.0 * (sin(w * j)))); 
+       if (conf_.method!=oneline) string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));  // get Z from adc
+       else  
+       {
+         string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));
+       }// vector_data.emplace_back(int16_t(10000.0 * (sin(w * j)))); 
         if (conf_.size == 2)  //дополнительный сигнал
         {
-          vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
+          string_dataout=string_dataout+separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));
+         // vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
         }
       }
     }
@@ -445,7 +474,9 @@ auto beginscan = std::chrono::high_resolution_clock::now();
      count0++;
     } 
     DrawDone = false;
-    sendStrData(code+std::to_string(SCANNING),vector_data,60,true); //240314  60
+    //sendStrData(code+std::to_string(SCANNING),vector_data,60,true); //240314  60
+   
+     sendStrData(code+std::to_string(SCANNING),string_dataout,60,true); //240314  60
 
     if (CONFIG_UPDATE)
     {
@@ -626,6 +657,7 @@ void Scanner::start_scanlin() //сканирование
   }
   for (size_t i = 0; i < nslowline; ++i)
   {
+    std::string string_dataout;
     for (uint32_t j = 0; j < nfastline; ++j)
     {
     switch (conf_.path)
@@ -676,23 +708,25 @@ void Scanner::start_scanlin() //сканирование
       if (!flgVirtual)
       {
         hardware->getValuesFromAdc();
-        vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // get Z from adc
+        int32_t ZValue=ZMaxValue-(int16_t) spiBuf[ZPin];
+        int32_t SignalValue;
+        string_dataout+=separator+std::to_string(ZValue);
         if (conf_.size == 2)
           switch (conf_.method)
           {
             case 3://phase 
             {
-              vector_data.emplace_back((int16_t) spiBuf[1]); 
+              string_dataout+=separator+std::to_string((int16_t) spiBuf[1]); 
               break;
             }
             case 4://ampl
             {
-              vector_data.emplace_back((int16_t) spiBuf[AmplPin]); 
+              string_dataout+=separator+std::to_string((int16_t) spiBuf[AmplPin]); 
               break;
             }
             case 7://current
             {
-              vector_data.emplace_back((int16_t) spiBuf[IPin]); 
+              string_dataout+=separator+std::to_string((int16_t) spiBuf[IPin]); 
               break;
             }
           }
@@ -701,10 +735,10 @@ void Scanner::start_scanlin() //сканирование
       {
          double_t w;
          w= 10*M_PI/(nfastline);   
-         if (conf_.method!=oneline) vector_data.emplace_back(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));  // get Z from adc
+         if (conf_.method!=oneline) string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));  
          if (conf_.size == 2)  //дополнительный сигнал
          {
-          vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
+          string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));  
          }
       }
     }
@@ -763,8 +797,8 @@ void Scanner::start_scanlin() //сканирование
      count0++;
     } 
      DrawDone = false;
-  
-    sendStrData(code+std::to_string(SCANNING),vector_data,40,true); //100
+     sendStrData(code+std::to_string(SCANNING),string_dataout,60,true);
+   // sendStrData(code+std::to_string(SCANNING),vector_data,40,true); //100
  
     if (CONFIG_UPDATE)
     {
@@ -980,7 +1014,8 @@ struct Config
     auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   { 
-      auto begin = std::chrono::high_resolution_clock::now();  
+     std::string string_dataout;
+    auto begin = std::chrono::high_resolution_clock::now();  
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
     stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
     reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
@@ -1056,23 +1091,28 @@ struct Config
       {
         hardware->getValuesFromAdc(); 
         ZCur=(int16_t) spiBuf[ZPin];
-        vector_data.emplace_back(ZMaxValue-ZCur);     // считать  Z invertCur=
+   //     vector_data.emplace_back(ZMaxValue-ZCur);     // считать  Z invertCur=
+        int32_t ZValue=ZMaxValue-ZCur;
+        int32_t SignalValue;
+        string_dataout+=separator+std::to_string(ZValue);
+     
         switch (conf_.method)
           //added signal  Const  BackPass=2;    //PM  Const  Phase=3;  Const  UAM=4;   //Force Image
         {
           case 3://phase !!!!
           {
-            vector_data.emplace_back((int16_t) spiBuf[1]);
+           string_dataout+=separator+std::to_string((int16_t) spiBuf[1]);
+          //  vector_data.emplace_back((int16_t) spiBuf[1]);
             break;
           }
           case 4://ampl
           {
-            vector_data.emplace_back((int16_t) spiBuf[AmplPin]);
+            string_dataout+=separator+std::to_string((int16_t)AmplPin);
             break;
           }
           case 7://current
           {
-            vector_data.emplace_back((int16_t) spiBuf[IPin]);
+            string_dataout+=separator+std::to_string((int16_t)IPin);
             break;
           }
         }
@@ -1080,11 +1120,13 @@ struct Config
       else
       {
         double_t w;
-        w= 10*M_PI/(nfastline);   
-        vector_data.emplace_back(int16_t(10000.0*(sin(w*j) + sin(w* i ))));  // get Z from adc
+        w= 10*M_PI/(nfastline);  
+         string_dataout+=separator+std::to_string(int16_t(10000.0*(sin(w*j) + sin(w* i )))); 
+    //    vector_data.emplace_back(int16_t(10000.0*(sin(w*j) + sin(w* i ))));  // get Z from adc
         if (conf_.size == 2)                                                   // added signal
         {
-          vector_data.emplace_back(int16_t(10000.0*(sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
+         string_dataout+=separator+std::to_string(int16_t(10000.0*(sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
+      //   vector_data.emplace_back(int16_t(10000.0*(sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
         }
       }
     } //fast line
@@ -1159,12 +1201,14 @@ struct Config
       {
         hardware->getValuesFromAdc();
         ISatCur=(int16_t) spiBuf[IPin];
-        vector_data.emplace_back(ISatCur);
+        string_dataout+=separator+std::to_string(ISatCur); 
+   //     vector_data.emplace_back(ISatCur);
       }
       else
       {
        ISatCur=ISatCur-int16_t(100*rand() % 5);// random_num;  //add 24/03/11
-       vector_data.emplace_back(ISatCur);
+       string_dataout+=separator+std::to_string(ISatCur);
+      // vector_data.emplace_back(ISatCur);
       }
 // auto correction setpoint for sicm
      if (conf_.flgAutoUpdateSP) 
@@ -1189,8 +1233,8 @@ struct Config
         sleep_ms(delayHope);   
        }
      }
-     
-     vector_data.emplace_back(round(conf_.SetPoint));
+      string_dataout+=separator+std::to_string(round(conf_.SetPoint));
+   //  vector_data.emplace_back(round(conf_.SetPoint));
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
@@ -1209,7 +1253,8 @@ struct Config
      } 
       DrawDone = false;
 //*****************************************************************
-    sendStrData(code+std::to_string(SCANNING),vector_data,60,true); //send data 60
+    sendStrData(code+std::to_string(SCANNING),string_dataout,60,true);
+   // sendStrData(code+std::to_string(SCANNING),vector_data,60,true); //send data 60
 //*****************************************************************
     if (STOP)  // stop
     {
@@ -1847,6 +1892,7 @@ void Scanner::start_fastscan()
      auto beginscan = std::chrono::high_resolution_clock::now();    
   while (!STOP)
   {
+    std::string string_dataout;
     auto begin = std::chrono::high_resolution_clock::now();  
     for (uint32_t i = 0; i < nslowline; ++i) //slow
     {
@@ -1878,11 +1924,13 @@ void Scanner::start_fastscan()
         if (!flgVirtual)
         {
           hardware->getValuesFromAdc();
-          vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // считать Z из АЦП
+           string_dataout+=separator+std::to_string(ZMaxValue-(int16_t) spiBuf[ZPin]); 
+      //    vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // считать Z из АЦП
         }
         else
         {
-          vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
+          string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
+      //    vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
         }
       } //j fast
  // возврат в начальную точку линии
@@ -1939,7 +1987,8 @@ void Scanner::start_fastscan()
        sendStrData(code+std::to_string(DEBUG)+"time per scan ms ",debugdata,200,true); 
      } 
     //std::string str=code+std::to_string(FASTSCANNING);
-    sendStrData(code+std::to_string(FASTSCANNING),vector_data,200,true);  //100
+      sendStrData(code+std::to_string(SCANNING),string_dataout,200,true);
+  //  sendStrData(code+std::to_string(FASTSCANNING),vector_data,200,true);  //100
    switch (conf_.path) //add 241217
    {
     case 0:

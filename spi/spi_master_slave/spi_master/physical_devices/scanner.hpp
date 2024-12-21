@@ -55,7 +55,10 @@ private:
   void sendStrData(std::string const& header,std::vector<int32_t>  &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<uint16_t> &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<int16_t>  &data, const uint16_t delay,const bool flg); //flg clear data
+  void sendStrData(std::string const& header,const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header);
+  void sendStrData(std::string const& header,std::string  data,const uint16_t delay,const bool flg);
+
   void sendData(uint8_t algcode, std::vector<int16_t>  &data, const uint16_t delay,const bool flg);
 
 public:
