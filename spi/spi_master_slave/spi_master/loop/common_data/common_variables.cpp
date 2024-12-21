@@ -14,7 +14,7 @@ std::atomic<int16_t>     ALGCODE;
 std::atomic<bool>  CONFIG_UPDATE;
 std::atomic<bool>  STOP;
 std::atomic<bool>  TheadDone;   //need dor synchronization with PC 
-std::atomic<bool>  DrawDone;    //need dor synchronization with PC 
+std::atomic<bool>  DrawDone=true;    //need dor synchronization with PC 
 std::atomic<bool>  ADC_IS_READY_TO_READ = true;
 std::atomic<bool>  flgVirtual = false; // start value!!! setPIDGain
 std::atomic<bool>  flgDebug   = false; // strat value!!!

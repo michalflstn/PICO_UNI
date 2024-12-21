@@ -977,6 +977,7 @@ struct Config
   }
 //****************************************************************
 //   start  
+   DrawDone=true;//add 241221
     auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   { 
@@ -1202,7 +1203,7 @@ struct Config
      sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
     } 
      int16_t count0 = 0;
-     while ((!DrawDone) || (count0<20))//ожидание ответа ПК для синхронизации
+     while ((!DrawDone) )//|| (count0<20))//ожидание ответа ПК для синхронизации
      {
       sleep_ms(10);
       count0++;
