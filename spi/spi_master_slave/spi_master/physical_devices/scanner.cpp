@@ -439,7 +439,7 @@ auto beginscan = std::chrono::high_resolution_clock::now();
      debugdata.emplace_back(pos_slow);
      sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
     } 
-    while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
+    while ((!DrawDone))// 241221 || (count0<20) )//ожидание ответа ПК для синхронизации
     {
      sleep_ms(10);
      count0++;
@@ -560,7 +560,7 @@ auto beginscan = std::chrono::high_resolution_clock::now();
     } 
   sleep_ms(300); //200
   int16_t count = 0;
-  while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
+  while ((!TheadDone) || (count<30) )// 20 //ожидание ответа ПК для синхронизации
   {
     sleep_ms(100);
     count++;
@@ -978,10 +978,10 @@ struct Config
 //****************************************************************
 //   start  
    DrawDone=true;//add 241221
-    auto beginscan = std::chrono::high_resolution_clock::now();  
+   auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   { 
-      auto begin = std::chrono::high_resolution_clock::now();  
+     auto begin = std::chrono::high_resolution_clock::now();  
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
     stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
     reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
@@ -1005,9 +1005,6 @@ struct Config
         break;
       }
     }  
-   for (uint32_t i = 0; i < nslowline; ++i)
-   {
-    auto begin = std::chrono::high_resolution_clock::now();  
     for (uint32_t j = 0; j < nfastline; ++j)
     {
       if (!flgVirtual)
@@ -1151,7 +1148,7 @@ struct Config
         }
       }
      }   //next line 
-   }
+  
  //  
       sleep_ms(conf_.HopeDelayFP);  //400
       sleep_us(conf_.pause);  
