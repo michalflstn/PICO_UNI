@@ -468,7 +468,7 @@ auto beginscan = std::chrono::high_resolution_clock::now();
      debugdata.emplace_back(pos_slow);
      sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
     } 
-    while ((!DrawDone) || (count0<20) )//ожидание ответа ПК для синхронизации
+    while ((!DrawDone))// 241221 || (count0<20) )//ожидание ответа ПК для синхронизации
     {
      sleep_ms(10);
      count0++;
@@ -1038,9 +1038,6 @@ struct Config
         break;
       }
     }  
-   for (uint32_t i = 0; i < nslowline; ++i)
-   {
-    auto begin = std::chrono::high_resolution_clock::now();  
     for (uint32_t j = 0; j < nfastline; ++j)
     {
       if (!flgVirtual)
@@ -1191,7 +1188,7 @@ struct Config
         }
       }
      }   //next line 
-   }
+   
  //  
       sleep_ms(conf_.HopeDelayFP);  //400
       sleep_us(conf_.pause);  
@@ -1245,7 +1242,7 @@ struct Config
      sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
     } 
      int16_t count0 = 0;
-     while ((!DrawDone) || (count0<20))//ожидание ответа ПК для синхронизации
+     while ((!DrawDone))// || (count0<20))//ожидание ответа ПК для синхронизации
      {
       sleep_ms(10);
       count0++;
