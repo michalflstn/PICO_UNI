@@ -289,24 +289,11 @@ struct Config
     }
   }
 //main cycle
-auto beginscan = std::chrono::high_resolution_clock::now();  
+  auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   {
-    /*
-    #include <chrono>
-    auto begin = chrono::high_resolution_clock::now();    
-    int x;
-    cin >> x;      // wait for user input
-    auto end = chrono::high_resolution_clock::now();    
-    auto dur = end - begin;
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-
-*/
- 
     auto begin = std::chrono::high_resolution_clock::now(); 
-
-   std::string string_dataout;
-
+    std::string string_dataout;
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
     stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
     reststepx =         conf_.betweenPoints_x % conf_.diskretinstep;
@@ -360,7 +347,6 @@ auto beginscan = std::chrono::high_resolution_clock::now();
       if (!flgVirtual)
       {
         hardware->getValuesFromAdc();
-       // vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // get Z from adc
         int32_t ZValue=ZMaxValue-(int16_t) spiBuf[ZPin];
         int32_t SignalValue;
         string_dataout+=separator+std::to_string(ZValue);
@@ -371,21 +357,18 @@ auto beginscan = std::chrono::high_resolution_clock::now();
             {
               SignalValue=(int16_t) spiBuf[ZPin];
               string_dataout+=separator+std::to_string(SignalValue);
-            //  vector_data.emplace_back((int16_t) spiBuf[1]); 
               break;
             }
             case 4://ampl
             {
               SignalValue=(int16_t) spiBuf[AmplPin];
               string_dataout+=separator+std::to_string(SignalValue); 
-            //  vector_data.emplace_back((int16_t) spiBuf[AmplPin]); 
               break;
             }
             case 7://current
             {
               SignalValue=(int16_t) spiBuf[IPin];
               string_dataout+=separator+std::to_string(SignalValue);
-            //  vector_data.emplace_back((int16_t) spiBuf[IPin]); 
               break;
             }
           }
@@ -398,12 +381,11 @@ auto beginscan = std::chrono::high_resolution_clock::now();
        else  
        {
          string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));
-       }// vector_data.emplace_back(int16_t(10000.0 * (sin(w * j)))); 
-        if (conf_.size == 2)  //дополнительный сигнал
-        {
-          string_dataout=string_dataout+separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));
-         // vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
-        }
+       }
+       if (conf_.size == 2)  //дополнительный сигнал
+       {
+         string_dataout=string_dataout+separator+std::to_string(int16_t(10000.0 * (sin(w*j) + sin(w* i ))));
+       }
       }
     }
     switch (conf_.path)
@@ -444,7 +426,6 @@ auto beginscan = std::chrono::high_resolution_clock::now();
       else  { pos_fast -= conf_.diskretinstep; }
       sleep_us(delayBW);
     }
-
     if (reststepfast != 0)// добирание остатка
     {
       if (!flgVirtual)
@@ -455,9 +436,6 @@ auto beginscan = std::chrono::high_resolution_clock::now();
       else  { pos_fast -= reststepfast; }
       sleep_us(delayBW);//241111
     }
-    int16_t count0 = 0;
-    //if (flgLocalDebug) 
-     
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
       auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
@@ -468,25 +446,24 @@ auto beginscan = std::chrono::high_resolution_clock::now();
      debugdata.emplace_back(pos_slow);
      sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
     } 
+    int16_t count0 = 0;
     while ((!DrawDone))// 241221 || (count0<20) )//ожидание ответа ПК для синхронизации
     {
      sleep_ms(10);
      count0++;
     } 
     DrawDone = false;
-    //sendStrData(code+std::to_string(SCANNING),vector_data,60,true); //240314  60
-   
-     sendStrData(code+std::to_string(SCANNING),string_dataout,60,true); //240314  60
+    sendStrData(code+std::to_string(SCANNING),string_dataout,60,true); //240314  60
 
     if (CONFIG_UPDATE)
     {
       CONFIG_UPDATE = false;
       conf_.delayF  = vupdateparams[1];
-      delayFW=conf_.delayF;//241111
+      delayFW=conf_.delayF;
       conf_.delayB  = vupdateparams[2];
       delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100); 
-      hardware->set_GainPID((uint16_t)vupdateparams[3]);//240320
+      hardware->set_GainPID((uint16_t)vupdateparams[3]);
       conf_.diskretinstep = vupdateparams[4]; 
       if (flgDebug)
       {
@@ -583,7 +560,7 @@ auto beginscan = std::chrono::high_resolution_clock::now();
     {  
      auto endscan = std::chrono::high_resolution_clock::now();  
      auto dur = endscan - beginscan;
-      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
      debugdata.emplace_back(ms);
      debugdata.emplace_back(pos_.x);
      debugdata.emplace_back(pos_.y);
@@ -1010,7 +987,7 @@ struct Config
   }
 //****************************************************************
 //   start  
-    auto beginscan = std::chrono::high_resolution_clock::now();  
+  auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   { 
      std::string string_dataout;
@@ -1042,11 +1019,11 @@ struct Config
     {
       if (!flgVirtual)
       {
-        if (flgMaxJump)  hardware->retract();           //втянуться на max
+        if (flgMaxJump)  hardware->retract(); //втянуться на max
         else       
         {
          DACZ0= ZCur-ZJump;
-         if (ZCur<ZJump) DACZ0=0;  //240220
+         if (ZCur<ZJump) DACZ0=0; 
          hardware->retract(DACZ0); //втянуться на ZJump
         }        
       }   
@@ -1059,7 +1036,6 @@ struct Config
           pos_fast += conf_.diskretinstep;
         } 
         else { pos_fast += conf_.diskretinstep; }
-       // sleep_us(conf_.delayF);
         sleep_us(delayFW);
       }
       if (reststepfast != 0)
@@ -1070,8 +1046,7 @@ struct Config
           hardware->set_DACXY(portfast, pos_fast);
         }
         else { pos_fast += reststepfast; }
-       // sleep_us(conf_.delayF);
-         sleep_us(delayFW);
+        sleep_us(delayFW);
       }
   //******************************************************************************
       if (!flgVirtual)
@@ -1079,7 +1054,6 @@ struct Config
         if (flgMaxJump) hardware->protract();// вытянуться
         else            hardware->protract();// protract(0, ZJump);// вытянуться на ZJump
       }
-    //  sleep_ms(conf_.HopeDelay);
       sleep_ms(delayHope);   
       sleep_us(conf_.pause);    // CONST 50ms wait for start get data
   //*******************************************************************************
@@ -1087,7 +1061,6 @@ struct Config
       {
         hardware->getValuesFromAdc(); 
         ZCur=(int16_t) spiBuf[ZPin];
-   //     vector_data.emplace_back(ZMaxValue-ZCur);     // считать  Z invertCur=
         int32_t ZValue=ZMaxValue-ZCur;
         int32_t SignalValue;
         string_dataout+=separator+std::to_string(ZValue);
@@ -1098,8 +1071,7 @@ struct Config
           case 3://phase !!!!
           {
            string_dataout+=separator+std::to_string((int16_t) spiBuf[1]);
-          //  vector_data.emplace_back((int16_t) spiBuf[1]);
-            break;
+           break;
           }
           case 4://ampl
           {
@@ -1117,12 +1089,10 @@ struct Config
       {
         double_t w;
         w= 10*M_PI/(nfastline);  
-         string_dataout+=separator+std::to_string(int16_t(10000.0*(sin(w*j) + sin(w* i )))); 
-    //    vector_data.emplace_back(int16_t(10000.0*(sin(w*j) + sin(w* i ))));  // get Z from adc
-        if (conf_.size == 2)                                                   // added signal
+        string_dataout+=separator+std::to_string(int16_t(10000.0*(sin(w*j) + sin(w* i )))); 
+        if (conf_.size == 2) // added signal
         {
          string_dataout+=separator+std::to_string(int16_t(10000.0*(sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
-      //   vector_data.emplace_back(int16_t(10000.0*(sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1))));
         }
       }
     } //fast line
@@ -1145,7 +1115,6 @@ struct Config
       {
         pos_fast -= conf_.diskretinstep * stepsfastline * nfastline;
       }
-//      sleep_us(conf_.delayB);
       sleep_us(delayBW);
 
       if (reststepfast != 0)
@@ -1156,7 +1125,6 @@ struct Config
          hardware->set_DACXY(portfast, pos_fast);
         }
         else { pos_fast -= reststepfast; }
-        //sleep_us(conf_.delayB);
         sleep_us(delayBW);
       }// move backward 
       //next line
@@ -1172,7 +1140,6 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += conf_.diskretinstep; }
-         // sleep_us(conf_.delayF);
          sleep_us(delayFW);
         }
         if (reststepslow != 0)
@@ -1183,13 +1150,10 @@ struct Config
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += reststepslow; }  // -240404
-        //  sleep_us(conf_.delayF);
           sleep_us(delayFW);
         }
       }
      }   //next line 
-   
- //  
       sleep_ms(conf_.HopeDelayFP);  //400
       sleep_us(conf_.pause);  
      
@@ -1198,13 +1162,11 @@ struct Config
         hardware->getValuesFromAdc();
         ISatCur=(int16_t) spiBuf[IPin];
         string_dataout+=separator+std::to_string(ISatCur); 
-   //     vector_data.emplace_back(ISatCur);
       }
       else
       {
        ISatCur=ISatCur-int16_t(100*rand() % 5);// random_num;  //add 24/03/11
        string_dataout+=separator+std::to_string(ISatCur);
-      // vector_data.emplace_back(ISatCur);
       }
 // auto correction setpoint for sicm
      if (conf_.flgAutoUpdateSP) 
@@ -1216,8 +1178,7 @@ struct Config
           conf_.SetPoint=round(ISatCur*conf_.KoeffCorrectISat*0.01 );
           ISatCurPrev=ISatCur;
           hardware->set_SetPoint(conf_.SetPoint);
-        //  sleep_ms(conf_.HopeDelay);
-            sleep_ms(delayHope);   
+          sleep_ms(delayHope);   
          }
        }
        else
@@ -1225,12 +1186,10 @@ struct Config
         conf_.SetPoint=round(ISatCur*conf_.KoeffCorrectISat*0.01 );
         hardware->set_SetPoint(conf_.SetPoint);
         ISatCurPrev=ISatCur;
- //       sleep_ms(conf_.HopeDelay);
         sleep_ms(delayHope);   
        }
      }
-      string_dataout+=separator+std::to_string(round(conf_.SetPoint));
-   //  vector_data.emplace_back(round(conf_.SetPoint));
+     string_dataout+=separator+std::to_string(round(conf_.SetPoint));
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
@@ -1250,7 +1209,6 @@ struct Config
       DrawDone = false;
 //*****************************************************************
     sendStrData(code+std::to_string(SCANNING),string_dataout,60,true);
-   // sendStrData(code+std::to_string(SCANNING),vector_data,60,true); //send data 60
 //*****************************************************************
     if (STOP)  // stop
     {
@@ -1267,8 +1225,8 @@ struct Config
       delayFW                    =  conf_.delayF;
       delayBW                    =  conf_.delayB;
       conf_.diskretinstep        = vupdateparams[3];
-      sleep_ms(100);             //240314
-      hardware->set_GainPID((uint16_t)vupdateparams[4]); //240320
+      sleep_ms(100);           
+      hardware->set_GainPID((uint16_t)vupdateparams[4]); 
       conf_.HopeDelay            = vupdateparams[5];
       delayHope                  =  conf_.HopeDelay;  
       conf_.HopeZ                = vupdateparams[6];
@@ -1361,11 +1319,11 @@ struct Config
   }
   sleep_ms(1000);
   int16_t count = 0;
-     if (flgTiming)
+    if (flgTiming)
     {  
      auto endscan = std::chrono::high_resolution_clock::now();  
      auto dur = endscan - beginscan;
-      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
      debugdata.emplace_back(ms);
      debugdata.emplace_back(pos_.x);
      debugdata.emplace_back(pos_.y);
@@ -1834,7 +1792,7 @@ void Scanner::start_fastscan()
   uint16_t pos_slow;
   uint16_t pos_fast_start;
   uint16_t pos_slow_start;
-   DrawDone=true;
+  DrawDone=true;
   switch (conf_.path)
   {
     case 0://X+
@@ -1920,13 +1878,11 @@ void Scanner::start_fastscan()
         if (!flgVirtual)
         {
           hardware->getValuesFromAdc();
-           string_dataout+=separator+std::to_string(ZMaxValue-(int16_t) spiBuf[ZPin]); 
-      //    vector_data.emplace_back(ZMaxValue-(int16_t) spiBuf[ZPin]);  // считать Z из АЦП
-        }
+          string_dataout+=separator+std::to_string(ZMaxValue-(int16_t) spiBuf[ZPin]); 
+         }
         else
         {
           string_dataout+=separator+std::to_string(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
-      //    vector_data.emplace_back(int16_t(10000.0 * (sin(M_PI * j * 0.1) + sin(M_PI * i * 0.1)))); 
         }
       } //j fast
  // возврат в начальную точку линии
@@ -1978,13 +1934,11 @@ void Scanner::start_fastscan()
      { 
        auto end = std::chrono::high_resolution_clock::now();  
        auto dur = end - begin;
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+       auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
        debugdata.emplace_back(ms);
        sendStrData(code+std::to_string(DEBUG)+"time per scan ms ",debugdata,200,true); 
      } 
-    //std::string str=code+std::to_string(FASTSCANNING);
-      sendStrData(code+std::to_string(SCANNING),string_dataout,200,true);
-  //  sendStrData(code+std::to_string(FASTSCANNING),vector_data,200,true);  //100
+     sendStrData(code+std::to_string(SCANNING),string_dataout,200,true);
    switch (conf_.path) //add 241217
    {
     case 0:
@@ -2017,7 +1971,6 @@ void Scanner::start_fastscan()
        debugdata.emplace_back(pos_.y);
       sendStrData(code+std::to_string(DEBUG)+"time per scan2 ms ",debugdata,200,true); 
      } 
-
   } //stop
 //  blue();
    STOP=false;
