@@ -1843,6 +1843,7 @@ void Scanner::start_fastscan()
         break;
       }
     } 
+     DrawDone=true;
      auto beginscan = std::chrono::high_resolution_clock::now();    
   while (!STOP)
   {
@@ -1938,6 +1939,13 @@ void Scanner::start_fastscan()
        debugdata.emplace_back(ms);
        sendStrData(code+std::to_string(DEBUG)+"time per scan ms ",debugdata,200,true); 
      } 
+     int16_t count0 = 0;
+     while ((!DrawDone))// || (count0<20))//ожидание ответа ПК для синхронизации
+     {
+      sleep_ms(10);
+      count0++;
+     } 
+      DrawDone = false;
      sendStrData(code+std::to_string(SCANNING),string_dataout,200,true);
    switch (conf_.path) //add 241217
    {
