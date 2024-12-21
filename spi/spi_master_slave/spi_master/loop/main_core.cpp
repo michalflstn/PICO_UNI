@@ -45,12 +45,14 @@ void MainCore::launchOnCore1()
   case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
         ALGCODE=ALGNONE;
         flgDebug=(bool)vector[1];
+       /* 
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(flgDebug);
         afc += endln;//"\n";
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
+        */
         break;
   case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
         flgСritical_section=(bool)vector[1]; 
