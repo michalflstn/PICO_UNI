@@ -943,12 +943,12 @@ struct Config
   const int8_t oneline=11;
   prev_point = pos_; //запоминание начальной точки скана
   vector_data.clear();
-//  if (flgDebug)
+  if (flgDebug)
   {
- //  for (int j = 0; j <= 24; ++j)
-//   {
-//    debugdata.emplace_back(vector[j]);
- //  }
+   for (int j = 0; j <= 24; ++j)
+   {
+    debugdata.emplace_back(vector[j]);
+   }
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
    sendStrData(code+std::to_string(DEBUG)+" hoping scan parameters",debugdata,100,true);
@@ -965,7 +965,6 @@ struct Config
   uint8_t  portslow;
   uint16_t pos_fast;
   uint16_t pos_slow;
- // int16_t  ZJump;
   int16_t  ISatCur;
   int16_t  ZCur;
   int16_t  ISatCurPrev;
@@ -1142,12 +1141,12 @@ struct Config
 // move backward 
       if (!flgVirtual)
       {
-       pos_fast -= conf_.diskretinstep * stepsfastline * nfastline;
-       hardware->set_DACXY(portfast, pos_fast);
+        pos_fast -= conf_.diskretinstep * stepsfastline * nfastline;
+        hardware->set_DACXY(portfast, pos_fast);
       }
       else
       {
-       pos_fast -= conf_.diskretinstep * stepsfastline * nfastline;
+        pos_fast -= conf_.diskretinstep * stepsfastline * nfastline;
       }
 //      sleep_us(conf_.delayB);
       sleep_us(delayBW);
