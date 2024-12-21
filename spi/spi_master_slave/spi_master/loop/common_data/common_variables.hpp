@@ -34,7 +34,7 @@
 #define ADC_GET_VALUECmd         24  // don't use
 #define SetDACZeroCmd            25
 #define Set_SIGN_LOOP_BIASV      26  //DAC8563_3
-
+#define ERROR                    27 
 #define SET_Z                    28  //DAC8563_3
 #define SET_XY                   29  //DAC8563_SET_VOLTAGE_2
 #define FREQ_SET                 30  //AD9833
@@ -50,7 +50,7 @@
 #define RESONANCE                40  //AD9833 
 #define GridMovetoNextScan       41
 #define LOCALDEBUG               42 // debug  в конкретном месте
-#define LOCALTIMING              42 // debug времени выполнения в конкретном месте
+#define CHRONOMETRIA             42 // debug времени выполнения в конкретном месте
 
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана

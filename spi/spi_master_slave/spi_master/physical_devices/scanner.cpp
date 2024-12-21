@@ -43,10 +43,9 @@ void Scanner::sendStrData(std::string const& header, std::vector<int32_t> &data,
    //for (auto & element :data) 
   for (size_t j = 0; j < data.size(); ++j)
   {
- // afc +=',' + std::to_string(element);
    afcc +=separator + std::to_string(data[j]);
   }
-  afcc +=endln;//"\n";
+  afcc +=endln;
   std::cout << afcc;
   afcc.clear();
   if (flg) data.clear();
@@ -79,6 +78,8 @@ void Scanner::sendStrData(std::string const& header,std::vector<uint16_t> &data,
    afcc +=separator + std::to_string(data[j]);
   }
   afcc +=endln;
+  size_t sz=afcc.size();
+  if (sz>64000) { afcc.clear(); afcc=code+std::to_string(ERROR)+endln; }
   std::cout << afcc;
   afcc.clear();
   sleep_ms(delay);
@@ -287,8 +288,7 @@ auto beginscan = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 
 */
-  //  if (flgLocalDebug) 
-  
+ 
     auto begin = std::chrono::high_resolution_clock::now();  
    
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
@@ -909,13 +909,14 @@ struct Config
   const int8_t oneline=11;
   prev_point = pos_; //запоминание начальной точки скана
   vector_data.clear();
-  if (flgDebug)
+//  if (flgDebug)
   {
-   for (int j = 0; j <= 24; ++j)
-   {
-    debugdata.emplace_back(vector[j]);
-   }
-   debugdata.emplace_back(RAND_MAX);
+ //  for (int j = 0; j <= 24; ++j)
+//   {
+//    debugdata.emplace_back(vector[j]);
+ //  }
+   debugdata.emplace_back(pos_.x);
+   debugdata.emplace_back(pos_.y);
    sendStrData(code+std::to_string(DEBUG)+" hoping scan parameters",debugdata,100,true);
   } 
   uint16_t stepsx;
@@ -976,8 +977,10 @@ struct Config
   }
 //****************************************************************
 //   start  
+    auto beginscan = std::chrono::high_resolution_clock::now();  
   for (uint32_t i = 0; i < nslowline; ++i)
   { 
+      auto begin = std::chrono::high_resolution_clock::now();  
     stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
     stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
     reststepx = conf_.betweenPoints_x % conf_.diskretinstep;
@@ -1001,7 +1004,10 @@ struct Config
         break;
       }
     }  
-   for (uint32_t j = 0; j < nfastline; ++j)
+   for (uint32_t i = 0; i < nslowline; ++i)
+   {
+    auto begin = std::chrono::high_resolution_clock::now();  
+    for (uint32_t j = 0; j < nfastline; ++j)
     {
       if (!flgVirtual)
       {
@@ -1144,6 +1150,7 @@ struct Config
         }
       }
      }   //next line 
+   }
  //  
       sleep_ms(conf_.HopeDelayFP);  //400
       sleep_us(conf_.pause);  
@@ -1184,7 +1191,16 @@ struct Config
      }
      
      vector_data.emplace_back(round(conf_.SetPoint));
-
+     auto end = std::chrono::high_resolution_clock::now();  
+     auto dur = end - begin;
+     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+    if (flgTiming)
+    {
+     debugdata.emplace_back(ms);
+     debugdata.emplace_back(pos_fast);
+     debugdata.emplace_back(pos_slow);
+     sendStrData(code+std::to_string(DEBUG)+"time per line  ms ",debugdata,100,true); 
+    } 
      int16_t count0 = 0;
      while ((!DrawDone) || (count0<20))//ожидание ответа ПК для синхронизации
      {
@@ -1304,6 +1320,16 @@ struct Config
   }
   sleep_ms(1000);
   int16_t count = 0;
+     if (flgTiming)
+    {  
+     auto endscan = std::chrono::high_resolution_clock::now();  
+     auto dur = endscan - beginscan;
+      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+     debugdata.emplace_back(ms);
+     debugdata.emplace_back(pos_.x);
+     debugdata.emplace_back(pos_.y);
+     sendStrData(code+std::to_string(DEBUG)+"time per scan  ms ",debugdata,100,true); 
+    } 
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {
     sleep_ms(100);
@@ -1912,8 +1938,8 @@ void Scanner::start_fastscan()
        debugdata.emplace_back(ms);
        sendStrData(code+std::to_string(DEBUG)+"time per scan ms ",debugdata,200,true); 
      } 
-    std::string str=code+std::to_string(FASTSCANNING);
-    sendStrData(str,vector_data,200,true);  //100
+    //std::string str=code+std::to_string(FASTSCANNING);
+    sendStrData(code+std::to_string(FASTSCANNING),vector_data,200,true);  //100
    switch (conf_.path) //add 241217
    {
     case 0:

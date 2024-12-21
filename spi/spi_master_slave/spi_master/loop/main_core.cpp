@@ -37,7 +37,11 @@ void MainCore::launchOnCore1()
           break;
   case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
          flgDebugLevel=vector[1];
-         break;    
+         break; 
+  case CHRONOMETRIA:
+         ALGCODE=ALGNONE; 
+         flgTiming=(bool)vector[1];
+         break;         
   case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
         ALGCODE=ALGNONE;
         flgDebug=(bool)vector[1];
@@ -47,10 +51,6 @@ void MainCore::launchOnCore1()
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
-        break;
-  case LOCALTIMING:
-        ALGCODE=ALGNONE;
-        flgTiming=(bool)vector[1];
         break;
   case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
         flgСritical_section=(bool)vector[1]; 
