@@ -1848,7 +1848,7 @@ void Scanner::start_fastscan(std::vector<int32_t> &vector)
 
         sleep_us(conf_.delayB);
       }
-      if ((nslowline - 1 - i) > 0)  //если непослелняя лниия
+      if ((nslowline - 1 - i) > 0)  //если непоследняя лниия
       {
         for (uint32_t n = 0; n < stepslowline; ++n) 
         {
