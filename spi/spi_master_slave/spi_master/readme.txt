@@ -1,3 +1,5 @@
+//250110
+fast scan синхронизация с ПК
 // 241214
 optimize!
 getValuesFromAdc() 
