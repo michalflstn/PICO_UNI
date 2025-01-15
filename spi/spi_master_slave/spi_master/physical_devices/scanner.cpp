@@ -1763,7 +1763,9 @@ void Scanner::start_hopingscanlin()
   hardware->activateDark();
 } //hoppinglin
 
-void Scanner::start_fastscan()
+void Scanner::
+
+start_fastscan()
 {
   prev_point = pos_; //запоминание начальной точки скана
   vector_data.clear();
@@ -1942,11 +1944,14 @@ void Scanner::start_fastscan()
      int16_t count0 = 0;
      while ((!DrawDone))// || (count0<20))//ожидание ответа ПК для синхронизации
      {
-      sleep_ms(10);
-      count0++;
+      sleep_ms(50);
+      //count0++;
      } 
       DrawDone = false;
-     sendStrData(code+std::to_string(SCANNING),string_dataout,200,true);
+//*************************************************************************
+     sendStrData(code+std::to_string(FASTSCANNING),string_dataout,200,true);
+//*************************************************************************
+     
    switch (conf_.path) //add 241217
    {
     case 0:
@@ -1997,8 +2002,8 @@ void Scanner::start_fastscan()
       break;
     }
   }
-  stop_scan();                      //возврат в начальную точку скана
-  sleep_ms(100);
+ // stop_scan();   //250115                   //возврат в начальную точку скана
+ // sleep_ms(100); //250115
   int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {
