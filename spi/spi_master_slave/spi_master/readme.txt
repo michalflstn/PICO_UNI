@@ -1,3 +1,8 @@
+//250116
+gain -> unit32_t
+uint16_t error
+freq -unint8_t-> unit32_t
+edited scan, scanlin, hope,hopelin
 //250110
 fast scan синхронизация с ПК
 // 241214
