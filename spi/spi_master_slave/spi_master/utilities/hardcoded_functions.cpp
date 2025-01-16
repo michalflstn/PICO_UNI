@@ -816,7 +816,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
       if (flgDebug)  
       {
        afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd);
+       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd)+ "gainprev="+std::to_string(LOOPGain);
       }  
       break;
   case WB:  
@@ -858,7 +858,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
      if (flgDebug)  
      {
        afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID Gain WB "+ std::to_string(255-gain); //?????
+       afc = code+std::to_string(DEBUG)+"debug PID Gain WB "+ std::to_string(255-gain)+ "gainprev="+std::to_string(LOOPGain); //?????
      } 
      break;
  case  BBFPGA:   
