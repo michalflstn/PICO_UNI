@@ -455,7 +455,7 @@ auto beginscan = std::chrono::high_resolution_clock::now();
       conf_.delayB  = vupdateparams[2];
       delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100); 
-      hardware->set_GainPID((uint16_t)vupdateparams[3]);//240320
+      hardware->set_GainPID((uint32_t)vupdateparams[3]);//240320
       conf_.diskretinstep = vupdateparams[4]; 
       if (flgDebug)
       {
@@ -774,7 +774,7 @@ void Scanner::start_scanlin() //сканирование
       delayFW=conf_.delayF;//241111
       delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100);     
-      hardware->set_GainPID((uint16_t)vupdateparams[3]);
+      hardware->set_GainPID((uint32_t)vupdateparams[3]);
       if (flgDebug) sleep_ms(100);              
       conf_.diskretinstep = vupdateparams[4]; 
       if (flgDebug)
@@ -1225,7 +1225,7 @@ struct Config
       delayBW                    =  conf_.delayB;
       conf_.diskretinstep        = vupdateparams[3];
       sleep_ms(100);             //240314
-      hardware->set_GainPID((uint16_t)vupdateparams[4]); //240320
+      hardware->set_GainPID((uint32_t)vupdateparams[4]); //240320
       conf_.HopeDelay            = vupdateparams[5];
       delayHope                  =  conf_.HopeDelay;  
       conf_.HopeZ                = vupdateparams[6];
@@ -1640,7 +1640,7 @@ void Scanner::start_hopingscanlin()
       delayBW                    =  conf_.delayB;
       conf_.diskretinstep        = vupdateparams[3];
       sleep_ms(100);             //240314
-      hardware->set_GainPID((uint16_t)vupdateparams[4]); //240320
+      hardware->set_GainPID((uint32_t)vupdateparams[4]); //240320
       conf_.HopeDelay            = vupdateparams[5];
       delayHope                  = conf_.HopeDelay;   
       conf_.HopeZ                = vupdateparams[6];
