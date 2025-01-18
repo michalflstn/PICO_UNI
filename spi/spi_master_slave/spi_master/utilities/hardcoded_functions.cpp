@@ -225,8 +225,9 @@ void HARDWARE::GetSOFTHARDWAREVersion()
 {
   afc.clear();
   afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
-  +",hardware "+std::to_string(HARDWAREVERSION);
+        +",hardware "+std::to_string(HARDWAREVERSION);
   afc +="\n";
+ //  uart_write_blocking(FPGA_UART_ID,(afc),sz)
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -239,7 +240,6 @@ void HARDWARE::set_Freq(uint32_t freq)
   int64_t n_reg = int64_t(freq * scale / 25.0e6);
   int64_t n_low = n_reg & 0x3fff;
   int64_t n_hi  = (n_reg >> 14) & 0x3fff;
-
   uint8_t buf[6];
 
   buf[0] = (flag_freq | n_low) / (0x100);
