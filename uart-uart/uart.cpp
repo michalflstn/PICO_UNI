@@ -41,12 +41,12 @@ int main() {
   */   
 #define FPGAUART_TX_PIN 8 //!
 #define FPGAUART_RX_PIN 9 //!
-#define FPGA_UART_ID    uart1
+#define FPGA_UART_ID    uart1 //uart1
 #define FPGA_BAUD_RATE  115200//400000 // 57600
    
   int main()
   {
-      size_t sz=12;  
+      size_t sz=256;  //12
       uint8_t inbuffer[sz];        
       stdio_init_all();  
       uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); //add  240627
@@ -77,7 +77,7 @@ int main() {
        //     uart_write_blocking(FPGA_UART_ID, (const uint8_t*)message, len);
       uart_write_blocking(FPGA_UART_ID,inbuffer,sz);
     
-      std::string afc ;
+   /*   std::string afc ;
       afc.clear();
       afc ="debug"; 
       for (size_t i = 0; i < sz; i++)
@@ -86,6 +86,7 @@ int main() {
         std::cout << afc;
         afc.clear();
         sleep_ms(100);
+        */
    }
   }
    sleep_ms(100);

@@ -16,8 +16,8 @@
 
 // We are using pins 0 and 1, but see the GPIO function select table in the
 // datasheet for information on which other pins can be used.
-#define UART_TX_PIN 16
-#define UART_RX_PIN 17
+#define UART_TX_PIN 0//16
+#define UART_RX_PIN 1//17
 
 int main() {
     // Set up our UART with the required speed.
