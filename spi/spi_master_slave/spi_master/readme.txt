@@ -50,7 +50,7 @@ error забыл про busyport +
  ввести параметр задержка в начале линии для хоппинга +
  проверить работу ПИД - есть изменения !!!!!?
 //240131
-MicroController read data from PC to  vector<int32_t>
+MicroController read data from PC to  Vector<int32_t>
 loop() if -> switch
 some bool flags -> constants
 

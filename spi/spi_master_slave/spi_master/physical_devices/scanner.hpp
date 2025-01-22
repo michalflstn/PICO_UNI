@@ -2,7 +2,7 @@
 #define PICO_EXAMPLES_SCANNER_HPP
 
 #include <string>
-#include <vector>
+#include <Vector>
 //#include <random>
 #include "../physical_devices/LinearDriver.hpp" //24/05/06
 #include "../utilities/base_types/Point.hpp"
@@ -71,7 +71,7 @@ public:
 
   ~Scanner();
   //void scan_update(const Config &config);             // обновить параметры скaнирования
-  void scanparams_update(const  std::vector<int32_t> &vector);// обновить параметры скaнирования
+  void scanparams_update(const  std::vector<int32_t> &Vector);// обновить параметры скaнирования
   
   void start_scan();
   
@@ -83,19 +83,19 @@ public:
 
   void start_fastscan();  // быстрое сканирование и вывод скана целиком, а не по линиям
 
-  void approacphm(std::vector<int32_t> &vector);      // захват взаимодействия с контролем ворот
+  void approacphm(std::vector<int32_t> &Vector);      // захват взаимодействия с контролем ворот
 
-  void positioningXYZ(std::vector<int32_t> &vector);  // abs(n) перемещение по  X,Y и Z (с контролем ворот)
+  void positioningXYZ(std::vector<int32_t> &Vector);  // abs(n) перемещение по  X,Y и Z (с контролем ворот)
 
   void start_frqscan();                               //поиск резонанса датчика
   
-  void testpiezomover(std::vector<int32_t> &vector);  //тестирование шагов пьезомувера
+  void testpiezomover(std::vector<int32_t> &Vector);  //тестирование шагов пьезомувера
 
-  void spectroscopyIV(std::vector<int32_t> &vector);  // спектроскопия I-V
+  void spectroscopyIV(std::vector<int32_t> &Vector);  // спектроскопия I-V
 
   int16_t DACZMove( int16_t Z0, int16_t dZ, int16_t stepsize, uint16_t delay );   // stepsize=+-1  sign  -> dir 
 
-  void spectroscopyAIZ(std::vector<int32_t> &vector); // спектроскопия Ampl-Z актуальный вариант
+  void spectroscopyAIZ(std::vector<int32_t> &Vector); // спектроскопия Ampl-Z актуальный вариант
 
  //переместиться в начальную точку скана из начальной точке предыдущего скана flg=1 Hopping?
   void move_toX0Y0(uint16_t x, uint16_t y, uint16_t delay, int8_t flg); 

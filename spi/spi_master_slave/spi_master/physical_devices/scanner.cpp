@@ -106,8 +106,8 @@ void Scanner::readDATALin()
 {
   data_LinX.clear();
   data_LinY.clear();
-  size_t szx=vector[1]; //nx
-  size_t szy=vector[2]; //ny
+  size_t szx=Vector[1]; //nx
+  size_t szy=Vector[2]; //ny
   if (flgDebug)
   {   
    debugdata.emplace_back(szx);
@@ -116,12 +116,12 @@ void Scanner::readDATALin()
   } 
    for (size_t j = 0; j <szx; ++j)
    {
-    data_LinX.emplace_back((uint16_t)vector[j+3]);
+    data_LinX.emplace_back((uint16_t)Vector[j+3]);
    }
 //  sendStrData("debug linx ",data_LinX,400,false);
    for (size_t j = 0; j <szy; ++j)
    {
-    data_LinY.emplace_back((uint16_t)vector[j+3+szx]);
+    data_LinY.emplace_back((uint16_t)Vector[j+3+szx]);
    } 
 //  sendStrData("debug liny ",data_LinY,400,false);
 }
@@ -132,7 +132,7 @@ void Scanner::readFPGA()
   {
      hardware->getValuesFromAdc();
      ZValue = (int16_t)spiBuf[ZPin];
-      switch (vector[1]) //прибор
+      switch (Vector[1]) //прибор
    {
         case SFM: //SFM=0
                 {
@@ -148,14 +148,14 @@ void Scanner::readFPGA()
    }         
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-        debugdata.emplace_back(vector[1]);
+        debugdata.emplace_back(Vector[1]);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);
   } 
   else
   {
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-        debugdata.emplace_back(vector[1]);
+        debugdata.emplace_back(Vector[1]);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
 }
@@ -165,7 +165,7 @@ void Scanner::readADC()
   {
    hardware->getValuesFromAdc();
    ZValue = (int16_t)spiBuf[ZPin];
-      switch (vector[1]) //прибор
+      switch (Vector[1]) //прибор
    {
         case SFM: //SFM=0
                 {
@@ -181,7 +181,7 @@ void Scanner::readADC()
    }         
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-        debugdata.emplace_back(vector[1]);
+        debugdata.emplace_back(Vector[1]);
         debugdata.emplace_back(SignLoop);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);
   } 
@@ -189,7 +189,7 @@ void Scanner::readADC()
   {
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-        debugdata.emplace_back(vector[1]);
+        debugdata.emplace_back(Vector[1]);
         debugdata.emplace_back(SignLoop);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
@@ -241,7 +241,7 @@ struct Config
   {
   /* for (int j = 0; j <= 17; ++j)
    {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
    }
    */
    debugdata.emplace_back(pos_.x);
@@ -458,24 +458,24 @@ struct Config
     if (CONFIG_UPDATE)
     {
       CONFIG_UPDATE = false;
-      conf_.delayF  = vupdateparams[1];
+      conf_.delayF  = Vupdateparams[1];
       delayFW=conf_.delayF;
-      conf_.delayB  = vupdateparams[2];
+      conf_.delayB  = Vupdateparams[2];
       delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100); 
-      hardware->set_GainPID((uint32_t)vupdateparams[3]);
-      conf_.diskretinstep = vupdateparams[4]; 
+      hardware->set_GainPID((uint32_t)Vupdateparams[3]);
+      conf_.diskretinstep = Vupdateparams[4]; 
       if (flgDebug)
       {
         sleep_ms(100);
        for (int j = 0; j <= 4; ++j)
        {
-        debugdata.emplace_back(vupdateparams[j]);
+        debugdata.emplace_back(Vupdateparams[j]);
        }
        sendStrData(code+std::to_string(DEBUG)+" scan parameters update",debugdata,100,true); //240314 100
       }
     // if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); //???
-      vupdateparams.clear();
+      Vupdateparams.clear();
     // if (flgСritical_section)  critical_section_exit(&criticalSection);  //???
      stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
      stepsy = (uint16_t) conf_.betweenPoints_y / conf_.diskretinstep;
@@ -588,7 +588,7 @@ void Scanner::start_scanlin() //сканирование
   {
    for (int j = 0; j <= 17; ++j)
    {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
    }
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
@@ -780,23 +780,23 @@ void Scanner::start_scanlin() //сканирование
     if (CONFIG_UPDATE)
     {
       CONFIG_UPDATE = false;
-      conf_.delayF        = vupdateparams[1];
-      conf_.delayB        = vupdateparams[2];
+      conf_.delayF        = Vupdateparams[1];
+      conf_.delayB        = Vupdateparams[2];
       delayFW=conf_.delayF;//241111
       delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100);     
-      hardware->set_GainPID((uint32_t)vupdateparams[3]);
+      hardware->set_GainPID((uint32_t)Vupdateparams[3]);
       if (flgDebug) sleep_ms(100);              
-      conf_.diskretinstep = vupdateparams[4]; 
+      conf_.diskretinstep = Vupdateparams[4]; 
       if (flgDebug)
       { 
        for (int j = 0; j <= 4; ++j)
        {
-        debugdata.emplace_back(vupdateparams[j]);
+        debugdata.emplace_back(Vupdateparams[j]);
        }
        sendStrData(code+std::to_string(DEBUG)+ " parameters update",debugdata,100,true);
       } 
-      vupdateparams.clear();
+      Vupdateparams.clear();
     }
     if (STOP)   // stop
     {
@@ -924,7 +924,7 @@ struct Config
   {
    for (int j = 0; j <= 24; ++j)
    {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
    }
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
@@ -1220,21 +1220,21 @@ struct Config
     if (CONFIG_UPDATE)
     {
        CONFIG_UPDATE              = false;
-      conf_.delayF               = vupdateparams[1];
-      conf_.delayB               = vupdateparams[2];
+      conf_.delayF               = Vupdateparams[1];
+      conf_.delayB               = Vupdateparams[2];
       delayFW                    =  conf_.delayF;
       delayBW                    =  conf_.delayB;
-      conf_.diskretinstep        = vupdateparams[3];
+      conf_.diskretinstep        = Vupdateparams[3];
       sleep_ms(100);           
-      hardware->set_GainPID((uint32_t)vupdateparams[4]); 
-      conf_.HopeDelay            = vupdateparams[5];
+      hardware->set_GainPID((uint32_t)Vupdateparams[4]); 
+      conf_.HopeDelay            = Vupdateparams[5];
       delayHope                  =  conf_.HopeDelay;  
-      conf_.HopeZ                = vupdateparams[6];
-      conf_.flgAutoUpdateSP      = vupdateparams[7];; // автообновление опоры на каждой линии                     19
-      conf_.flgAutoUpdateSPDelta = vupdateparams[8];; // обновление опоры , если изменение тока превысило порог 20
-      conf_.ThresholdAutoUpdate  = vupdateparams[9];; // изменения опоры, если изменение тока превысило порог     21
-      conf_.KoeffCorrectISat     = vupdateparams[10]; // опора  %  от тока насыщения  
-      conf_.HopeDelayFP          = vupdateparams[11]; //задержка в первой точке линии   // add 240503  
+      conf_.HopeZ                = Vupdateparams[6];
+      conf_.flgAutoUpdateSP      = Vupdateparams[7];; // автообновление опоры на каждой линии                     19
+      conf_.flgAutoUpdateSPDelta = Vupdateparams[8];; // обновление опоры , если изменение тока превысило порог 20
+      conf_.ThresholdAutoUpdate  = Vupdateparams[9];; // изменения опоры, если изменение тока превысило порог     21
+      conf_.KoeffCorrectISat     = Vupdateparams[10]; // опора  %  от тока насыщения  
+      conf_.HopeDelayFP          = Vupdateparams[11]; //задержка в первой точке линии   // add 240503  
       ZJump=conf_.HopeZ;
       flgMaxJump=(ZJump==0);  
       if (flgDebug)
@@ -1242,12 +1242,12 @@ struct Config
        sleep_ms(100);   
        for (int j = 0; j <= 11; ++j)
        {
-        debugdata.emplace_back(vupdateparams[j]);
+        debugdata.emplace_back(Vupdateparams[j]);
        }
        sendStrData(code+std::to_string(DEBUG)+" hoping parameters update",debugdata,100,true);
       } 
       if (flgСritical_section) critical_section_enter_blocking(&criticalSection); 
-       vupdateparams.clear();
+       Vupdateparams.clear();
       if (flgСritical_section) critical_section_exit(&criticalSection);  
 
       stepsx = (uint16_t) conf_.betweenPoints_x / conf_.diskretinstep;
@@ -1349,7 +1349,7 @@ void Scanner::start_hopingscanlin()
   {  
    for (int j = 0; j <= 24; ++j)
    {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
    }
    sendStrData(code+std::to_string(DEBUG)+" hoping scan parameters",debugdata,100,true);
   }
@@ -1635,21 +1635,21 @@ void Scanner::start_hopingscanlin()
     if (CONFIG_UPDATE)
     {
       CONFIG_UPDATE              = false;
-      conf_.delayF               = vupdateparams[1];
-      conf_.delayB               = vupdateparams[2];
+      conf_.delayF               = Vupdateparams[1];
+      conf_.delayB               = Vupdateparams[2];
       delayFW                    =  conf_.delayF;
       delayBW                    =  conf_.delayB;
-      conf_.diskretinstep        = vupdateparams[3];
+      conf_.diskretinstep        = Vupdateparams[3];
       sleep_ms(100);             //240314
-      hardware->set_GainPID((uint32_t)vupdateparams[4]); //240320
-      conf_.HopeDelay            = vupdateparams[5];
+      hardware->set_GainPID((uint32_t)Vupdateparams[4]); //240320
+      conf_.HopeDelay            = Vupdateparams[5];
       delayHope                  = conf_.HopeDelay;   
-      conf_.HopeZ                = vupdateparams[6];
-      conf_.flgAutoUpdateSP      = vupdateparams[7];; // автообновление опоры на каждой линии                     19
-      conf_.flgAutoUpdateSPDelta = vupdateparams[8];; // обновление опоры , если изменение тока превысило порог 20
-      conf_.ThresholdAutoUpdate  = vupdateparams[9];; // изменения опоры, если изменение тока превысило порог     21
-      conf_.KoeffCorrectISat     = vupdateparams[10]; // опора  %  от тока насыщения  
-      conf_.HopeDelayFP          = vupdateparams[11]; //задержка в первой точке линии   // add 240503  
+      conf_.HopeZ                = Vupdateparams[6];
+      conf_.flgAutoUpdateSP      = Vupdateparams[7];; // автообновление опоры на каждой линии                     19
+      conf_.flgAutoUpdateSPDelta = Vupdateparams[8];; // обновление опоры , если изменение тока превысило порог 20
+      conf_.ThresholdAutoUpdate  = Vupdateparams[9];; // изменения опоры, если изменение тока превысило порог     21
+      conf_.KoeffCorrectISat     = Vupdateparams[10]; // опора  %  от тока насыщения  
+      conf_.HopeDelayFP          = Vupdateparams[11]; //задержка в первой точке линии   // add 240503  
       ZJump=conf_.HopeZ;   
       flgMaxJump=(conf_.HopeZ==0);
       ZJump=-conf_.HopeZ;
@@ -1658,7 +1658,7 @@ void Scanner::start_hopingscanlin()
       {  
        for (int j = 0; j <= 11; ++j)
        {
-        debugdata.emplace_back(vector[j]);
+        debugdata.emplace_back(Vector[j]);
        }
        sendStrData(code+std::to_string(DEBUG)+" parameters update",debugdata,100,true);
       }
@@ -1773,7 +1773,7 @@ start_fastscan()
   {
    for (int j = 0; j <= 17; ++j)
    {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
    }
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
@@ -2038,53 +2038,53 @@ void Scanner::stop_scan()
   }
 }
 
-void Scanner::scanparams_update(const std::vector<int32_t> &vector)
+void Scanner::scanparams_update(const std::vector<int32_t> &Vector)
 {
 //  conf_ = config;
  if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-  conf_.nPoints_x=(uint16_t)vector[1]; //uint16_t nPoints_x;        // точек по оси  X                                            1
-  conf_.nPoints_y=(uint16_t)vector[2];        // точек по оси  Y                                            2 
-  conf_.path=(uint16_t)vector[3];             // сканирование  0 - по оси X, 1 - по оси Y                   3
-  conf_.method=(uint16_t)vector[4];           // что измерять Topo=0,Phase=1, Ampl=2...                     4
-  conf_.delayF=(uint16_t)vector[5];           // задержка при сканировании вперёд                           5
-  conf_.delayB=(uint16_t)vector[6];           // задержка при сканировании назад                            6
-  conf_.betweenPoints_x=(uint16_t)vector[7];  // расстояние между точками по X в дискретах                  7 
-  conf_.betweenPoints_y=(uint16_t)vector[8];  // расстояние между точками по Y в дискретах                  8 
-  conf_.size=(uint16_t)vector[9];             // size=1  -Z; size=2 - Z,Амплитуда                           9
-  conf_.Ti=(uint16_t)vector[10];               // усиление ПИД                                              10
-  conf_.diskretinstep=(uint16_t)vector[11];    // размер шага в дискретах                                   11
-  conf_.pause=(uint16_t)vector[12];            // время ожидания в точке измерения  мксек                   12  
-  conf_.flgLin=(uint8_t)vector[13];           // флаг линеализации                                          13   
-  conf_.lineshift=(uint16_t)vector[14];        //сдвиг линии -учет неортогональности сканнера               14
-  conf_.flgOneFrame=(uint8_t)vector[15];      // быстрое сканирование один кадр=1                           15
-  conf_.flgHoping=(uint8_t)vector[16];        // сканирование прыжками                                      16
+  conf_.nPoints_x=(uint16_t)Vector[1]; //uint16_t nPoints_x;        // точек по оси  X                                            1
+  conf_.nPoints_y=(uint16_t)Vector[2];        // точек по оси  Y                                            2 
+  conf_.path=(uint16_t)Vector[3];             // сканирование  0 - по оси X, 1 - по оси Y                   3
+  conf_.method=(uint16_t)Vector[4];           // что измерять Topo=0,Phase=1, Ampl=2...                     4
+  conf_.delayF=(uint16_t)Vector[5];           // задержка при сканировании вперёд                           5
+  conf_.delayB=(uint16_t)Vector[6];           // задержка при сканировании назад                            6
+  conf_.betweenPoints_x=(uint16_t)Vector[7];  // расстояние между точками по X в дискретах                  7 
+  conf_.betweenPoints_y=(uint16_t)Vector[8];  // расстояние между точками по Y в дискретах                  8 
+  conf_.size=(uint16_t)Vector[9];             // size=1  -Z; size=2 - Z,Амплитуда                           9
+  conf_.Ti=(uint16_t)Vector[10];               // усиление ПИД                                              10
+  conf_.diskretinstep=(uint16_t)Vector[11];    // размер шага в дискретах                                   11
+  conf_.pause=(uint16_t)Vector[12];            // время ожидания в точке измерения  мксек                   12  
+  conf_.flgLin=(uint8_t)Vector[13];           // флаг линеализации                                          13   
+  conf_.lineshift=(uint16_t)Vector[14];        //сдвиг линии -учет неортогональности сканнера               14
+  conf_.flgOneFrame=(uint8_t)Vector[15];      // быстрое сканирование один кадр=1                           15
+  conf_.flgHoping=(uint8_t)Vector[16];        // сканирование прыжками                                      16
  //hoping
-  conf_.HopeDelay=(uint16_t)vector[17];        // задержка в точке измерения при прыжках                    17
+  conf_.HopeDelay=(uint16_t)Vector[17];        // задержка в точке измерения при прыжках                    17
 // add hoping params  
- if (sizeof(vector)>18) 
+ if (sizeof(Vector)>18) 
  {
-  conf_.HopeZ=(uint16_t)vector[18];             // прыжок по Z,если=0,то прыжок по максимуму                18
-  conf_.flgAutoUpdateSP=(uint8_t)vector[19];     // автообновление опоры на каждой линии                    19
-  conf_.flgAutoUpdateSPDelta=(uint8_t)vector[20]; // обновление опоры , если изменение тока превысило порог 20
-  conf_.ThresholdAutoUpdate=(uint8_t)vector[21];  //изменения опоры, если изменение тока превысило порог    21
-  conf_.KoeffCorrectISat=(uint16_t)vector[22];    // опора  %  от тока насыщения                            22
-  conf_.SetPoint=(uint16_t)vector[23];            // опора  ток                                             23
-  conf_.HopeDelayFP=(uint16_t)vector[24];         // Задержка  в первой точке линии                         24  //add 24/05/02
+  conf_.HopeZ=(uint16_t)Vector[18];             // прыжок по Z,если=0,то прыжок по максимуму                18
+  conf_.flgAutoUpdateSP=(uint8_t)Vector[19];     // автообновление опоры на каждой линии                    19
+  conf_.flgAutoUpdateSPDelta=(uint8_t)Vector[20]; // обновление опоры , если изменение тока превысило порог 20
+  conf_.ThresholdAutoUpdate=(uint8_t)Vector[21];  //изменения опоры, если изменение тока превысило порог    21
+  conf_.KoeffCorrectISat=(uint16_t)Vector[22];    // опора  %  от тока насыщения                            22
+  conf_.SetPoint=(uint16_t)Vector[23];            // опора  ток                                             23
+  conf_.HopeDelayFP=(uint16_t)Vector[24];         // Задержка  в первой точке линии                         24  //add 24/05/02
  } 
  if (flgСritical_section) critical_section_exit(&criticalSection);
    /*
-            static_cast<uint16_t>(vector[1]), static_cast<uint16_t>(vector[2]),
-                             static_cast<uint8_t>(vector[3]),  static_cast<uint8_t>(vector[4]),
-                             static_cast<uint16_t>(vector[5]), static_cast<uint16_t>(vector[6]),
-                             static_cast<uint16_t>(vector[7]), static_cast<uint16_t>(vector[8]),
-                             static_cast<uint8_t>(vector[9]),  static_cast<uint16_t>(vector[10]),
-                             static_cast<uint16_t>(vector[11]),static_cast<uint16_t>(vector[12]),
-                             static_cast<uint8_t>(vector[13]), static_cast<int16_t>(vector[14]),  
-                             static_cast<uint8_t>(vector[15]), static_cast<uint8_t>(vector[16]),
-                             static_cast<uint16_t>(vector[17]),static_cast<uint16_t>(vector[18]),
-                             static_cast<uint8_t>(vector[19]), static_cast<uint8_t>(vector[20]),
-                             static_cast<uint16_t>(vector[21]),static_cast<uint16_t>(vector[22]),
-                             static_cast<int16_t>(vector[23])
+            static_cast<uint16_t>(Vector[1]), static_cast<uint16_t>(Vector[2]),
+                             static_cast<uint8_t>(Vector[3]),  static_cast<uint8_t>(Vector[4]),
+                             static_cast<uint16_t>(Vector[5]), static_cast<uint16_t>(Vector[6]),
+                             static_cast<uint16_t>(Vector[7]), static_cast<uint16_t>(Vector[8]),
+                             static_cast<uint8_t>(Vector[9]),  static_cast<uint16_t>(Vector[10]),
+                             static_cast<uint16_t>(Vector[11]),static_cast<uint16_t>(Vector[12]),
+                             static_cast<uint8_t>(Vector[13]), static_cast<int16_t>(Vector[14]),  
+                             static_cast<uint8_t>(Vector[15]), static_cast<uint8_t>(Vector[16]),
+                             static_cast<uint16_t>(Vector[17]),static_cast<uint16_t>(Vector[18]),
+                             static_cast<uint8_t>(Vector[19]), static_cast<uint8_t>(Vector[20]),
+                             static_cast<uint16_t>(Vector[21]),static_cast<uint16_t>(Vector[22]),
+                             static_cast<int16_t>(Vector[23])
      */       
   delayFW=conf_.delayF; //241111
   delayBW=conf_.delayB; 
@@ -2210,7 +2210,7 @@ void Scanner::LID_move_toNextGridScan(int StepsNmbX,int StepsNmbY,int  StepsNmbZ
   sendStrData(code+std::to_string(GridMovetoNextScan));
 }
 
-void Scanner::positioningXYZ(std::vector<int32_t> &vector)
+void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
 {
   uint8_t  lid_name;
   uint16_t flgSICMPrePos;
@@ -2225,23 +2225,23 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
   int16_t freq, duty;
   uint16_t flgDev;
  // SET VALUE FROM RX_CORE
-          lid_name=(uint8_t)vector[1]; //  int lid_name
-              freq=vector[2]; 
-              duty=vector[3]; 
-           lnsteps=abs((int16_t)vector[4]); //  int nsteps
-              ldir=(bool)vector[5]; //  int dir
-       APPROACHDIR=(bool)vector[6]; // approach direction set in ini files main delphi program  
-        GATE_Z_MAX=(uint16_t)vector[7]; //  int Z gate max
-        GATE_Z_MIN=(uint16_t)vector[8]; //  int Z gate min
-            flgDev=(uint16_t)vector[9]; //  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
-     flgSICMPrePos=(uint16_t)vector[10];
+          lid_name=(uint8_t)Vector[1]; //  int lid_name
+              freq=Vector[2]; 
+              duty=Vector[3]; 
+           lnsteps=abs((int16_t)Vector[4]); //  int nsteps
+              ldir=(bool)Vector[5]; //  int dir
+       APPROACHDIR=(bool)Vector[6]; // approach direction set in ini files main delphi program  
+        GATE_Z_MAX=(uint16_t)Vector[7]; //  int Z gate max
+        GATE_Z_MIN=(uint16_t)Vector[8]; //  int Z gate min
+            flgDev=(uint16_t)Vector[9]; //  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
+     flgSICMPrePos=(uint16_t)Vector[10];
    //   pos_data[7] / //  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
   //    pos_data[8]/ //  Voltage
    if (flgDebug)
    {
     for (int j = 0; j <= 9; ++j)
     {
-     debugdata.emplace_back(vector[j]);
+     debugdata.emplace_back(Vector[j]);
     }
     sendStrData(code+std::to_string(DEBUG)+" parameters posisionXYZ ",debugdata,100,true);
    } 
@@ -2270,21 +2270,21 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       if (CONFIG_UPDATE)
       {
         CONFIG_UPDATE = false;
-          lnsteps  = vupdateparams[1];  //abs
-              ldir = vupdateparams[2]; 
-        GATE_Z_MAX = (uint16_t)vupdateparams[3];
-        GATE_Z_MIN = (uint16_t)vupdateparams[4];
+          lnsteps  = Vupdateparams[1];  //abs
+              ldir = Vupdateparams[2]; 
+        GATE_Z_MAX = (uint16_t)Vupdateparams[3];
+        GATE_Z_MIN = (uint16_t)Vupdateparams[4];
         lnsteps = abs(lnsteps);
         sleep_ms(100);
         if (flgDebug)
         {  
          for (int j =0; j <= 4; ++j)
          {
-          debugdata.emplace_back(vupdateparams[j]);
+          debugdata.emplace_back(Vupdateparams[j]);
          }
          sendStrData(code+std::to_string(DEBUG)+"posXYZ parameters update",debugdata,100,true);
         }   
-        vupdateparams.clear();
+        Vupdateparams.clear();
       }
       status = none;
       if (!flgVirtual) 
@@ -2306,21 +2306,21 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
       if (CONFIG_UPDATE)
       { 
         CONFIG_UPDATE = false;
-              lnsteps =  (int16_t)vupdateparams[1];
-                 ldir =  (int16_t)vupdateparams[2]; 
-           GATE_Z_MAX = (uint16_t)vupdateparams[3];
-           GATE_Z_MIN = (uint16_t)vupdateparams[4];
+              lnsteps =  (int16_t)Vupdateparams[1];
+                 ldir =  (int16_t)Vupdateparams[2]; 
+           GATE_Z_MAX = (uint16_t)Vupdateparams[3];
+           GATE_Z_MIN = (uint16_t)Vupdateparams[4];
         sleep_ms(100);
         if (flgDebug)
         {  
          for (int j = 0; j <= 3; ++j)
          {
-          debugdata.emplace_back(vector[j]);
+          debugdata.emplace_back(Vector[j]);
          }
          sendStrData(code+std::to_string(DEBUG)+" parameters posistionXYZ update",debugdata,100,true);
         } 
      // if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); ???? 241110
-       vupdateparams.clear();
+       Vupdateparams.clear();
      // if (flgСritical_section)  critical_section_exit(&criticalSection); 
       }
       status = none;
@@ -2457,7 +2457,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &vector)
     }   
     return(Zt);
 	}
-void Scanner::spectroscopyAIZ(std::vector<int32_t> &vector) // спектроскопия Ampl-Z
+void Scanner::spectroscopyAIZ(std::vector<int32_t> &Vector) // спектроскопия Ampl-Z
 {
 /*
    params[0]:=(SpectrParams.Npoints);
@@ -2478,13 +2478,13 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &vector) // спектрос�
 // const int16_t SFM=0;
 // const int16_t STM=1;
 // const int16_t SICMDC=3;      
- int16_t   NPoints=(int16_t )vector[1]; // n точек
- int16_t   NCurves=(int16_t )vector[2]; // отход на  abs(ZStart)
- int16_t    ZStart=(int16_t )vector[3]; // отход на  abs(ZStart)
- int16_t     ZStep=(int16_t )vector[4]; // ZStep>0
- int16_t Threshold=(int16_t )vector[5]; // Threshold
- int16_t     delay=(int16_t )vector[6]; // delay
- int16_t   flgModa=(int16_t )vector[7]; // flgmode stm,sfm;
+ int16_t   NPoints=(int16_t )Vector[1]; // n точек
+ int16_t   NCurves=(int16_t )Vector[2]; // отход на  abs(ZStart)
+ int16_t    ZStart=(int16_t )Vector[3]; // отход на  abs(ZStart)
+ int16_t     ZStep=(int16_t )Vector[4]; // ZStep>0
+ int16_t Threshold=(int16_t )Vector[5]; // Threshold
+ int16_t     delay=(int16_t )Vector[6]; // delay
+ int16_t   flgModa=(int16_t )Vector[7]; // flgmode stm,sfm;
 
  int16_t SignalValue;
  int16_t dir,dlt,deltaZ;
@@ -2495,7 +2495,7 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &vector) // спектрос�
  {  
   for (int j = 0; j <= 7; ++j)
   {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
   }
   sendStrData(code+std::to_string(DEBUG)+" AI_Z parameters",debugdata,100,true);
  } 
@@ -2618,7 +2618,7 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &vector) // спектрос�
   sendStrData(code+std::to_string(END)+"end");
 }
 
-void Scanner::spectroscopyIV(std::vector<int32_t> &vector)
+void Scanner::spectroscopyIV(std::vector<int32_t> &Vector)
 {
     int i,j;
     int16_t  Z0;
@@ -2633,19 +2633,19 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &vector)
     int32_t  start_step;
     int32_t  step;
 
-    UPoints         = (int16_t) vector[1]; // n точек
-    UCurves         = (int16_t) vector[2]; // m кривых
-		UStart	      	=           vector[3]; // V начальное значение    
-		UStep		        =           vector[4]; // V шаг 
-  	delay           = (int16_t) vector[5]; // задержка в точке измерения
-    flgDev          = (int8_t)  vector[6]; // прибор not use
-    UBackup         = (int16_t) vector[7]; // V текущее значение напряжения 
+    UPoints         = (int16_t) Vector[1]; // n точек
+    UCurves         = (int16_t) Vector[2]; // m кривых
+		UStart	      	=           Vector[3]; // V начальное значение    
+		UStep		        =           Vector[4]; // V шаг 
+  	delay           = (int16_t) Vector[5]; // задержка в точке измерения
+    flgDev          = (int8_t)  Vector[6]; // прибор not use
+    UBackup         = (int16_t) Vector[7]; // V текущее значение напряжения 
 //start
  if (flgDebug)
  {  
   for (int j = 0; j <= 7; ++j)
   {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
   }
   sendStrData(code+std::to_string(DEBUG)+" I_V parameters",debugdata,100,true);
  } 
@@ -2755,7 +2755,7 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &vector)
   sendStrData(code+std::to_string(END)+"end");  
 }
 
-void Scanner::approacphm(std::vector<int32_t> &vector) 
+void Scanner::approacphm(std::vector<int32_t> &Vector) 
 {
   const int none = 30;
   const int ok = 3;
@@ -2773,19 +2773,19 @@ void Scanner::approacphm(std::vector<int32_t> &vector)
   bool     DIR;
   bool     APPROACHDIR ;
   // SET VALUE FROM RX_CORE
-  SET_POINT      =(int16_t) vector[1]; // set point
-  GATE_Z_MAX     =(int16_t) vector[2]; // max
-  GATE_Z_MIN     =(int16_t) vector[3]; // min
-  NSTEPS         =(int16_t) vector[4]; // steps 
-  DIR            =(bool)    vector[5]; //  int dir
-  APPROACHDIR    =(bool)    vector[6]; //  APPRoach dir read from ini file
-  INTDELAY       =(uint16_t)vector[7]; // initdelay
-  GAIN           =(uint16_t)vector[8]; // gain  //240320
-  SCANNERDECAY   =(uint16_t)vector[9]; // scannerDelay 
-  freq           =(int16_t) vector[10]; // freq
-  duty           =(int16_t) vector[11]; // scv
-  flgDev         =(int16_t) vector[12];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
-  BiasV          =(int16_t) vector[13];// Voltage need for STM,SICM
+  SET_POINT      =(int16_t) Vector[1]; // set point
+  GATE_Z_MAX     =(int16_t) Vector[2]; // max
+  GATE_Z_MIN     =(int16_t) Vector[3]; // min
+  NSTEPS         =(int16_t) Vector[4]; // steps 
+  DIR            =(bool)    Vector[5]; //  int dir
+  APPROACHDIR    =(bool)    Vector[6]; //  APPRoach dir read from ini file
+  INTDELAY       =(uint16_t)Vector[7]; // initdelay
+  GAIN           =(uint16_t)Vector[8]; // gain  //240320
+  SCANNERDECAY   =(uint16_t)Vector[9]; // scannerDelay 
+  freq           =(int16_t) Vector[10]; // freq
+  duty           =(int16_t) Vector[11]; // scv
+  flgDev         =(int16_t) Vector[12];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
+  BiasV          =(int16_t) Vector[13];// Voltage need for STM,SICM
  //need to add channel Bias ????
  //need to add channel SetPoint ????
  // ZValue=-1000;
@@ -2793,7 +2793,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector)
  {
   for (size_t j = 0; j < 11; j++)     // send info
   {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
   } 
   sendStrData(code+std::to_string(DEBUG)+" approach parameters  ",debugdata,100,true);
  } 
@@ -2843,14 +2843,14 @@ void Scanner::approacphm(std::vector<int32_t> &vector)
     if (CONFIG_UPDATE)
     {
       CONFIG_UPDATE = false;
-      SET_POINT    = vupdateparams[1];
-      GATE_Z_MAX   = vupdateparams[2];
-      GATE_Z_MIN   = vupdateparams[3];
-      NSTEPS       = vupdateparams[4];
-      DIR          =(bool)vupdateparams[5]; //  int dir
-      INTDELAY     = vupdateparams[6];
-      GAIN         =(uint16_t) vupdateparams[7];
-      SCANNERDECAY = vupdateparams[8];
+      SET_POINT    = Vupdateparams[1];
+      GATE_Z_MAX   = Vupdateparams[2];
+      GATE_Z_MIN   = Vupdateparams[3];
+      NSTEPS       = Vupdateparams[4];
+      DIR          =(bool)Vupdateparams[5]; //  int dir
+      INTDELAY     = Vupdateparams[6];
+      GAIN         =(uint16_t) Vupdateparams[7];
+      SCANNERDECAY = Vupdateparams[8];
      
      // if (flgDev!=SFM) set_Bias(1,Bias);  240211
       hardware->set_SetPoint(SET_POINT); 
@@ -2861,12 +2861,12 @@ void Scanner::approacphm(std::vector<int32_t> &vector)
       {  
        for (int j = 0; j <= 7; ++j)
        {
-        debugdata.emplace_back(vupdateparams[j]);
+        debugdata.emplace_back(Vupdateparams[j]);
        }
        sendStrData(code+std::to_string(DEBUG)+" parameters update",debugdata,200,true);
       } 
      if (flgСritical_section)  critical_section_enter_blocking(&criticalSection); 
-      vupdateparams.clear();
+      Vupdateparams.clear();
      if (flgСritical_section)  critical_section_exit(&criticalSection); 
     }
  
@@ -2969,7 +2969,7 @@ void Scanner::approacphm(std::vector<int32_t> &vector)
   sendStrData(code+std::to_string(END)+"end");
 }
 
-void Scanner::testpiezomover(std::vector<int32_t> &vector)
+void Scanner::testpiezomover(std::vector<int32_t> &Vector)
 {
   int8_t   flgstop;  //=1  stop
   int16_t  step,Z0;
@@ -2978,20 +2978,20 @@ void Scanner::testpiezomover(std::vector<int32_t> &vector)
   int16_t  NSTEPS,NCYCLES;
   uint16_t INTDELAY, SCANNERDECAY;
   // SET VALUE FROM RX_CORE
-         GATE_Z_MAX     =(int16_t) vector[1]; // max
-         GATE_Z_MIN     =(int16_t) vector[2]; // min
-         NSTEPS         =abs((int16_t) vector[3]); // steps 
-         NCYCLES        =(int16_t) vector[4]; // ncycles 
-         INTDELAY       =(uint16_t)vector[5]; // initdelay
-         SCANNERDECAY   =(uint16_t)vector[6]; // scannerDelay 
-         freq           =(int16_t) vector[7]; // freq
-         scv            =(int16_t) vector[8]; // scv  
-    //     flgDev         =(int16_t) vector[9];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
+         GATE_Z_MAX     =(int16_t) Vector[1]; // max
+         GATE_Z_MIN     =(int16_t) Vector[2]; // min
+         NSTEPS         =abs((int16_t) Vector[3]); // steps 
+         NCYCLES        =(int16_t) Vector[4]; // ncycles 
+         INTDELAY       =(uint16_t)Vector[5]; // initdelay
+         SCANNERDECAY   =(uint16_t)Vector[6]; // scannerDelay 
+         freq           =(int16_t) Vector[7]; // freq
+         scv            =(int16_t) Vector[8]; // scv  
+    //     flgDev         =(int16_t) Vector[9];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
  if (flgDebug)
  {
    for (size_t j = 0; j < 9; j++)     // send info
   {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
   } 
   sendStrData(code+std::to_string(DEBUG)+" test motor steps parameters  ",debugdata,300,true);
  }
@@ -3123,19 +3123,19 @@ void Scanner::testpiezomover(std::vector<int32_t> &vector)
      if (CONFIG_UPDATE)
      {
         CONFIG_UPDATE = false;
-        NSTEPS       = abs(vupdateparams[1]);
-        INTDELAY     = vupdateparams[2];   
-        freq         = vupdateparams[3];
-        scv          = vupdateparams[4];
+        NSTEPS       = abs(Vupdateparams[1]);
+        INTDELAY     = Vupdateparams[2];   
+        freq         = Vupdateparams[3];
+        scv          = Vupdateparams[4];
        if (flgDebug)
        {
         for (int j = 0; j <= 4; ++j)
         {
-         debugdata.emplace_back(vupdateparams[j]);
+         debugdata.emplace_back(Vupdateparams[j]);
         }
         sendStrData(code+std::to_string(DEBUG)+" test piezo parameters update",debugdata,200,true);
        } 
-        vupdateparams.clear();
+        Vupdateparams.clear();
        }
        i++;
       }//while cyclecount
@@ -3251,15 +3251,15 @@ void Scanner::start_frqscan()
   int16_t  delay;
   int32_t freqstart;
   int16_t  npoint;
-    npoint=vector[1];
- freqstart=(int32_t)vector[2];
-  freqstep=(int32_t)vector[3];
-     delay=vector[4];
+    npoint=Vector[1];
+ freqstart=(int32_t)Vector[2];
+  freqstep=(int32_t)Vector[3];
+     delay=Vector[4];
   if (flgDebug)
   {  
    for (int j = 0; j < 5; ++j)
    {
-    debugdata.emplace_back(vector[j]);
+    debugdata.emplace_back(Vector[j]);
    }
    sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
   }

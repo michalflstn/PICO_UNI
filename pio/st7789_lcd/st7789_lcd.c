@@ -108,7 +108,7 @@ int main() {
     // Lane 0 will be u coords (bits 8:1 of addr offset), lane 1 will be v
     // coords (bits 16:9 of addr offset), and we'll represent coords with
     // 16.16 fixed point. ACCUM0,1 will contain current coord, BASE0/1 will
-    // contain increment vector, and BASE2 will contain image base pointer
+    // contain increment Vector, and BASE2 will contain image base pointer
 #define UNIT_LSB 16
     interp_config lane0_cfg = interp_default_config();
     interp_config_set_shift(&lane0_cfg, UNIT_LSB - 1); // -1 because 2 bytes per pixel

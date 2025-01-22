@@ -95,8 +95,8 @@ extern uint32_t     DEBUG_LEVEL;
 extern std::string  afc;
 extern uint16_t     spiBuf[8];
 
-extern std::vector<int32_t> vector;
-extern std::vector<int32_t> vupdateparams;
+extern std::vector<int32_t> Vector;
+extern std::vector<int32_t> Vupdateparams;
 extern int32_t vectorSize;
 
 extern bool AD9833_SENDER;
