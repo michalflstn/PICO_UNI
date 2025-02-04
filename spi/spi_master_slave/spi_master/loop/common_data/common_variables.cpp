@@ -1,20 +1,20 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="25.01.17.1 BiasV_for_WB_Free_Mem delphi UseCore1";
+std::string  SOFTVERSION="24.12.20.1 BiasV_for_WB_new delphi UseCore1";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
-std::vector<int32_t> Vector;
-std::vector<int32_t> Vupdateparams;
+std::vector<int32_t> vector;
+std::vector<int32_t> vupdateparams;
 int32_t  vectorSize;
 uint16_t spiBuf[8];
 std::atomic<int16_t>     ALGCODE;
 std::atomic<bool>  CONFIG_UPDATE;
 std::atomic<bool>  STOP;
 std::atomic<bool>  TheadDone;   //need dor synchronization with PC 
-std::atomic<bool>  DrawDone;    //need dor synchronization with PC 
+std::atomic<bool>  DrawDone=true;    //need dor synchronization with PC 
 std::atomic<bool>  ADC_IS_READY_TO_READ = true;
 std::atomic<bool>  flgVirtual = false; // start value!!! setPIDGain
 std::atomic<bool>  flgDebug   = false; // strat value!!!
