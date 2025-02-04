@@ -1,13 +1,13 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="24.12.20.1 BiasV_for_WB_new delphi UseCore1";
+std::string  SOFTVERSION="25.02.03.1 BiasV_for_WB_new delphi UseCore1";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=WB;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
-std::vector<int32_t> vector;
-std::vector<int32_t> vupdateparams;
+std::vector<int32_t> Vector;
+std::vector<int32_t> Vupdateparams;
 int32_t  vectorSize;
 uint16_t spiBuf[8];
 std::atomic<int16_t>     ALGCODE;
