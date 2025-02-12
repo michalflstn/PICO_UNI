@@ -24,7 +24,19 @@ void MainCore::launchOnCore1()
      /* case  ADC_RESET: 
         ADC_RESET = true;
         break;
-     */   
+     */  
+ case VersionCmd:
+              {
+                ALGCODE=ALGNONE;
+                afc.clear();
+                afc = code+std::to_string(DEBUG)+" get version ";
+                afc +=endln;//"\n";
+                std::cout << afc;
+                afc.clear();
+                sleep_ms(100);
+                scanner->hardware->GetSOFTHARDWAREVersion();
+                break;
+              }  
   case VirtualCmd : //флаг симуляции работы микроконтроллера      
           ALGCODE=ALGNONE;
           flgVirtual=(bool)Vector[1];
@@ -117,18 +129,7 @@ void MainCore::loop()
     switch (ALGCODE)
     {
 case   ALGNONE:{break;}
-case VersionCmd:
-              {
-                ALGCODE=ALGNONE;
-                afc.clear();
-                afc = code+std::to_string(DEBUG)+" get version ";
-                afc +=endln;//"\n";
-                std::cout << afc;
-                afc.clear();
-                sleep_ms(100);
-                scanner->hardware->GetSOFTHARDWAREVersion();
-                break;
-              } 
+
 /*
  case  VirtualCmd:
               {
