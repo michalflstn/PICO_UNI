@@ -25,6 +25,9 @@ std::atomic<uint16_t> ZJump;        //hopping
 
 const std::string  code="code";  
 const std::string  endln="\n";
+//=std::endl 
+//The usual convention is to just use std::endl instead of simply outputting '\n'; 
+// std::endl outputs a '\n' and then flushes the stream ????
 const char         separator=',';
 
 bool   AD9833_SENDER = false;
