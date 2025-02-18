@@ -1,3 +1,4 @@
+
 add_executable(spi_master spi_master.cpp transceiver/rx_utils/parser.hpp utilities/base_types/Spi.cpp
         utilities/base_types/Spi.hpp utilities/base_types/Decoder.cpp utilities/base_types/Decoder.hpp
         transceiver/rx_core.hpp transceiver/rx_core.cpp
