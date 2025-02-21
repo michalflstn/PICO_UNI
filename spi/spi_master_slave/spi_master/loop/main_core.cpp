@@ -225,7 +225,7 @@ case TESTMOVER:{
                }
 case FREQ_SET:{
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_Freq((uint16_t) Vector[1]);              
+                scanner->hardware->set_Freq((uint32_t) Vector[1]);              
                 break;
               }
 case LID_MOVE_UNTIL_STOP:

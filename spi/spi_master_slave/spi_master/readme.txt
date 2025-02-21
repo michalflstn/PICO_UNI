@@ -1,3 +1,5 @@
+//250221
+error set freq>65568 -corrected!
 //250116
 gain -> unit32_t
 uint16_t error
