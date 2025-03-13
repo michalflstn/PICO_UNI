@@ -866,8 +866,24 @@ void HARDWARE::set_GainPID(uint32_t gain)
       FPGAWriteData writedata;
       writedata.addr=arrModule_0.wbKx[0];//  0x08430000;  //adress gain need sign
       writedata.cmd=0x01;
-      writedata.data=(uint32_t)gain; // gain need sign
-      WriteDataToFPGA(writedata);
+      if (LOOPGain<=gain)
+      {
+       for (size_t i = LOOPGain; i > gain; i--)
+       {
+        writedata.data=(uint32_t)gain; // gain need sign
+        WriteDataToFPGA(writedata);
+        sleep_ms(10);
+       }
+      } 
+      else
+      {
+        for (size_t i = LOOPGain; i > gain; i--)
+        {
+          writedata.data=(uint32_t)gain; // gain need sign
+          WriteDataToFPGA(writedata); 
+          sleep_ms(10);
+        }
+      } 
       break;
      }    
   }
@@ -887,8 +903,26 @@ void HARDWARE::set_GainPID(uint32_t gain)
       FPGAWriteData writedata;
       writedata.addr=arrModule_0.wbKx[0];//  0x08430000;  //adress gain need sign
       writedata.cmd=0x01;
+    //  writedata.data=(uint32_t)gain; // gain need sign
+    //  WriteDataToFPGA(writedata);  
+     if (LOOPGain<=gain)
+     {
+     for (size_t i = LOOPGain; i > gain; i--)
+     {
       writedata.data=(uint32_t)gain; // gain need sign
-      WriteDataToFPGA(writedata);  
+      WriteDataToFPGA(writedata);
+      sleep_ms(10);
+     }
+     } 
+     else
+     {
+      for (size_t i = LOOPGain; i > gain; i--)
+      {
+        writedata.data=(uint32_t)gain; // gain need sign
+        WriteDataToFPGA(writedata); 
+        sleep_ms(10);
+      }
+     } 
     }
     else //virtual
     {
@@ -909,7 +943,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 
-  }  
+  } 
+  LOOPGain=gain; 
  }
 void HARDWARE::set_GainPID(uint16_t gain)
 {

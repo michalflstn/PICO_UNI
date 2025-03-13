@@ -463,7 +463,7 @@ struct Config
       conf_.delayB  = Vupdateparams[2];
       delayBW=conf_.delayB;
       if (flgDebug) sleep_ms(100); 
-      hardware->set_GainPID((uint32_t)Vupdateparams[3]);
+      hardware->set_GainPID((uint32_t)Vupdateparams[3]); 
       conf_.diskretinstep = Vupdateparams[4]; 
       if (flgDebug)
       {
