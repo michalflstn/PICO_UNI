@@ -9,7 +9,7 @@ std::string afc;  //dataout string
 std::vector<int32_t> Vector;
 std::vector<int32_t> Vupdateparams;
 int32_t  vectorSize;
-uint16_t spiBuf[8];
+//uint16_t spiBuf[12]; //8 25/03/17
 std::atomic<int16_t>     ALGCODE;
 std::atomic<bool>  CONFIG_UPDATE;
 std::atomic<bool>  STOP;
@@ -56,9 +56,12 @@ int16_t ZMaxValue   = maxint16_t;
 int16_t SignalMaxValue = maxint16_t; //add 240710
 int32_t ShiftDac  = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 int8_t  SetPointScale= 1;  ///??????
+
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
 uint8_t IPin    = 2; // ток  
+
+
 bool Z_STATE = false; //???
 
 critical_section_t criticalSection;

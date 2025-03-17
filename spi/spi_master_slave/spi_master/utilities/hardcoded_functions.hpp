@@ -147,7 +147,9 @@ public:
  int32_t  ReadDataFromFPGA(FPGAReadData readdata);
  
  uint8_t ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout);
- 
+
+ uint8_t ReadDataFromFPGAArrayALL(uint16_t *arrayout);
+
  void retract();       // втянуть сканер
 
  void retract(int16_t HeightJump); //втянуть на HeightJump

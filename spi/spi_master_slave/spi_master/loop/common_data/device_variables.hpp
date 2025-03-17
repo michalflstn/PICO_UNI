@@ -15,16 +15,36 @@
 #define FPGAUART_TX_PIN 8 //!
 #define FPGAUART_RX_PIN 9 //!
 #define FPGA_UART_ID    uart1
-#define FPGA_BAUD_RATE  115200
+#define FPGA_BAUD_RATE  115200 //400000?
+#define NmbADCSignals   12 //8 ADC + control
 
-extern uint8_t FPGADELIM;
-extern uint8_t FPGACRCPAR;
-extern uint8_t FPGAREAD;
-extern uint8_t FPGAREADOK;
-extern uint8_t FPGAREADADC;
-extern uint8_t FPGAREADADCM;
-extern uint8_t FPGAWRITE;
-extern uint8_t FPGAASC;
+extern uint16_t  spiBuf[NmbADCSignals];
+/*
+register map!!!!!!!!!!!!
+0-timestamp_us
+1-8 data ADC registers
+control registers
+9   0x08410024  not use
+10  0x08410028 
+    включить фильтрацию на канале АЦП x (от 0 до 7) в регистр 0x08410028 
+    нужно записать 0x0000010x, где x - номер канала (от 0 до 7).
+    В регистре controlReg2 включается фильтр низких частот,
+    остальные регистры управления пока не используются.
+    Чтобы включить фильтрацию на канале АЦП x (от 0 до 7) в регистр 0x08410028 
+    нужно записать 0x0000010x, где x - номер канала (от 0 до 7).
+11  0x0841002C  not use   
+*/
+//extern uint16_t spiBuf[NmbSignals];
+extern uint8_t  FPGADELIM;
+extern uint8_t  FPGACRCPAR;
+extern uint8_t  FPGAREAD;
+extern uint8_t  FPGAREADOK;
+extern uint8_t  FPGAREADADC;
+extern uint8_t  FPGAREADADCM;
+extern uint8_t  FPGAREADADCMALL;
+extern uint8_t  FPGAWRITE;
+extern uint8_t  FPGAASC;
+extern uint8_t  FPGAASCREADMAll;
 extern uint32_t ZAdress;
 extern uint32_t AmplAdress;
 extern uint32_t IAdress;
@@ -101,6 +121,15 @@ struct FPGAReadDataArray
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
  };
+ struct FPGAReadDataArrayALL
+ {
+ uint8_t  delimbegin=FPGADELIM;
+ uint8_t  cmd=FPGAREADADCMALL;
+ uint32_t addr=0x08410004; //dataBufferRd[0]
+ uint8_t  count;
+ uint8_t  crcpar=FPGACRCPAR;
+ uint8_t  delimend=FPGADELIM;
+ };
  struct FPGAAscData
 {
  uint8_t  delimbegin=FPGADELIM;
@@ -108,7 +137,7 @@ struct FPGAReadDataArray
  uint32_t addr;
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
- };
+};
 struct ConfigHardWareNew  //WB
 {
   uint8_t DACSetPointPort;    //2 DAC8563_1  BIAS SetPoint

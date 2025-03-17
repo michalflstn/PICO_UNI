@@ -93,7 +93,7 @@ extern std::string  SoftHARDWAREVERSION;  //  {0,1,....} or {0.1, 1.1...}
 extern int8_t       HARDWAREVERSION;      //PICO=0; MotherBoard=1
 extern uint32_t     DEBUG_LEVEL;
 extern std::string  afc;
-extern uint16_t     spiBuf[8];
+//extern uint16_t     spiBuf[12];
 
 extern std::vector<int32_t> Vector;
 extern std::vector<int32_t> Vupdateparams;

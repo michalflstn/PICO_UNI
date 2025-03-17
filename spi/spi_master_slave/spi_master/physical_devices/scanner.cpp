@@ -172,7 +172,11 @@ void Scanner::readADC()
                  SignalValue = (int16_t) spiBuf[AmplPin];
                  break;  
                 } 
-        case STM://STM=1
+       case STM://STM=1
+                {
+                  SignalValue = (int16_t) spiBuf[IPin];
+                  break;  
+                } 
      case SICMDC://SICMDC=3  
                 {
                  SignalValue = (int16_t) spiBuf[IPin];

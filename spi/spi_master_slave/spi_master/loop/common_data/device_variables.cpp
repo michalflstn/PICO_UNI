@@ -7,11 +7,15 @@ uint8_t   FPGAREAD=0x00;
 uint8_t FPGAREADOK=0x80; // если выполнена команда чтения и ОК
 uint8_t  FPGAWRITE=0x01;
 uint8_t    FPGAASC=0x80;
-uint8_t   FPGAREADADC=0x03; ///?????????????????   Согласовать
-uint8_t  FPGAREADADCM=0x40; //read array
+uint8_t   FPGAASCREADMAll=0xCC; //  ACK(0x80) + READM(0x40 + COUNT(0x0C)) ответ на чтение 12 регистров
+//uint8_t   FPGAREADADC=0x03;    ///?????????????????   Согласовать
+uint8_t   FPGAREADADCM=0x40;   //read array
+uint8_t   FPGAREADADCMALL=0x4C; // 0x40 + 0x0C  read array 12 registers
 uint32_t    ZAdress=0x08410004;
 uint32_t AmplAdress=0x08410008;
 uint32_t    IAdress=0x0841000C;
+
+uint16_t     spiBuf[NmbADCSignals];
 
 Spi                  spi;
 Decoder              decoder(4, 5, 6);  
