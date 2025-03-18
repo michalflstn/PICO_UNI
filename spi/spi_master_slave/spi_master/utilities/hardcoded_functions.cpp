@@ -147,6 +147,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
 switch  (HARDWAREVERSION) 
 {
 case BBFPGA:
+       gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);     
        break;
 case BB:
        gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
@@ -548,7 +549,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
     }
    else return 1;// error 
 }
-uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
+uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint32_t *arrayout) //16
 {
 //  uint8_t szasc=count*4+5;  //40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t count=NmbADCSignals; //fix
@@ -565,7 +566,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
   outbuffer[5]=(readdata.addr&0x000000FF);
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
-  if (flgDebug)  
+  /*if (flgDebug)  
   {
     std::string afcc;
     afcc.clear();
@@ -579,6 +580,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
     sleep_ms(200);
     afcc.clear();
   }
+ */
   while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
   {
     uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
@@ -593,7 +595,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
     {
    //  for (size_t j = 0; j < sizeof(spiBuf);j++)
      for (size_t j = 0; j < count;j++)
-      for (size_t i = 0; i < count; i++)
+    //  for (size_t i = 0; i < count; i++)// 250318
       {
     //   spiBuf[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
        arrayout[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
@@ -602,7 +604,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
      return 0; //ok
     }
    else return 1;// error 
-}
+ }
 int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
 {
   uint8_t szread=8;
