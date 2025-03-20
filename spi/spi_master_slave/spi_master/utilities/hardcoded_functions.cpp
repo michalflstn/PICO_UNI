@@ -164,7 +164,8 @@ case BB:
    init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
-   uint32_t gain=7; 
+   uint32_t gain0=7; 
+   uint32_t gain=(gain0<<8)+100;
    LOOPGain=gain;
    set_GainPID(gain); // not virtual; not debug!
    retract();         //втянуть    
@@ -717,7 +718,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     sleep_ms(200);
     afcc.clear();
   }
-  while (!uart_is_writable(FPGA_UART_ID)) {sleep_ms(100);} 
+ // while (!uart_is_writable(FPGA_UART_ID)) {sleep_ms(100);} 
   {
     uart_write_blocking(FPGA_UART_ID, buffer,szwrite);
     sleep_ms(30);
@@ -934,9 +935,12 @@ void HARDWARE::set_GainPID(uint32_t gain)
       FPGAWriteData writedata;
       writedata.addr=arrModule_0.wbKx[0];//  0x08430000;  //adress gain need sign
       writedata.cmd=0x01;
-      if (abs(LOOPGain)<=abs(gain))
+      writedata.data=gain;//(uint32_t)gain; // gain need sign
+      WriteDataToFPGA(writedata);
+      sleep_ms(10);
+   /*   if (abs(LOOPGain)<=abs(gain))
       {
-       for (size_t i = abs(LOOPGain); i > abs(gain); i--)
+       for (size_t i = abs(LOOPGain); i >= abs(gain); i--)
        {
         writedata.data=gain;//(uint32_t)gain; // gain need sign
         WriteDataToFPGA(writedata);
@@ -952,6 +956,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
           sleep_ms(10);
         }
       } 
+        */
       break;
      }    
   }
