@@ -549,7 +549,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
     }
    else return 1;// error 
 }
-uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint32_t *arrayout) //16
+uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
 {
 //  uint8_t szasc=count*4+5;  //40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t count=NmbADCSignals; //fix
@@ -591,6 +591,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint32_t *arrayout) //16
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   }
   uint8_t k=6; //0A 80 adress=4 ??
+  uint16_t val;
    if(inbuffer[1]==(FPGAASCREADMAll)) //???? get array adc 0A 80 adress dataarray BB 0A
     {
    //  for (size_t j = 0; j < sizeof(spiBuf);j++)
@@ -598,7 +599,8 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint32_t *arrayout) //16
     //  for (size_t i = 0; i < count; i++)// 250318
       {
     //   spiBuf[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
-       arrayout[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+       val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+       arrayout[j]=(uint16_t)val;
        k+=4;
       }
      return 0; //ok
