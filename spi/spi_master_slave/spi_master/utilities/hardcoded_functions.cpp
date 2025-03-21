@@ -135,8 +135,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(FPGAUART_RX_PIN, GPIO_FUNC_UART);  
     // Enable UART
+    // Set UART flow control CTS/RTS, we don't want these, so turn them off
     uart_set_hw_flow(FPGA_UART_ID, false, false);
+        // Set our data format
     uart_set_format(FPGA_UART_ID, 8, 1, UART_PARITY_NONE);
+     // Turn off FIFO's - we want to do this character by character
     uart_set_fifo_enabled(FPGA_UART_ID,true);// true);  
    // uart_set_hw_flow(FPGA_UART_ID,true, true);
   }
@@ -147,7 +150,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
 switch  (HARDWAREVERSION) 
 {
 case BBFPGA:
-       gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);     
+      // gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);     
        break;
 case BB:
        gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
@@ -164,12 +167,26 @@ case BB:
    init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
-   uint32_t gain0=7; 
-   uint32_t gain=(gain0<<8)+100;
+   uint32_t gain;
+   switch  (HARDWAREVERSION) 
+   {
+    case BBFPGA: 
+    { 
+     gain=7; 
+     break;
+    } 
+    case BB:
+    { 
+     uint32_t gain0=7;
+     gain=(gain0<<8)+100; 
+     break;
+    } 
+    case WB:{ gain=7; ; break;}
+   }
    LOOPGain=gain;
-   set_GainPID(gain); // not virtual; not debug!
-   retract();         //втянуть    
-   init_DACZ(confighardwarev0.DACZPort);      //инициирование ЦАП3  DACZ
+   set_GainPID(gain);                    // not virtual; not debug!
+   retract();                            // втянуть    
+   init_DACZ(confighardwarev0.DACZPort); // инициирование ЦАП3  DACZ
    set_DACZ(0); 
 
 //************************************************************* 
@@ -182,9 +199,7 @@ case BB:
     usemod_U:=0;       // use mod U; not=0
     usenotmod_I:=1;       // use mod I not  =1 ; 
   */  
-
-//  init_DACZ(dacZPort);      //инициирование ЦАП3  DACZ
-  
+ //  init_DACZ(dacZPort);      //инициирование ЦАП3  DACZ
 }
 void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB  
 {
@@ -561,13 +576,13 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
   FPGAReadDataArrayALL readdata;
   outbuffer[0]=readdata.delimbegin;
   outbuffer[1]=readdata.cmd; 
-  outbuffer[2]=(readdata.addr&0xFF000000)>>24;
-  outbuffer[3]=(readdata.addr&0x00FF0000)>>16;  
-  outbuffer[4]=(readdata.addr&0x0000FF00)>>8;
-  outbuffer[5]=(readdata.addr&0x000000FF);
+  outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
+  outbuffer[3]=(uint8_t)((readdata.addr&0x00FF0000)>>16);  
+  outbuffer[4]=(uint8_t)((readdata.addr&0x0000FF00)>>8);
+  outbuffer[5]=(uint8_t)((readdata.addr&0x000000FF));
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
-  /*if (flgDebug)  
+ if (flgDebug)  
   {
     std::string afcc;
     afcc.clear();
@@ -581,8 +596,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
     sleep_ms(200);
     afcc.clear();
   }
- */
-  while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
+ while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
   {
     uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
     sleep_ms(30);
@@ -809,6 +823,8 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
  //   sleep_us(2);//240405 
     decoder.activePort(7);
   } 
+
+
 */
     switch (HARDWAREVERSION)
       {
@@ -860,7 +876,6 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
 void HARDWARE::set_GainPID(uint32_t gain)
 { 
     uint8_t ti; 
-
    switch (HARDWAREVERSION)  
   {
   case BB:

@@ -1,3 +1,7 @@
+//250321
+работа с uart в cmakelist.txt добалено pico_sdk_init()
+и  в target_link_libraries hardware_uart?
+BBFPGA - управление  gain  один ползунок нет addgain
 //250221
 error set freq>65568 -corrected!
 //250116
