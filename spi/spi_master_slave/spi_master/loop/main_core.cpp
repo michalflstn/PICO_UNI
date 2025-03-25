@@ -367,12 +367,24 @@ case Set_SIGN_LOOP_BIASV:
 case ADC_READCmd: //TIMER
               {
                 ALGCODE=ALGNONE;
-                if (ADC_IS_READY_TO_READ)
+                switch (HARDWAREVERSION)
+                {       
+              case BBFPGA:
                 {
-                 scanner->readADC();
+                  scanner->readADC();
+                  break;  
                 }
-                break;
+                case BB:
+                case WB:
+                { 
+                 if (ADC_IS_READY_TO_READ)
+                 {
+                  scanner->readADC();
+                 }
+                 break;
+                }
               }    
+            }
 case GET_CURRENTX0Y0:
               {
                 ALGCODE=ALGNONE;

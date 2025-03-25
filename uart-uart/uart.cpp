@@ -46,7 +46,7 @@ int main() {
    
   int main()
   {
-      size_t sz=8;//12; //256;  //12
+      size_t sz=12;//12; //256;  //12
       uint8_t inbuffer[sz];        
       stdio_init_all();  
       uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); //add  240627

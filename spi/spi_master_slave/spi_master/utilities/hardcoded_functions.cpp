@@ -131,6 +131,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
   {
     ShiftDac=0;
     SetPointScale=2;  ////????????
+    stdio_init_all(); //add 250325
     uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); //add  240627
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(FPGAUART_RX_PIN, GPIO_FUNC_UART);  
@@ -184,10 +185,10 @@ case BB:
     case WB:{ gain=7; ; break;}
    }
    LOOPGain=gain;
-   set_GainPID(gain);                    // not virtual; not debug!
-   retract();                            // втянуть    
+  // set_GainPID(gain);     //250325               // not virtual; not debug!
+  // retract();             //250325               // втянуть    
    init_DACZ(confighardwarev0.DACZPort); // инициирование ЦАП3  DACZ
-   set_DACZ(0); 
+  // set_DACZ(0); //250325
 
 //************************************************************* 
  // init_commutation(sensor,signloop,signal_to_loop,usenotmod_I,usemod_U);
@@ -570,7 +571,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
 //  uint8_t szasc=count*4+5;  //40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t count=NmbADCSignals; //fix
   uint8_t szread=8;
-  uint8_t szasc=8;//2+4+NmbADCSignals*4+2;  //=56 bytes
+  uint8_t szasc=2+4+NmbADCSignals*4+2;  //=56 bytes
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
   FPGAReadDataArrayALL readdata;
@@ -625,15 +626,16 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
      std::cout << afcc;
      sleep_ms(200);
      afcc.clear();
-    uart_read_blocking(FPGA_UART_ID, inbuffer,szasc); 
+
+     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc); 
 
      afcc.clear();
-     afcc=code+std::to_string(DEBUG)+"read"; 
+     afcc=code+std::to_string(DEBUG)+"read="+std::to_string(szasc) ; 
      afcc +=endln;
      std::cout << afcc;
      sleep_ms(200);
      afcc.clear();
-  }
+  //}
   uint8_t k=6; //0A 80 adress=4 ??
   uint32_t val;
  //  if(inbuffer[1]==(FPGAASCREADMAll)) //???? get array adc 0A 80 adress dataarray BB 0A
@@ -643,12 +645,20 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
     //  for (size_t i = 0; i < count; i++)// 250318
       {
     //   spiBuf[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+    //val=inbuffer[j];
        val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
        arrayout[j]=(uint16_t)val;
+       afcc+=separator + std::to_string(arrayout[j]); 
        k+=4;
       }
+
+      afcc +=endln;
+     std::cout << afcc;
+     sleep_ms(200);
+     afcc.clear();
      return 0; //ok
     }
+  }
   // else return 1;// error 
  }
 int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
@@ -694,6 +704,17 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
  //get array adc 0A 80 adress data BB 0A
   if(inbuffer[1]==FPGAREADOK) {ures=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[7]<<8)+inbuffer[9];} //ok
     else ures=0; //error ????
+    if (flgDebug)  
+    {
+      std::string afcc;
+      afcc.clear();
+      afcc=code+std::to_string(DEBUG); 
+      afcc +=separator + std::to_string(ures);
+      afcc +=endln;
+      std::cout << afcc;
+      sleep_ms(200);
+      afcc.clear();
+    }
   return int32_t(res);
 }
 void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
@@ -729,24 +750,24 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     self.CMD_CRC, self.DELIM\
  */           
   size_t szwrite;
-  size_t szasc=8; //for ASC FPGA
+  size_t szasc=1;//2;//8; //for ASC FPGA
   szwrite=sizeof(writedata);
   uint8_t buffer[szwrite];
-  //uint8_t outbuffer[szasc];
+  //uint8_t buffer[1];
+  uint8_t outbuffer[szasc];
   buffer[0]=writedata.delimbegin;
   buffer[1]=writedata.cmd;
-  buffer[2]=(writedata.addr&0xFF000000)>>24;
-  buffer[3]=(writedata.addr&0x00FF0000)>>16;  
-  buffer[4]=(writedata.addr&0x0000FF00)>>8;
-  buffer[5]= writedata.addr&0x000000FF;
-  buffer[6]=(writedata.data&0xFF000000)>>24;
-  buffer[7]=(writedata.data&0x00FF0000)>>16;;
-  buffer[8]=(writedata.data&0x0000FF00)>>8;
-  buffer[9]= writedata.data&0x000000FF;
+  buffer[2]=(uint8_t)((writedata.addr&0xFF000000)>>24);
+  buffer[3]=(uint8_t)((writedata.addr&0x00FF0000)>>16);  
+  buffer[4]=(uint8_t)((writedata.addr&0x0000FF00)>>8);
+  buffer[5]=(uint8_t)( writedata.addr&0x000000FF);
+  buffer[6]=(uint8_t)((writedata.data&0xFF000000)>>24);
+  buffer[7]=(uint8_t)((writedata.data&0x00FF0000)>>16);;
+  buffer[8]=(uint8_t)((writedata.data&0x0000FF00)>>8);
+  buffer[9]=(uint8_t)(writedata.data&0x000000FF);
   buffer[10]=writedata.crcpar;
   buffer[11]=writedata.delimend;
-  
- // memcpy(buffer, &writedata,sz);
+   // memcpy(buffer, &writedata,sz);
   if (flgDebug)  
   {
     std::string afcc;
@@ -821,6 +842,10 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       writedata.cmd=0x01;
       writedata.data=SetPointScale*(uint32_t)(SetPoint+ShiftDac);  
       WriteDataToFPGA(writedata);
+      sleep_ms(200);
+      FPGAReadData readdata;
+      readdata.addr=arrModule_0.wbSetpoint;
+      ReadDataFromFPGA(readdata);
     }
   }
   // отладка
@@ -982,6 +1007,11 @@ void HARDWARE::set_GainPID(uint32_t gain)
       writedata.data=gain;//(uint32_t)gain; // gain need sign
       WriteDataToFPGA(writedata);
       sleep_ms(10);
+      if (flgDebug)  
+      {
+       afc.clear();
+       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti);
+      }  
    /*   if (abs(LOOPGain)<=abs(gain))
       {
        for (size_t i = abs(LOOPGain); i >= abs(gain); i--)
