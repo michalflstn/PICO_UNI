@@ -16,7 +16,7 @@
 #define FPGAUART_RX_PIN 9 //!
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
-#define NmbADCSignals   1//2 //8 ADC + control
+#define NmbADCSignals   12 // ADC + control
 
 extern uint16_t  spiBuf[NmbADCSignals];
 /*
@@ -117,16 +117,16 @@ struct FPGAReadDataArray
  uint8_t  delimbegin=FPGADELIM;
  uint8_t  cmd=FPGAREADADCM;
  uint32_t addr=0x08410004; //dataBufferRd[0]
- uint8_t  count;
+ //uint8_t  count;//???
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
  };
  struct FPGAReadDataArrayALL
  {
  uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAREADADCMALL;
+ uint8_t  cmd=FPGAREADADCMALL; ///
  uint32_t addr=0x08410004; //dataBufferRd[0]
- uint8_t  count;
+ //uint8_t  count; //?????
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
  };

@@ -3276,7 +3276,7 @@ void Scanner::start_frqscan()
       hardware->set_Freq(freq);
       sleep_ms(delay);
       hardware->getValuesFromAdc();
-      SignalValue = (int32_t)spiBuf[AmplPin];
+      SignalValue = (int32_t)spiBuf[0];//[AmplPin];
       data.emplace_back(freq);
       data.emplace_back(SignalValue); 
     }

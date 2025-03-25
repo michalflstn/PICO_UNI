@@ -140,7 +140,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
         // Set our data format
     uart_set_format(FPGA_UART_ID, 8, 1, UART_PARITY_NONE);
      // Turn off FIFO's - we want to do this character by character
-    uart_set_fifo_enabled(FPGA_UART_ID,true);// true);  
+    uart_set_fifo_enabled(FPGA_UART_ID,false);//true);// true);  
    // uart_set_hw_flow(FPGA_UART_ID,true, true);
   }
   gpio_pull_down(resetport->getPort());
@@ -519,11 +519,11 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
   uint8_t inbuffer[szasc];
   FPGAReadDataArrayALL readdata;
   outbuffer[0]=readdata.delimbegin;
-  outbuffer[1]=readdata.cmd+count; 
-  outbuffer[2]=(readdata.addr&0xFF000000)>>24;
-  outbuffer[3]=(readdata.addr&0x00FF0000)>>16;  
-  outbuffer[4]=(readdata.addr&0x0000FF00)>>8;
-  outbuffer[5]=(readdata.addr&0x000000FF);
+  outbuffer[1]=readdata.cmd+count; //// 0x40 + 0x0C  read array 12 registers
+  outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
+  outbuffer[3]=(uint8_t)((readdata.addr&0x00FF0000)>>16);  
+  outbuffer[4]=(uint8_t)((readdata.addr&0x0000FF00)>>8);
+  outbuffer[5]=(uint8_t)(readdata.addr&0x000000FF);
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
   if (flgDebug)  
@@ -570,12 +570,12 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
 //  uint8_t szasc=count*4+5;  //40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t count=NmbADCSignals; //fix
   uint8_t szread=8;
-  uint8_t szasc=2+4+NmbADCSignals*4+2;  //=56 bytes
+  uint8_t szasc=8;//2+4+NmbADCSignals*4+2;  //=56 bytes
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
   FPGAReadDataArrayALL readdata;
   outbuffer[0]=readdata.delimbegin;
-  outbuffer[1]=readdata.cmd; 
+  outbuffer[1]=readdata.cmd; // 0x40 + 0x0C  read array 12 registers
   outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
   outbuffer[3]=(uint8_t)((readdata.addr&0x00FF0000)>>16);  
   outbuffer[4]=(uint8_t)((readdata.addr&0x0000FF00)>>8);
@@ -601,13 +601,42 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
     uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
     sleep_ms(30);
   }
+
+  if (flgDebug)  
+   {
+     std::string afcc;
+     afcc.clear();
+     afcc=code+std::to_string(DEBUG)+"write"; 
+     for (size_t j = 0; j < szread; ++j)
+     {
+       afcc +=separator + std::to_string(outbuffer[j]);
+     }
+     afcc +=endln;
+     std::cout << afcc;
+     sleep_ms(200);
+     afcc.clear();
+   }
   while (!uart_is_readable(FPGA_UART_ID)){sleep_ms(30);}  
   {
-    uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
+    std::string afcc;
+     afcc.clear();
+     afcc=code+std::to_string(DEBUG)+"ready"; 
+     afcc +=endln;
+     std::cout << afcc;
+     sleep_ms(200);
+     afcc.clear();
+    uart_read_blocking(FPGA_UART_ID, inbuffer,szasc); 
+
+     afcc.clear();
+     afcc=code+std::to_string(DEBUG)+"read"; 
+     afcc +=endln;
+     std::cout << afcc;
+     sleep_ms(200);
+     afcc.clear();
   }
   uint8_t k=6; //0A 80 adress=4 ??
-  uint16_t val;
-   if(inbuffer[1]==(FPGAASCREADMAll)) //???? get array adc 0A 80 adress dataarray BB 0A
+  uint32_t val;
+ //  if(inbuffer[1]==(FPGAASCREADMAll)) //???? get array adc 0A 80 adress dataarray BB 0A
     {
    //  for (size_t j = 0; j < sizeof(spiBuf);j++)
      for (size_t j = 0; j < count;j++)
@@ -620,7 +649,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
       }
      return 0; //ok
     }
-   else return 1;// error 
+  // else return 1;// error 
  }
 int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
 {
@@ -629,11 +658,11 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
   outbuffer[0]=readdata.delimbegin;
-  outbuffer[1]=readdata.cmd;
-  outbuffer[2]=(readdata.addr&0xFF000000)>>24;
-  outbuffer[3]=(readdata.addr&0x00FF0000)>>16;  
-  outbuffer[4]=(readdata.addr&0x0000FF00)>>8;
-  outbuffer[5]=readdata.addr&0x000000FF;
+  outbuffer[1]=readdata.cmd;  // 0x00
+  outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
+  outbuffer[3]=(uint8_t)((readdata.addr&0x00FF0000)>>16);  
+  outbuffer[4]=(uint8_t)((readdata.addr&0x0000FF00)>>8);
+  outbuffer[5]=(uint8_t)(readdata.addr&0x000000FF);
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
   if (flgDebug)  

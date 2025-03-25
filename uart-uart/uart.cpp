@@ -55,7 +55,7 @@ int main() {
     // Enable UART
       uart_set_hw_flow(FPGA_UART_ID, false, false);
       uart_set_format(FPGA_UART_ID, 8, 1, UART_PARITY_NONE);
-      uart_set_fifo_enabled(FPGA_UART_ID, true);  
+      uart_set_fifo_enabled(FPGA_UART_ID,false);// true);  
   while (true)         
   { 
     //  for (size_t i = 0; i < sz; i++)
