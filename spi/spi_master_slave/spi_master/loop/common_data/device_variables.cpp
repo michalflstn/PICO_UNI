@@ -7,10 +7,12 @@ uint8_t   FPGAREAD=0x00;
 uint8_t FPGAREADOK=0x80; // если выполнена команда чтения и ОК
 uint8_t  FPGAWRITE=0x01;
 uint8_t    FPGAASC=0x80;
+uint8_t   FPGAWRITEOK=0x81; //0x80+cmd?
 uint8_t   FPGAASCREADMAll=0xCC; //  ACK(0x80) + READM(0x40 + COUNT(0x0C)) ответ на чтение 12 регистров
 //uint8_t   FPGAREADADC=0x03;    ///?????????????????   Согласовать
 uint8_t   FPGAREADADCM=0x40;   //read array
 uint8_t   FPGAREADADCMALL=0x4C; // 0x40 + 0x0C  read array 12 registers
+
 uint32_t    ZAdress=0x08410004;
 uint32_t AmplAdress=0x08410008;
 uint32_t    IAdress=0x0841000C;
@@ -78,7 +80,7 @@ ConfigLinearDrive    configlineardrivev0({18,19,20,21,22,28});
 //ConfigLinearDriveNew configlineardrivev1({18,19,20,21,22}); //2241003
 ConfigLinearDriveNew configlineardrivev1({18,19,22,21,20});
 
-FPGAAdress           arrModule_0(
+FPGALOOPCTRAdress    arrLoopModule_0(
                       {
                        0x08430000,//wbKx[0]
                        0x08430004,//wbKx[1] //интегратор
@@ -90,3 +92,16 @@ FPGAAdress           arrModule_0(
                        0x0843001C,//wbSetpoint
                        0x08430020 //pidControl // protract /retract
                        });
+                       
+FPGA_ADCAdress    arrADCadress(
+    {
+     0x08410004,  //Z
+     0x08430008,  //Ampl
+     0x0841000C,  //I
+     0x08430010,
+     0x08410014,
+     0x08430018,
+     0x0841001C,
+     0x08430020,    
+     });
+

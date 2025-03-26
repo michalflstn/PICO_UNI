@@ -17,8 +17,6 @@
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
 #define NmbADCSignals   12 // ADC + control
-
-extern uint16_t  spiBuf[NmbADCSignals];
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
@@ -34,7 +32,7 @@ control registers
     нужно записать 0x0000010x, где x - номер канала (от 0 до 7).
 11  0x0841002C  not use   
 */
-//extern uint16_t spiBuf[NmbSignals];
+extern uint16_t spiBuf[NmbADCSignals];
 extern uint8_t  FPGADELIM;
 extern uint8_t  FPGACRCPAR;
 extern uint8_t  FPGAREAD;
@@ -43,6 +41,7 @@ extern uint8_t  FPGAREADADC;
 extern uint8_t  FPGAREADADCM;
 extern uint8_t  FPGAREADADCMALL;
 extern uint8_t  FPGAWRITE;
+extern uint8_t  FPGAWRITEOK;
 extern uint8_t  FPGAASC;
 extern uint8_t  FPGAASCREADMAll;
 extern uint32_t ZAdress;
@@ -80,7 +79,7 @@ struct ConfigHardWare //BB and BBFPGA
   uint8_t FreezePort;   //26 заморозить сканнер=1; разморозить =0
   uint8_t ProtractPort; //27 втянуть    сканнер=1; вытянуть    =0
 };
-struct FPGAAdress
+struct FPGALOOPCTRAdress
 {
  uint32_t wbKx[3];
  uint32_t wbInMulKoef;
@@ -89,6 +88,17 @@ struct FPGAAdress
  uint32_t wbOutShift; //DACZ
  uint32_t wbSetpoint;
  uint32_t pidControl;
+};
+struct FPGA_ADCAdress 
+{
+  uint32_t Z;
+  uint32_t Apml;
+  uint32_t I;
+  uint32_t Signal4;
+  uint32_t Signal5;
+  uint32_t Signal6;
+  uint32_t Signal7;
+  uint32_t Signal8;
 };
 /*
 Rx Frame format big-endian Offs:
@@ -116,7 +126,7 @@ struct FPGAReadDataArray
 {
  uint8_t  delimbegin=FPGADELIM;
  uint8_t  cmd=FPGAREADADCM;
- uint32_t addr=0x08410004; //dataBufferRd[0]
+ uint32_t addr;//=  0x08410004; //dataBufferRd[0]
  //uint8_t  count;//???
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
@@ -125,7 +135,7 @@ struct FPGAReadDataArray
  {
  uint8_t  delimbegin=FPGADELIM;
  uint8_t  cmd=FPGAREADADCMALL; ///
- uint32_t addr=0x08410004; //dataBufferRd[0]
+ uint32_t addr;//=arrADCadress.Z;//0x08410004; //dataBufferRd[0] Z
  //uint8_t  count; //?????
  uint8_t  crcpar=FPGACRCPAR;
  uint8_t  delimend=FPGADELIM;
@@ -193,5 +203,6 @@ extern ConfigHardWare       confighardwarev0;
 extern ConfigHardWareNew    confighardwarev1;
 extern ConfigLinearDrive    configlineardrivev0;
 extern ConfigLinearDriveNew configlineardrivev1;
-extern FPGAAdress           arrModule_0;
+extern FPGALOOPCTRAdress    arrLoopModule_0;
+extern FPGA_ADCAdress       arrADCadress;
 #endif //PICO_EXAMPLES_DEVICE_VARIABLES_HPP
