@@ -55,7 +55,7 @@ struct ADCData
 };
 extern ADCData adcdata;
 
-struct ConfigHardWare //BB and BBFPGA
+struct ConfigHardWareBB //BB 
 {
   uint8_t DACSetPointPort;  //2 DAC8563_1  BIAS SetPoint
   uint8_t DACSetPointMode;  //1 DAC8563_1  BIAS SetPoint
@@ -79,76 +79,32 @@ struct ConfigHardWare //BB and BBFPGA
   uint8_t FreezePort;   //26 заморозить сканнер=1; разморозить =0
   uint8_t ProtractPort; //27 втянуть    сканнер=1; вытянуть    =0
 };
-struct FPGALOOPCTRAdress
+
+struct ConfigHardWareBBFPGA // BBFPGA
 {
- uint32_t wbKx[3];
- uint32_t wbInMulKoef;
- uint32_t wbInShift;
- uint32_t wbOutMulKoef;
- uint32_t wbOutShift; //DACZ
- uint32_t wbSetpoint;
- uint32_t pidControl;
+  uint8_t DACSetPointPort;  //2 DAC8563_1  BIAS SetPoint
+  uint8_t DACSetPointMode;  //1 DAC8563_1  BIAS SetPoint
+  uint8_t DACBiasVPort;  //2 DAC8563_1  BIAS SetPoint
+  uint8_t DACBiasVMode;  //1 DAC8563_1  BIAS SetPoint
+  uint8_t DACXYPort;    //3 DAC8563_2  XY
+  uint8_t DACXYMode;    //2 DAC8563_2  XY
+  uint8_t DACZPort;     //4 dac8563_3  Z
+  uint8_t DACZMode;     //1 
+  uint8_t BUSYPort;     //16
+  uint8_t CONV;         //7
+  uint8_t DEC;          //10
+  uint8_t ResetPort;    //17
+  uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
+  uint8_t RDBPort;      //23
+  uint8_t IO1_0;        //11
+  uint8_t IO1_1;        //12
+  uint8_t GainPID0;     //13
+  uint8_t GainPID1;     //14
+  uint8_t GainPID2;     //15
+  uint8_t FreezePort;   //26 заморозить сканнер=1; разморозить =0
+  uint8_t ProtractPort; //27 втянуть    сканнер=1; вытянуть    =0
 };
-struct FPGA_ADCAdress 
-{
-  uint32_t Z;
-  uint32_t Apml;
-  uint32_t I;
-  uint32_t Signal4;
-  uint32_t Signal5;
-  uint32_t Signal6;
-  uint32_t Signal7;
-  uint32_t Signal8;
-};
-/*
-Rx Frame format big-endian Offs:
-  Size:      1       1       4        4         1         1
-Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
-*/
-struct FPGAWriteData
-{
- uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAWRITE;
- uint32_t addr;
- uint32_t data;
- uint8_t  crcpar=FPGACRCPAR;
- uint8_t  delimend=FPGADELIM;
- };
-struct FPGAReadData
-{
- uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAREAD;
- uint32_t addr;
- uint8_t  crcpar=FPGACRCPAR;
- uint8_t  delimend=FPGADELIM;
- };
-struct FPGAReadDataArray
-{
- uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAREADADCM;
- uint32_t addr;//=  0x08410004; //dataBufferRd[0]
- //uint8_t  count;//???
- uint8_t  crcpar=FPGACRCPAR;
- uint8_t  delimend=FPGADELIM;
- };
- struct FPGAReadDataArrayALL
- {
- uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAREADADCMALL; ///
- uint32_t addr;//=arrADCadress.Z;//0x08410004; //dataBufferRd[0] Z
- //uint8_t  count; //?????
- uint8_t  crcpar=FPGACRCPAR;
- uint8_t  delimend=FPGADELIM;
- };
- struct FPGAAscData
-{
- uint8_t  delimbegin=FPGADELIM;
- uint8_t  cmd=FPGAASC;
- uint32_t addr;
- uint8_t  crcpar=FPGACRCPAR;
- uint8_t  delimend=FPGADELIM;
-};
-struct ConfigHardWareNew  //WB
+struct ConfigHardWareWB  //WB
 {
   uint8_t DACSetPointPort;    //2 DAC8563_1  BIAS SetPoint
   uint8_t DACSetPointMode; //1 DAC8563_1  BIAS SetPoint
@@ -179,6 +135,74 @@ struct ConfigHardWareNew  //WB
   uint8_t Interator_InPort;// выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
 };
 
+struct FPGALOOPCTRAdress
+{
+ uint32_t wbKx[3];
+ uint32_t wbInMulKoef;
+ uint32_t wbInShift;
+ uint32_t wbOutMulKoef;
+ uint32_t wbOutShift; //DACZ
+ uint32_t wbSetpoint;
+ uint32_t pidControl;
+};
+struct FPGA_ADCAdress 
+{
+  uint32_t Z;
+  uint32_t Apml;
+  uint32_t I;
+  uint32_t Signal4;
+  uint32_t Signal5;
+  uint32_t Signal6;
+  uint32_t Signal7;
+  uint32_t Signal8;
+};
+/*
+Rx Frame format big-endian Offs:
+  Size:      1       1       4        4         1         1
+Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
+*/
+ struct FPGAWriteData
+ {
+  uint8_t  delimbegin=FPGADELIM;
+  uint8_t  cmd=FPGAWRITE;
+  uint32_t addr;
+  uint32_t data;
+  uint8_t  crcpar=FPGACRCPAR;
+  uint8_t  delimend=FPGADELIM;
+ };
+ struct FPGAReadData
+ {
+  uint8_t  delimbegin=FPGADELIM;
+  uint8_t  cmd=FPGAREAD;
+  uint32_t addr;
+  uint8_t  crcpar=FPGACRCPAR;
+  uint8_t  delimend=FPGADELIM;
+ };
+ struct FPGAReadDataArray
+ {
+  uint8_t  delimbegin=FPGADELIM;
+  uint8_t  cmd=FPGAREADADCM;
+  uint32_t addr;//=  0x08410004; //dataBufferRd[0]
+ //uint8_t  count;//???
+  uint8_t  crcpar=FPGACRCPAR;
+  uint8_t  delimend=FPGADELIM;
+ };
+ struct FPGAReadDataArrayALL
+ {
+  uint8_t  delimbegin=FPGADELIM;
+  uint8_t  cmd=FPGAREADADCMALL; ///
+  uint32_t addr;//=arrADCadress.Z;//0x08410004; //dataBufferRd[0] Z
+  uint8_t  crcpar=FPGACRCPAR;
+  uint8_t  delimend=FPGADELIM;
+ };
+ struct FPGAAscData
+ {
+  uint8_t  delimbegin=FPGADELIM;
+  uint8_t  cmd=FPGAASC;
+  uint32_t addr;
+  uint8_t  crcpar=FPGACRCPAR;
+  uint8_t  delimend=FPGADELIM;
+};
 struct ConfigLinearDrive
 {
   uint8_t XA_Port;     
@@ -199,8 +223,9 @@ struct ConfigLinearDriveNew
 
 extern Spi                  spi;
 extern Decoder              decoder;
-extern ConfigHardWare       confighardwarev0;
-extern ConfigHardWareNew    confighardwarev1;
+extern ConfigHardWareBB     confighardwareBB; //v0
+extern ConfigHardWareBBFPGA confighardwareBBFPGA; //v0
+extern ConfigHardWareWB     confighardwareWB; //v1
 extern ConfigLinearDrive    configlineardrivev0;
 extern ConfigLinearDriveNew configlineardrivev1;
 extern FPGALOOPCTRAdress    arrLoopModule_0;

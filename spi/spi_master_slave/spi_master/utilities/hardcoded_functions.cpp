@@ -6,7 +6,7 @@
 #include "../utilities/debug_logger.hpp"
 #include "hardcoded_functions.hpp"
 
-HARDWARE::HARDWARE(ConfigHardWare confighardware)   // BB  mother BB+FPGA
+HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
 {
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
         dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
@@ -27,7 +27,28 @@ HARDWARE::HARDWARE(ConfigHardWare confighardware)   // BB  mother BB+FPGA
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
  linearDriver=new LinearDriverPico2040(true,configlineardrivev0);   
 }
-HARDWARE::HARDWARE(ConfigHardWareNew confighardware) // WB
+HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
+{
+       dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
+        dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode);   //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode);    //set mode DAC Z  
+     busyport=new InputPort(confighardware.BUSYPort);
+         conv=new OutputPort(confighardware.CONV);
+          dec=new OutputPort(confighardware.DEC);
+    resetport=new OutputPort(confighardware.ResetPort); 
+      ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
+       rdbLed=new OutputPort(confighardware.RDBPort); 
+        io1_0=new OutputPort(confighardware.IO1_0); //??
+        io1_1=new OutputPort(confighardware.IO1_1); //?
+     gainPID0=new OutputPort(confighardware.GainPID0);
+     gainPID1=new OutputPort(confighardware.GainPID1); 
+     gainPID2=new OutputPort(confighardware.GainPID2); 
+   freezeport=new OutputPort(confighardware.FreezePort);//заморозить/разморозить ПИД 
+ protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
+ linearDriver=new LinearDriverPico2040(true,configlineardrivev0);   
+}
+HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
 {
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
         dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
@@ -117,7 +138,7 @@ void HARDWARE::reset_ADCPort()
   sleep_us(10);
   resetport->disable();
 }
-void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
+void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFPGA
 {
  // BASIC SETTINGS
  // uart_init(uart1, 115200); //????
@@ -125,36 +146,53 @@ void HARDWARE::setDefaultSettings(ConfigHardWare  confighardwarev)  // BB,BBFPGA
  // gpio_set_function(USBUART_TX_PIN, GPIO_FUNC_UART);
  // gpio_set_function(USBUART_RX_PIN, GPIO_FUNC_UART); 
  // gpio_pull_down(resetport->getPort());
-  if (HARDWAREVERSION==BBFPGA)
-  {
     ShiftDac=0;
     SetPointScale=2;  ////????????
     stdio_init_all(); //add 250325
-    uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); //add  240627
+    uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); 
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(FPGAUART_RX_PIN, GPIO_FUNC_UART);  
     // Enable UART
     // Set UART flow control CTS/RTS, we don't want these, so turn them off
     uart_set_hw_flow(FPGA_UART_ID, false, false);
-        // Set our data format
+   // uart_set_hw_flow(FPGA_UART_ID,true, true)  // Set our data format
     uart_set_format(FPGA_UART_ID, 8, 1, UART_PARITY_NONE);
-     // Turn off FIFO's - we want to do this character by character
-    uart_set_fifo_enabled(FPGA_UART_ID,true);// true);  
-   // uart_set_hw_flow(FPGA_UART_ID,true, true);
-  }
+    // Turn off FIFO's - we want to do this character by character
+    uart_set_fifo_enabled(FPGA_UART_ID,true);  
+
+// #warning should be undeleted
+// RX_core rxCore;
+// fixme mb should add & before isr
+// gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);     
+// multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
+ 
+   gpio_pull_down(resetport->getPort()); 
+   dec->enable();
+   conv->enable();
+   resetport->disable();
+   gpio_pull_down(resetport->getPort());
+   ledPort->enable();
+   dark();
+   init_DACSetPoint(confighardwarev.DACSetPointPort);  //инициирование ЦАП1  SetPoint
+   init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
+   init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY
+   uint32_t gain;
+   gain=7; 
+   LOOPGain=gain;
+   set_GainPID(gain);                   // not virtual; not debug!
+   retract();                           // втянуть    
+   init_DACZ(confighardwareBBFPGA.DACZPort); // инициирование ЦАП3  DACZ
+   set_DACZ(0); 
+}
+
+void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB,BBFPGA
+{
   gpio_pull_down(resetport->getPort());
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
-switch  (HARDWAREVERSION) 
-{
-case BBFPGA:
-      // gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);     
-       break;
-case BB:
-       gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
-       break;
-}
+
+  gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
 
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
    dec->enable();
@@ -167,26 +205,13 @@ case BB:
    init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
    uint32_t gain;
-   switch  (HARDWAREVERSION) 
-   {
-    case BBFPGA: 
-    { 
-     gain=7; 
-     break;
-    } 
-    case BB:
-    { 
-     uint32_t gain0=7;
-     gain=(gain0<<8)+100; 
-     break;
-    } 
-    case WB:{ gain=7; ; break;}
-   }
+   uint32_t gain0=7;
+   gain=(gain0<<8)+100; 
    LOOPGain=gain;
-  // set_GainPID(gain);     //250325               // not virtual; not debug!
-  // retract();             //250325               // втянуть    
-   init_DACZ(confighardwarev0.DACZPort); // инициирование ЦАП3  DACZ
-  // set_DACZ(0); //250325
+   set_GainPID(gain);                   // not virtual; not debug!
+   retract();                           // втянуть    
+   init_DACZ(confighardwareBB.DACZPort); // инициирование ЦАП3  DACZ
+   set_DACZ(0); 
 
 //************************************************************* 
  // init_commutation(sensor,signloop,signal_to_loop,usenotmod_I,usemod_U);
@@ -200,15 +225,8 @@ case BB:
   */  
  //  init_DACZ(dacZPort);      //инициирование ЦАП3  DACZ
 }
-void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB  
+void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB  
 {
- // BASIC SETTINGS
- // uart_init(uart1, 115200); //????
- // uart_init(USB_UART_ID, 115200); //????
- // gpio_set_function(USBUART_TX_PIN, GPIO_FUNC_UART);
- // gpio_set_function(USBUART_RX_PIN, GPIO_FUNC_UART); 
- // gpio_pull_down(resetport->getPort());
-
   gpio_pull_down(resetport->getPort());
 // #warning should be undeleted
 // RX_core rxCore;
@@ -240,9 +258,10 @@ void HARDWARE::setDefaultSettings(ConfigHardWareNew  confighardwarev) //WB
   LOOPGain=gain;
   set_GainPID(gain); // not virtual; not debug!
   retract();         //втянуть    
-  init_DACZ(confighardwarev0.DACZPort);      //инициирование ЦАП3  DACZ
+  init_DACZ(confighardwareWB.DACZPort);   //v0??   //инициирование ЦАП3  DACZ
   set_DACZ(0); 
 }
+
 void HARDWARE::GetSOFTHARDWAREVersion()
 {
   afc.clear();

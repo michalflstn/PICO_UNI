@@ -1,16 +1,16 @@
 #include "device_variables.hpp"
 
 //ADCData adcdata;
-uint8_t  FPGADELIM=0x0A; //0xAA?
-uint8_t FPGACRCPAR=0xBB;
-uint8_t   FPGAREAD=0x00;
-uint8_t FPGAREADOK=0x80; // если выполнена команда чтения и ОК
-uint8_t  FPGAWRITE=0x01;
-uint8_t    FPGAASC=0x80;
-uint8_t   FPGAWRITEOK=0x81; //0x80+cmd?
+uint8_t         FPGADELIM=0x0A; //0xAA?
+uint8_t        FPGACRCPAR=0xBB;
+uint8_t          FPGAREAD=0x00;
+uint8_t        FPGAREADOK=0x80; // если выполнена команда чтения и ОК
+uint8_t         FPGAWRITE=0x01;
+uint8_t           FPGAASC=0x80;
+uint8_t       FPGAWRITEOK=0x81; //0x80+cmd?
 uint8_t   FPGAASCREADMAll=0xCC; //  ACK(0x80) + READM(0x40 + COUNT(0x0C)) ответ на чтение 12 регистров
 //uint8_t   FPGAREADADC=0x03;    ///?????????????????   Согласовать
-uint8_t   FPGAREADADCM=0x40;   //read array
+uint8_t      FPGAREADADCM=0x40;   //read array
 uint8_t   FPGAREADADCMALL=0x4C; // 0x40 + 0x0C  read array 12 registers
 
 uint32_t    ZAdress=0x08410004;
@@ -20,8 +20,9 @@ uint32_t    IAdress=0x0841000C;
 uint16_t     spiBuf[NmbADCSignals];
 
 Spi                  spi;
-Decoder              decoder(4, 5, 6);  
-ConfigHardWare       confighardwarev0
+Decoder              decoder(4, 5, 6); 
+ 
+ConfigHardWareBB     confighardwareBB
                       (
                        {                        
                         2, //DACSetPointPort
@@ -47,7 +48,33 @@ ConfigHardWare       confighardwarev0
                         27 //ProtractPor  втянуть    сканнер=1; вытянуть    =0
                        }
                       );
-ConfigHardWareNew    confighardwarev1
+ConfigHardWareBBFPGA    confighardwareBBFPGA
+                      (
+                       {                        
+                        2, //DACSetPointPort
+                        1, //DACSetPointMode
+                        2, //DACBiasVPort
+                        1, //DACBiasVMode
+                        3, //DACXYPort
+                        2, //DACXYMode
+                        4, //DACZport
+                        1, //DACZMode
+                        16,//BUSYPort
+                        7, //CONV
+                        10,//DEC
+                        17,//ResetPort
+                        PICO_DEFAULT_LED_PIN,//LEDPort
+                        23,//RDBPort
+                        11,//IO1_0
+                        12,//IO1_1
+                        13,//GainPID0
+                        14,//GainPID1
+                        15,//GainPID2
+                        26,//FreezePort  заморозить сканнер=1; разморозить =0
+                        27 //ProtractPor  втянуть    сканнер=1; вытянуть    =0
+                       }  
+                      );                    
+ConfigHardWareWB    confighardwareWB
                       (
                        {
                         4,//SetPointPort 

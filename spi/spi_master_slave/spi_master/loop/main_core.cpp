@@ -158,17 +158,21 @@ case ChangeHardWare:
                   HARDWAREVERSION= (int8_t)Vector[1];   
                   switch (HARDWAREVERSION)
                   {       
-                case BBFPGA:
                    case BB:{
-                             scanner=new  Scanner(confighardwarev0); 
-                             scanner->hardware->setDefaultSettings(confighardwarev0);                 
+                             scanner=new  Scanner(confighardwareBB); 
+                             scanner->hardware->setDefaultSettings(confighardwareBB);                 
                              break; 
                            }
+               case BBFPGA:{
+                             scanner=new  Scanner(confighardwareBBFPGA); 
+                             scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
+                             break; 
+                            }                           
                     case WB:{
-                             scanner=new  Scanner(confighardwarev1);
-                             scanner->hardware->setDefaultSettings(confighardwarev1);
+                             scanner=new  Scanner(confighardwareWB);
+                             scanner->hardware->setDefaultSettings(confighardwareWB);
                              break;
-                           }
+                            }
                   } 
                   if (scanner==nullptr) 
                   {
@@ -428,20 +432,20 @@ MainCore()
    {       
     case BB:
            {
-            scanner=new  Scanner(confighardwarev0); 
-            scanner->hardware->setDefaultSettings(confighardwarev0);                 
+            scanner=new  Scanner(confighardwareBB); //bb=v0
+            scanner->hardware->setDefaultSettings(confighardwareBB);                 
             break; 
            }
     case WB:
            {
-            scanner=new  Scanner(confighardwarev1);
-            scanner->hardware->setDefaultSettings(confighardwarev1);
+            scanner=new  Scanner(confighardwareWB);
+            scanner->hardware->setDefaultSettings(confighardwareWB);
             break; 
            }
     case BBFPGA:
            { //BB+ WBFPGA
-            scanner=new  Scanner(confighardwarev0); 
-            scanner->hardware->setDefaultSettings(confighardwarev0);                 
+            scanner=new  Scanner(confighardwareBBFPGA); 
+            scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
             break; 
            }
    } 

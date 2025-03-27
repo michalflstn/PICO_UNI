@@ -65,9 +65,11 @@ public:
 
    HARDWARE *hardware;
 
-   Scanner(ConfigHardWare confighardware);
+   Scanner(ConfigHardWareBB confighardware);
 
-   Scanner(ConfigHardWareNew confighardware);
+   Scanner(ConfigHardWareWB confighardware);
+
+   Scanner(ConfigHardWareBBFPGA confighardware);
 
   ~Scanner();
   //void scan_update(const Config &config);             // обновить параметры скaнирования

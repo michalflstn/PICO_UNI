@@ -1,7 +1,7 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="25.03.20.1 BiasV_for_WB_new delphi UseCore1";
+std::string  SOFTVERSION="25.03.27.1 BiasV_for_WB_new UseCore FPGA";
 std::string  SoftHARDWAREVERSION="0.1";
 int8_t       HARDWAREVERSION=BBFPGA;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;

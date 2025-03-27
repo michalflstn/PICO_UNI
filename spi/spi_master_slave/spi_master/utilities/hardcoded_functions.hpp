@@ -65,9 +65,11 @@ public:
    uint32_t LOOPGain;
    LinearDriverBase  *linearDriver;
 
-   HARDWARE(ConfigHardWare confighardware);
+   HARDWARE(ConfigHardWareBB confighardware);
 
-   HARDWARE(ConfigHardWareNew confighardware);
+   HARDWARE(ConfigHardWareBBFPGA confighardware);
+
+   HARDWARE(ConfigHardWareWB confighardware);
 
   ~HARDWARE();
 
@@ -83,9 +85,11 @@ public:
 
 [[noreturn]] void activateError();
  //инициирование ЦАП1  SetPoint,BIAS
- void setDefaultSettings( ConfigHardWare  confighardware);      //BB,BBFPGA
+ void setDefaultSettings( ConfigHardWareBB  confighardware);      //BB
 
- void setDefaultSettings( ConfigHardWareNew  confighardware);   //WB
+ void setDefaultSettings( ConfigHardWareBBFPGA  confighardware);  
+
+ void setDefaultSettings( ConfigHardWareWB  confighardware);      //WB
  
  void GetSOFTHARDWAREVersion();
 

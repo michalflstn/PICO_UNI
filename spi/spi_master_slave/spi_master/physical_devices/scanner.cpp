@@ -7,15 +7,18 @@
 
 Scanner *scanner;
 
-Scanner::Scanner(ConfigHardWare confighardware) : pos_({0, 0}), conf_({})
+Scanner::Scanner(ConfigHardWareBBFPGA confighardware) : pos_({0, 0}), conf_({})
 {
   hardware=new  HARDWARE(confighardware);
 }
-Scanner::Scanner(ConfigHardWareNew confighardware) : pos_({0, 0}), conf_({})
+Scanner::Scanner(ConfigHardWareWB confighardware) : pos_({0, 0}), conf_({})
 {
   hardware=new  HARDWARE(confighardware);
 }
-
+Scanner::Scanner(ConfigHardWareBB confighardware) : pos_({0, 0}), conf_({})
+{
+  hardware=new  HARDWARE(confighardware);
+}
 Scanner::~Scanner()
 {
   move_to({0, 0}, 10);
