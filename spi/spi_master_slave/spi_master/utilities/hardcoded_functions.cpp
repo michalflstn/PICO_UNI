@@ -697,7 +697,7 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   {
     std::string afcc;
     afcc.clear();
-    afcc=code+std::to_string(DEBUG); 
+    afcc=code+std::to_string(DEBUG)+"to read "; 
     for (size_t j = 0; j < szread; ++j)
     {
       afcc +=separator + std::to_string(outbuffer[j]);
@@ -710,24 +710,33 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
   {
     uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
-    sleep_ms(30);
+    sleep_ms(100);
   }
   while (!uart_is_readable(FPGA_UART_ID)){sleep_ms(30);}  
   {
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   }
-  int32_t res;  //int32_t
+  int32_t res;  //
+  uint32_t  adr;
   uint32_t ures;
  // res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
  //get array adc 0A 80 adress data BB 0A
-  if(inbuffer[1]==FPGAREADOK) {ures=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[7]<<8)+inbuffer[9];} //ok
-                              else ures=0; //error ????
+  int8_t flgOk;
+  if(inbuffer[1]==FPGAREADOK) { flgOk=0; }//ures=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[7]<<8)+inbuffer[9];} //ok
+                              else flgOk=1;//ures=0; //error ????
+  //adr= (inbuffer[2]<<24)+(inbuffer[3]<<16)+(inbuffer[4]<<8)+inbuffer[5]; 
+  //ures=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[7]<<8)+inbuffer[9];                            
   if (flgDebug)  
     {
       std::string afcc;
       afcc.clear();
-      afcc=code+std::to_string(DEBUG); 
-      afcc +=separator + std::to_string(ures);
+      afcc=code+std::to_string(DEBUG)+"read "+ std::to_string(flgOk) ; 
+    //  afcc +=separator +"adr="+std::to_string(adr);
+    //  afcc +=separator +"res+"+std::to_string(ures);
+    for (size_t j = 0; j <szasc; ++j)
+    {
+      afcc +=separator + std::to_string(inbuffer[j]);
+    }
       afcc +=endln;
       std::cout << afcc;
       sleep_ms(200);
@@ -769,7 +778,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
  */ 
   uint8_t flgOK;          
   size_t szwrite;
-  size_t szasc=12;//8;//2; //for ASC FPGA
+  size_t szasc=8;//12;//8;//2; //for ASC FPGA
   szwrite=sizeof(writedata);
   uint8_t buffer[szwrite];
   uint8_t outbuffer[szasc];

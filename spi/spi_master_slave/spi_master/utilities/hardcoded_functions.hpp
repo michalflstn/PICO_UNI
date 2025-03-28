@@ -146,9 +146,9 @@ public:
  void move_scannerY(int y);
 
  //uint16_t *getValuesFromAdc();  // чтение АЦП
- void      getValuesFromAdc();  // чтение АЦП
+ void getValuesFromAdc();  // чтение АЦП
 
- int32_t  ReadDataFromFPGA(FPGAReadData readdata);
+ int32_t ReadDataFromFPGA(FPGAReadData readdata);
  
  uint8_t ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout);
 

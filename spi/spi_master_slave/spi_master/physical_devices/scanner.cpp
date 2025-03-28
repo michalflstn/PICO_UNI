@@ -362,7 +362,7 @@ struct Config
           {
             case 3://phase 
             {
-              SignalValue=(int16_t) spiBuf[ZPin];
+              SignalValue=(int16_t) spiBuf[ZPin];///?????
               string_dataout+=separator+std::to_string(SignalValue);
               break;
             }
@@ -695,25 +695,28 @@ void Scanner::start_scanlin() //сканирование
         int32_t ZValue=ZMaxValue-(int16_t) spiBuf[ZPin];
         int32_t SignalValue;
         string_dataout+=separator+std::to_string(ZValue);
-        if (conf_.size == 2)
-          switch (conf_.method)
+         if (conf_.size == 2)
+        switch (conf_.method)
+        {
+          case 3://phase 
           {
-            case 3://phase 
-            {
-              string_dataout+=separator+std::to_string((int16_t) spiBuf[1]); 
-              break;
-            }
-            case 4://ampl
-            {
-              string_dataout+=separator+std::to_string((int16_t) spiBuf[AmplPin]); 
-              break;
-            }
-            case 7://current
-            {
-              string_dataout+=separator+std::to_string((int16_t) spiBuf[IPin]); 
-              break;
-            }
+            SignalValue=(int16_t) spiBuf[ZPin];/////phase  temp
+            string_dataout+=separator+std::to_string(SignalValue);
+            break;
           }
+          case 4://ampl
+          {
+            SignalValue=(int16_t) spiBuf[AmplPin];
+            string_dataout+=separator+std::to_string(SignalValue); 
+            break;
+          }
+          case 7://current
+          {
+            SignalValue=(int16_t) spiBuf[IPin];
+            string_dataout+=separator+std::to_string(SignalValue);
+            break;
+          }
+        }
       }
       else
       {

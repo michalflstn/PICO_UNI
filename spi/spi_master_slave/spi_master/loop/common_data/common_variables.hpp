@@ -46,6 +46,7 @@
 #define ADC_RESET                36
 #define INITCOMMMUTATION         37
 #define USEPLDCmd                38  //использовать ПЛИСС
+#define ReadFPGA                 39 
 //#define SET_PID_GAINFPGA         39  //не нужен 
 #define RESONANCE                40  //AD9833 
 #define GridMovetoNextScan       41
