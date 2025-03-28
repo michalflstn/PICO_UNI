@@ -571,12 +571,9 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
  // ACK(0x80) + READM(0x40 + COUNT(0x0C)) = 0xCC,  
    if(inbuffer[1]==(FPGAREADOK+readdata.cmd+count)) //???? get array adc 0A 80 adress dataarray BB 0A
     {
-   //  for (size_t j = 0; j < sizeof(spiBuf);j++)
-     for (size_t j = 0; j < count;j++)
       for (size_t i = 0; i < count; i++)
       {
-    //   spiBuf[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
-       arrayout[j]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+        arrayout[i]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
        k+=4;
       }
      return 0; //ok
@@ -820,9 +817,11 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     std::string afcc;
     afcc.clear();
     afcc=code+std::to_string(DEBUG)+"FPGA write ask"+separator+std::to_string(flgOK); 
-    for (size_t j = 0; j <szasc; ++j)
+   // for (size_t j = 0; j <szasc; ++j)
     {
-      afcc +=separator + std::to_string(outbuffer[j]);
+      afcc +=separator +"ask="+std::to_string(outbuffer[1])+
+       "adress "+std::to_string((outbuffer[2]<<24)+(outbuffer[3]<<16)+(outbuffer[4]<<8)+outbuffer[5]);
+    //   "data"   +std::to_string((outbuffer[6]<<24)+(outbuffer[7]<<16)+(outbuffer[8]<<8)+outbuffer[9]);  
     }
     afcc +=endln;
     std::cout << afcc;
