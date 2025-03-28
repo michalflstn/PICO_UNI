@@ -389,6 +389,13 @@ case ADC_READCmd: //TIMER
                 }
               }    
             }
+case ReadFPGA:{ 
+                 ALGCODE=ALGNONE;
+                 FPGAReadData readdata;
+                 readdata.addr=arrLoopModule_0.wbSetpoint;
+                 scanner->hardware->ReadDataFromFPGA(readdata);
+                 break;
+              }            
 case GET_CURRENTX0Y0:
               {
                 ALGCODE=ALGNONE;

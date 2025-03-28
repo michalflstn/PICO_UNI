@@ -16,7 +16,7 @@
 #define FPGAUART_RX_PIN 9 //!
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
-#define NmbADCSignals   12 // ADC + control
+#define NmbADCSignals   8// 12 // ADC + control
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us

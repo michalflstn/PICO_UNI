@@ -52,6 +52,7 @@ private:
 //  ConfigHardWare  _confighardware;
   void stop_scan();         // возвращение сканера в  начальную точку скана
   void move_to(const Point &point, uint16_t delay);  // переместиться в начальную точку скана текущего скана
+  
   void sendStrData(std::string const& header,std::vector<int32_t>  &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<uint16_t> &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<int16_t>  &data, const uint16_t delay,const bool flg); //flg clear data
