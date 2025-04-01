@@ -166,7 +166,8 @@ void Scanner::readADC()
 {
   if (!flgVirtual)
   {
-   hardware->getValuesFromAdc();
+ //  hardware->getValuesFromAdc();
+ hardware->ReadDataFromFPGAArrayALL(spiBuf);
    ZValue = (int16_t)spiBuf[ZPin];
       switch (Vector[1]) //прибор
    {
@@ -3282,7 +3283,7 @@ void Scanner::start_frqscan()
       hardware->set_Freq(freq);
       sleep_ms(delay);
       hardware->getValuesFromAdc();
-      SignalValue = (int32_t)spiBuf[0];//[AmplPin];
+      SignalValue = (int32_t)spiBuf[AmplPin];
       data.emplace_back(freq);
       data.emplace_back(SignalValue); 
     }
