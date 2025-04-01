@@ -697,10 +697,6 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
   {
     uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
-    sleep_ms(100);
-  }
-  while (!uart_is_readable(FPGA_UART_ID)){sleep_ms(30);}  
-  {
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   }
   int32_t res;  //
@@ -805,21 +801,13 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
   }
 
-  while (!uart_is_writable(FPGA_UART_ID)) {sleep_ms(100);} 
-  {
-    uart_write_blocking(FPGA_UART_ID, buffer,szwrite);
-    sleep_ms(30);
-    //uart_write_blocking(uart_inst_t *uart, const uint8_t *src, size_t len)
-  }
-
-  while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}
-  {
-   uart_read_blocking(FPGA_UART_ID, outbuffer,szasc);
+  while (!uart_is_writable(FPGA_UART_ID)) {sleep_ms(30);} 
+  uart_write_blocking(FPGA_UART_ID, buffer,szwrite);
+  uart_read_blocking(FPGA_UART_ID, outbuffer,szasc);
    flgOK=1;  
-  // if (outbuffer[0]==FPGAWRITEOK) {flgOK=0;}
-  if (outbuffer[1]==0x81) {flgOK=0;}
-  }
-//  sleep_ms(200);
+  // if (outbuffer[0]==) {flgOK=0;}
+  if (outbuffer[1]==FPGAWRITEOK) {flgOK=0;}
+ //  sleep_ms(200);
   if (flgDebug)  
   {
     std::string afcc;
