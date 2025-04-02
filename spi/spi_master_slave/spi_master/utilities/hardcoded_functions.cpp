@@ -526,13 +526,10 @@ void HARDWARE::move_scannerY(int y)
 
 }
 
-//uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count)
 uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
 {
-//  uint8_t szread=8;
-//  uint8_t szasc=count*4+5;  //40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t szread=8;
-  uint8_t szasc=2+4+count*4+2;
+  uint8_t szasc=2+4+count*4+2; //get array adc 0A 80 adress dataarray BB 0A
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
   FPGAReadDataArrayALL readdata;
@@ -544,6 +541,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
   outbuffer[5]=(uint8_t)(readdata.addr&0x000000FF);
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
+ /*
   if (flgDebug)  
   {
     std::string afcc;
@@ -558,25 +556,28 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
     sleep_ms(200);
     afcc.clear();
   }
+    */
+  uint8_t dst;
+  while (uart_is_readable(FPGA_UART_ID)) //clean buffer
+  { //250401 add oni
+   tight_loop_contents();
+   dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
+  }
   while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
-  {
-    uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
-    sleep_ms(30);
-  }
-  while (!uart_is_readable(FPGA_UART_ID)){sleep_ms(30);}  
-  {
-    uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
-  }
-  uint8_t k=6; //0A 80 adress=4
- // ACK(0x80) + READM(0x40 + COUNT(0x0C)) = 0xCC,  
-   if(inbuffer[1]==(FPGAREADOK+readdata.cmd+count)) //???? get array adc 0A 80 adress dataarray BB 0A
+  uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
+  uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
+  uint8_t k=6; 
+ // ACK(0x80) + READM(0x40 + COUNT(0x0C)) = 0xCC,
+  uint32_t val;  
+   if(inbuffer[1]==(FPGAASCREADMAll+count)) //???? get array adc 0A 80 adress dataarray BB 0A
     {
-      for (size_t i = 0; i < count; i++)
+      for (size_t j = 0; j < count;j++)
       {
-        arrayout[i]=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+       val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
+       arrayout[j]=(uint16_t)val;
        k+=4;
       }
-     return 0; //ok
+     return 0;   // ok
     }
    else return 1;// error 
 }
@@ -592,7 +593,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
   FPGAReadDataArrayALL readdata;
   readdata.addr=arrADCadress.Z;
   outbuffer[0]=readdata.delimbegin;
-  outbuffer[1]=readdata.cmd; // 0x40 + 0x0C  read array 12 registers
+  outbuffer[1]=readdata.cmd+NmbADCSignals; // 0x40 + 0x0C  read array 12 registers
   outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
   outbuffer[3]=(uint8_t)((readdata.addr&0x00FF0000)>>16);  
   outbuffer[4]=(uint8_t)((readdata.addr&0x0000FF00)>>8);
@@ -617,7 +618,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
  */
   //add 250401
   uint8_t dst;
-  while (uart_is_readable(FPGA_UART_ID))
+  while (uart_is_readable(FPGA_UART_ID)) //clean buffer
   { //250401 add oni
    tight_loop_contents();
    dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
@@ -645,14 +646,13 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
   uint8_t k=6; //0A 80 adress=4 ??
   uint32_t val;
   res=1;
-   if(inbuffer[1]==(FPGAASCREADMAll)) //???? get array adc 0A 80 adress dataarray BB 0A
+   if(inbuffer[1]==(FPGAASCREADMAll+NmbADCSignals)) //???? get array adc 0A 80 adress dataarray BB 0A
     {
       res=0;
      for (size_t j = 0; j < count;j++)
       {
        val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
        arrayout[j]=(uint16_t)val;
-      // if (flgDebug) afcc+=separator + std::to_string(arrayout[j]); 
        k+=4;
       }
     }   
@@ -1266,7 +1266,6 @@ void HARDWARE::set_DACZ(int16_t value)
   }
 }
 
-
 //uint16_t *getValuesFromAdc();  // чтение АЦП
 void HARDWARE::getValuesFromAdc()  // чтение АЦП
 {
@@ -1277,7 +1276,6 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
   }
   else
   {
- //  ReadDataFromFPGAArray(uint8_t(sizeof(spiBuf)),spiBuf);
     ReadDataFromFPGAArrayALL(spiBuf);         
   }
 }

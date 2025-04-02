@@ -166,8 +166,8 @@ void Scanner::readADC()
 {
   if (!flgVirtual)
   {
- //  hardware->getValuesFromAdc();
- hardware->ReadDataFromFPGAArrayALL(spiBuf);
+   //hardware->ReadDataFromFPGAArrayALL(spiBuf);
+   hardware->ReadDataFromFPGAArray(3,spiBuf);
    ZValue = (int16_t)spiBuf[ZPin];
       switch (Vector[1]) //прибор
    {
@@ -660,7 +660,7 @@ void Scanner::start_scanlin() //сканирование
         stepsy    = (uint16_t) data_LinY[j] / conf_.diskretinstep;
         reststepy = (uint16_t) data_LinY[j] % conf_.diskretinstep;
         stepsfastline = stepsy;
-         reststepfast = reststepy;
+        reststepfast = reststepy;
         break;
       }
     }
@@ -673,7 +673,6 @@ void Scanner::start_scanlin() //сканирование
         }
         else
         { pos_fast += conf_.diskretinstep; }
-       // sleep_us(conf_.delayF);
          sleep_us(delayFW);
       }
       if (reststepfast != 0)// добирание остатка
@@ -696,9 +695,9 @@ void Scanner::start_scanlin() //сканирование
         int32_t ZValue=ZMaxValue-(int16_t) spiBuf[ZPin];
         int32_t SignalValue;
         string_dataout+=separator+std::to_string(ZValue);
-         if (conf_.size == 2)
-        switch (conf_.method)
-        {
+        if (conf_.size == 2)
+         switch (conf_.method)
+         {
           case 3://phase 
           {
             SignalValue=(int16_t) spiBuf[ZPin];/////phase  temp
@@ -717,7 +716,7 @@ void Scanner::start_scanlin() //сканирование
             string_dataout+=separator+std::to_string(SignalValue);
             break;
           }
-        }
+         }
       }
       else
       {

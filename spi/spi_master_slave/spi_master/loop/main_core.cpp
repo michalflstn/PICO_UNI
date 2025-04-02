@@ -129,21 +129,7 @@ void MainCore::loop()
     switch (ALGCODE)
     {
 case   ALGNONE:{break;}
-
-/*
- case  VirtualCmd:
-              {
-                ALGCODE=ALGNONE;
-                flgVirtual=(bool)Vector[1];
-                afc.clear();
-                afc = code+std::to_string(DEBUG)+" virtual "+ std::to_string(Vector[1]);
-                afc +=endln;//"\n";
-                std::cout << afc;
-                afc.clear();
-              //  sleep_ms(100);               
-                break;
-              }
-*/              
+             
 case ChangeHardWare:
               {
                 ALGCODE=ALGNONE;
@@ -298,21 +284,7 @@ case SENDDATALIN:
                 scanner->readDATALin();
                 break;
               }              
-/*case SET_PID_GAIN:
-              {
-                ALGCODE=ALGNONE;
-                if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint32_t)Vector[1]);
-                else                         scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
-                break; 
-              }  
-              
-case SET_PID_GAINFPGA:
-              {
-                ALGCODE=ALGNONE;
-                scanner->hardware->set_GainPIDFPGA((uint32_t)Vector[1]); 
-                break; 
-              }   
-*/                
+             
 case SET_AMPLMOD_GAIN: // усиление раскачка зонда 
               {
                 ALGCODE=ALGNONE;
