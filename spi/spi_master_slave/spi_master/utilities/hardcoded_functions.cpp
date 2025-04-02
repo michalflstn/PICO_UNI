@@ -563,7 +563,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout)
    tight_loop_contents();
    dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
   }
-  while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
+  //while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  //250402
   uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
   uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   uint8_t k=6; 
@@ -624,7 +624,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
    dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
   }
 
-  while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
+  //while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  //250402
 
    uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
 
@@ -694,7 +694,14 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
     sleep_ms(200);
     afcc.clear();
   }
-  while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  
+ // while (!uart_is_writable(FPGA_UART_ID)){sleep_ms(30);}  //250402
+ uint8_t dst;
+ while (uart_is_readable(FPGA_UART_ID)) //clean buffer //250402
+ { //250401 add oni
+  tight_loop_contents();
+  dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
+ }
+
   {
     uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   

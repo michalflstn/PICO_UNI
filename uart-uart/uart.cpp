@@ -59,8 +59,8 @@ int main() {
   while (true)         
   { 
     //  for (size_t i = 0; i < sz; i++)
-   while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}// if(uart_is_readable(FPGA_UART_ID ))      
-   {     
+  // while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}// if(uart_is_readable(FPGA_UART_ID ))      
+      
      uart_read_blocking(FPGA_UART_ID, inbuffer,sz);
     // sleep_ms(20);
          //uart_write_blocking(uart_inst_t *uart, const uint8_t *src, size_t len)
@@ -87,7 +87,6 @@ int main() {
         afc.clear();
         sleep_ms(100);
         */
-   }
   }
    sleep_ms(100);
  }     
