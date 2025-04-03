@@ -87,7 +87,7 @@ public:
  //инициирование ЦАП1  SetPoint,BIAS
  void setDefaultSettings( ConfigHardWareBB  confighardware);      //BB
 
- void setDefaultSettings( ConfigHardWareBBFPGA  confighardware);  
+ void setDefaultSettings( ConfigHardWareBBFPGA  confighardware);  //FPGA
 
  void setDefaultSettings( ConfigHardWareWB  confighardware);      //WB
  
@@ -106,6 +106,8 @@ public:
  void init_Commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_u);
  
  void init_SPI(uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4); //инициирование SPI
+
+ void init_FPGALOOP();
 
  void init_DACSetPoint(uint8_t spiport);  
 

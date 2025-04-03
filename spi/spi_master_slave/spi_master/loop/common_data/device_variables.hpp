@@ -229,5 +229,6 @@ extern ConfigHardWareWB     confighardwareWB; //v1
 extern ConfigLinearDrive    configlineardrivev0;
 extern ConfigLinearDriveNew configlineardrivev1;
 extern FPGALOOPCTRAdress    arrLoopModule_0;
+extern FPGALOOPCTRAdress    arrLoopModule_1;
 extern FPGA_ADCAdress       arrADCadress;
 #endif //PICO_EXAMPLES_DEVICE_VARIABLES_HPP

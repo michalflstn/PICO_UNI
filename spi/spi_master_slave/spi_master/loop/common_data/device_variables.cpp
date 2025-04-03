@@ -118,7 +118,18 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                        0x0843001C,//wbSetpoint
                        0x08430020 //pidControl // protract /retract
                        });
-                       
+ FPGALOOPCTRAdress    arrLoopModule_1(
+                        {
+                         0x08430100,//wbKx[0]
+                         0x08430104,//wbKx[1] //интегратор
+                         0x08430108,//wbKx[2]
+                         0x0843010C,//wbInMulKoef
+                         0x08430110,//wbInShift //?
+                         0x08430114,//wbOutMulKoef
+                         0x08430118,//wbOutShift //DACZ
+                         0x0843011C,//wbSetpoint
+                         0x08430120 //pidControl // protract /retract
+                         });                       
 FPGA_ADCAdress    arrADCadress(
     {
      0x08410004,  //Z
