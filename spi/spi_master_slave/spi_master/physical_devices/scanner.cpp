@@ -166,8 +166,8 @@ void Scanner::readADC()
 {
   if (!flgVirtual)
   {
-   //hardware->ReadDataFromFPGAArrayALL(spiBuf);
-   hardware->ReadDataFromFPGAArray(3,spiBuf);
+   hardware->ReadDataFromFPGAArrayALL(spiBuf);
+   //hardware->ReadDataFromFPGAArray(3,spiBuf);
    ZValue = (int16_t)spiBuf[ZPin];
       switch (Vector[1]) //прибор
    {

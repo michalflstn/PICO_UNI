@@ -359,7 +359,8 @@ case ADC_READCmd: //TIMER
                  }
                  break;
                 }
-              }    
+              }  
+              break;  
             }
 case ReadFPGA:{ 
                  ALGCODE=ALGNONE;
