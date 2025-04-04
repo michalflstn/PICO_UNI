@@ -129,7 +129,9 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                          0x08430118,//wbOutShift //DACZ
                          0x0843011C,//wbSetpoint
                          0x08430120 //pidControl // protract /retract
-                         });                       
+                         });     
+FPGALOOPCTRAdress    arrLoopModule;
+                           
 FPGA_ADCAdress    arrADCadress(
     {
      0x08410004,  //Z

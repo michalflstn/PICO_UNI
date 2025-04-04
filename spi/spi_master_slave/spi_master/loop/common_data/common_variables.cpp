@@ -1,9 +1,9 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="25.04.03.3 BiasV_for_WB_new UseCore FPGA12_LOOP";
+std::string  SOFTVERSION="25.04.04.1 BiasV_for_WB_new UseCore FPGA12_LOOP";
 std::string  SoftHARDWAREVERSION="0.1";
-int8_t       HARDWAREVERSION=BBFPGA;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
+int8_t       HARDWAREVERSION=WB;//BBFPGA;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
 std::vector<int32_t> Vector;

@@ -16,7 +16,7 @@
 #define FPGAUART_RX_PIN 9 //!
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
-#define NmbADCSignals   12// 12 // ADC + control
+#define NmbADCSignals   12 // 12 // ADC + control
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
@@ -230,5 +230,6 @@ extern ConfigLinearDrive    configlineardrivev0;
 extern ConfigLinearDriveNew configlineardrivev1;
 extern FPGALOOPCTRAdress    arrLoopModule_0;
 extern FPGALOOPCTRAdress    arrLoopModule_1;
+extern FPGALOOPCTRAdress    arrLoopModule;
 extern FPGA_ADCAdress       arrADCadress;
 #endif //PICO_EXAMPLES_DEVICE_VARIABLES_HPP
