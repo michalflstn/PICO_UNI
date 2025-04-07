@@ -46,11 +46,11 @@
 #define ADC_RESET                36
 #define INITCOMMMUTATION         37
 #define USEPLDCmd                38  //использовать ПЛИСС
-#define ReadFPGA                 39 
+#define ReadFPGA                 39 //test FPGA
 //#define SET_PID_GAINFPGA         39  //не нужен 
 #define RESONANCE                40  //AD9833 
 #define GridMovetoNextScan       41
-#define LOCALDEBUG               42 // debug  в конкретном месте
+//#define LOCALDEBUG               42 // debug  в конкретном месте
 #define CHRONOMETRIA             42 // debug времени выполнения в конкретном месте
 
 #define SCANNING                 50
@@ -129,11 +129,9 @@ extern std::atomic<uint16_t> ZJump;
 
 extern bool flgUseTUD;
 extern bool flgParamsUpdated;
-//extern bool flgDebug;    // output diagnostics
-//extern bool flgVirtual;  // Virtual device for debuging and simulation
 extern bool flgСritical_section;
 extern bool flgUseUART;  
-extern bool flgUseFPGA;       //Использовать ПЛИС
+extern bool flgUseFPGA;       //Использовать ПЛИСС
 extern bool flgLocalDebug;  
 extern bool flgTiming;  
 extern uint8_t SignLoop;

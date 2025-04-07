@@ -1,9 +1,15 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="25.04.04.1 BiasV_for_WB_new UseCore FPGA12_LOOP";
+std::string  SOFTVERSION="25.04.07.1 BB";
+//std::string  SOFTVERSION="25.04.04.1 BBFPGA 12_LOOP";
+//std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
-int8_t       HARDWAREVERSION=WB;//BBFPGA;   // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
+// PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
+int8_t       HARDWAREVERSION=BB;
+//int8_t       HARDWAREVERSION=WB;  
+//int8_t       HARDWAREVERSION=BBFPGA;
+
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
 std::vector<int32_t> Vector;
@@ -50,12 +56,12 @@ bool    flgLocalDebug=false;    // локальная отладка
 bool    flgTiming=false; 
 //данные для симуляции 
 uint8_t SignLoop;
-int16_t ZValue      = maxint16_t;
-int16_t SignalValue = maxint16_t;
-int16_t ZMaxValue   = maxint16_t;
+int16_t ZValue         = maxint16_t;
+int16_t SignalValue    = maxint16_t;
+int16_t ZMaxValue      = maxint16_t;
 int16_t SignalMaxValue = maxint16_t; //add 240710
-int32_t ShiftDac  = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
-int8_t  SetPointScale= 1;  ///??????
+int32_t ShiftDac       = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
+int8_t  SetPointScale  = 1;  ///??????
 
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
