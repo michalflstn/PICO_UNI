@@ -832,10 +832,8 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
   while (!uart_is_writable(FPGA_UART_ID)) {sleep_ms(30);} 
   uart_write_blocking(FPGA_UART_ID, buffer,szwrite);
   uart_read_blocking(FPGA_UART_ID, outbuffer,szasc);
-   flgOK=1;  
-  // if (outbuffer[0]==) {flgOK=0;}
+  flgOK=1;  
   if (outbuffer[1]==FPGAWRITEOK) {flgOK=0;}
- //  sleep_ms(200);
   if (flgDebug)  
   {
     std::string afcc;
@@ -862,7 +860,7 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       switch (HARDWAREVERSION)
       {
       case WB:
-              dacspt->writeA(SetPoint+ShiftDac); //B
+              dacspt->writeA(SetPoint+ShiftDac); 
               break;
       case BB:
               dacspt->writeA(SetPoint+ShiftDac);
@@ -870,7 +868,6 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   case BBFPGA:
               FPGAWriteData writedata;
               writedata.addr=arrLoopModule.wbSetpoint;
-             // writedata.cmd=FPGAWRITE;//0x01;
               writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));  
               WriteDataToFPGA(writedata);
               break;
@@ -882,7 +879,6 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
     {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbSetpoint;
-    //  writedata.cmd=FPGAWRITE;
       writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));    
       WriteDataToFPGA(writedata);
       sleep_ms(200);
@@ -1047,7 +1043,6 @@ void HARDWARE::set_GainPID(uint32_t gain)
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];//  0x08430000;  //adress gain need sign
-    //  writedata.cmd=FPGAWRITE;
       writedata.data=gain;//(uint32_t)gain; // gain need sign
       WriteDataToFPGA(writedata);
       sleep_ms(10);
@@ -1093,7 +1088,6 @@ void HARDWARE::set_GainPID(uint32_t gain)
     { 
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];//  0x08430000;  //adress gain need sign
-   //   writedata.cmd=FPGAWRITE;
     //  writedata.data=(uint32_t)gain; // gain need sign
     //  WriteDataToFPGA(writedata);  
      if (LOOPGain<=gain)
@@ -1119,7 +1113,6 @@ void HARDWARE::set_GainPID(uint32_t gain)
     {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];
-   //   writedata.cmd=FPGAWRITE;//0x01;
       writedata.data=(uint32_t)gain; // gain need sign
       WriteDataToFPGA(writedata);
     } 
@@ -1216,7 +1209,6 @@ void HARDWARE::set_GainPID(uint16_t gain)
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];//  0x08430000;  //adress gain need sign
-     // writedata.cmd=FPGAWRITE;//0x01;
       writedata.data=(uint32_t)ti; // gain need sign
       WriteDataToFPGA(writedata);
      }    
@@ -1227,7 +1219,6 @@ void HARDWARE::set_GainPID(uint16_t gain)
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];
-    // writedata.cmd=FPGAWRITE;//0x01;
       writedata.data=(uint32_t)ti; // gain need sign
       WriteDataToFPGA(writedata);
      }
@@ -1287,7 +1278,6 @@ void HARDWARE::set_DACZ(int16_t value)
       case BBFPGA:
         FPGAWriteData writedata;
         writedata.addr=arrLoopModule.wbOutShift; //?????
-       // writedata.cmd=FPGAWRITE;//0x01;
         writedata.data=(uint32_t)(int32_t(value)+ShiftDac);  
         WriteDataToFPGA(writedata);
         break;
@@ -1329,7 +1319,6 @@ void HARDWARE::retract() //втянуть
  {
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
- //  writedata.cmd=FPGAWRITE;//0x01;
    writedata.data=0;   //3 250403
    WriteDataToFPGA(writedata);
  }
@@ -1377,7 +1366,6 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
  {
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
- //  writedata.cmd=FPGAWRITE;//0x01;
    writedata.data=0;  
    WriteDataToFPGA(writedata);
  }
@@ -1394,7 +1382,6 @@ if (HARDWAREVERSION!=BBFPGA)
  {
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
-  // writedata.cmd=FPGAWRITE;//0x01;
    writedata.data=1;  
    WriteDataToFPGA(writedata);
  }
