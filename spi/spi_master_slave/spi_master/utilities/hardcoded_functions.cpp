@@ -206,7 +206,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    set_DACZ(0); 
 }
 
-void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB,BBFPGA
+void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 {
   gpio_pull_down(resetport->getPort());
 // #warning should be undeleted

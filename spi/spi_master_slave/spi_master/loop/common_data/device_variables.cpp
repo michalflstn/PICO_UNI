@@ -47,6 +47,38 @@ ConfigHardWareBB     confighardwareBB
                         27 //ProtractPor  втянуть    сканнер=1; вытянуть    =0
                        }
                       );
+
+//
+/*
+ConfigHardWare       confighardwarev0
+                      (
+                       {                        
+                        2, //DACSetPointPort
+                        1, //DACSetPointMode
+                        2, //DACBiasVPort
+                        1, //DACBiasVMode
+                        3, //DACXYPort
+                        2, //DACXYMode
+                        4, //DACZport
+                        1, //DACZMode
+                        16,//BUSYPort
+                        7, //CONV
+                        10,//DEC
+                        17,//ResetPort
+                        PICO_DEFAULT_LED_PIN,//LEDPort
+                        23,//RDBPort
+                        11,//IO1_0
+                        12,//IO1_1
+                        13,//GainPID0
+                        14,//GainPID1
+                        15,//GainPID2
+                        26,//FreezePort  заморозить сканнер=1; разморозить =0
+                        27 //ProtractPor  втянуть    сканнер=1; вытянуть    =0
+                       }
+                      );
+*/
+
+//
 ConfigHardWareBBFPGA    confighardwareBBFPGA
                       (
                        {                        
