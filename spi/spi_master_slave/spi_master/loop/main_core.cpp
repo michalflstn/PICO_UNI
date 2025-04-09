@@ -156,7 +156,7 @@ case VersionCmd:
      break;
     }  
   }              
-  scanner->hardware->GetSOFTHARDWAREVersion(device);
+  scanner->hardware->SetDev_GetSOFTHARDWAREVersion(device);
   break;
 }               
 case ChangeHardWare:
@@ -504,7 +504,7 @@ MainCore()
             break; 
            }
     case BBFPGA:
-           { //BB+ WBFPGA
+           { 
             scanner=new  Scanner(confighardwareBBFPGA); 
             scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
             break; 

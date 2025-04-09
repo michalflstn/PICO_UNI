@@ -98,7 +98,7 @@ public:
 
  void setDefaultSettings( ConfigHardWareWB  confighardware);      //WB
  
- void GetSOFTHARDWAREVersion(uint8_t device);
+ void SetDev_GetSOFTHARDWAREVersion(uint8_t device);
 
  void set_Freq(uint32_t freq);    // установка заданной частоты генератора
 
@@ -116,7 +116,7 @@ public:
  
  void init_SPI(uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4); //инициирование SPI
 
- void init_FPGALOOP();
+ void init_LOOP();
 
  void init_DACSetPoint(uint8_t spiport);  
 

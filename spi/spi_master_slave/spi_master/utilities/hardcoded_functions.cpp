@@ -138,28 +138,43 @@ void HARDWARE::reset_ADCPort()
   sleep_us(10);
   resetport->disable();
 }
-void HARDWARE::init_FPGALOOP()
+void HARDWARE::init_LOOP()
 {
-  switch (nloop)
- { 
- case 0: { arrLoopModule=arrLoopModule_0; break;}
- case 1: { arrLoopModule=arrLoopModule_1; break;};
- } 
-  FPGAWriteData writedata;
-  writedata.data=0;
-  writedata.addr=arrLoopModule.wbKx[1];
-  WriteDataToFPGA(writedata);
-  sleep_ms(30);
-  writedata.addr=arrLoopModule.wbKx[2]; 
-  writedata.data=0;
-  WriteDataToFPGA(writedata); 
-  sleep_ms(30);
-  writedata.addr=arrLoopModule.wbOutMulKoef;
-  writedata.data=1;
-  WriteDataToFPGA(writedata);
-  sleep_ms(30);
-// need set select channel input !!!!!! 250408
-
+  //set dafault device SFM
+  device=SFM;
+  switch (HARDWAREVERSION)
+  {
+case BBFPGA: 
+    {
+     scanner->hardware->ChooseLoopChannelInputFPGA(channelampl,nloop);    // channel, nloop
+     switch (nloop)
+     { 
+     case 0: { arrLoopModule=arrLoopModule_0; break;}
+     case 1: { arrLoopModule=arrLoopModule_1; break;};
+     } 
+      FPGAWriteData writedata;
+      writedata.data=0;
+      writedata.addr=arrLoopModule.wbKx[1];
+      WriteDataToFPGA(writedata);
+      sleep_ms(30);
+      writedata.addr=arrLoopModule.wbKx[2]; 
+      writedata.data=0;
+      WriteDataToFPGA(writedata); 
+      sleep_ms(30);
+      writedata.addr=arrLoopModule.wbOutMulKoef;
+      writedata.data=1;
+      WriteDataToFPGA(writedata);
+      sleep_ms(30);
+      break;        
+    } 
+case WB:
+    {
+      scanner->hardware->init_Commutation(0 , SignalDecrease , AmplPin , 1, 0); //add 250409
+      break;        
+    }      
+    break;
+  }    
+ // need set select channel input !!!!!! 250408
 }
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFPGA
@@ -200,7 +215,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACSetPoint(confighardwarev.DACSetPointPort);  //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY
-   init_FPGALOOP();
+   init_LOOP();
    // channel is default ampl!!! need change  when changed dev
    uint32_t gain;
    gain=7; 
@@ -213,13 +228,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 {
-  gpio_pull_down(resetport->getPort());
+   gpio_pull_down(resetport->getPort());
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
-
-  gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
-
+   gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
    dec->enable();
    conv->enable();
@@ -238,18 +251,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    retract();                           // втянуть    
    init_DACZ(confighardwareBB.DACZPort); // инициирование ЦАП3  DACZ
    set_DACZ(0); 
-
-//************************************************************* 
- // init_commutation(sensor,signloop,signal_to_loop,usenotmod_I,usemod_U);
- /*
-    default afm probe ?????
-    sensor=0           // probe=0;  cantilever =1
-    signLoop:=1;       // 1= -1 ; 0 = +1
-    signal_to_loop:=1; // sd->to loop =1 Ampl  
-    usemod_U:=0;       // use mod U; not=0
-    usenotmod_I:=1;       // use mod I not  =1 ; 
-  */  
- //  init_DACZ(dacZPort);      //инициирование ЦАП3  DACZ
 }
 void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB  
 {
@@ -267,11 +268,12 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
   dark();
-  init_Commutation(0 , 1 , 1 , 1, 0);   //default afm 
+  init_LOOP();//250409
+ // init_Commutation(0 , 1 , 1 , 1, 0);   //default afm 
   /*
     default afm probe ?????
     sensor=0           // probe=0;  cantilever =1
-    signLoop:=1;       // 1= -1 ; 0 = +1
+    signLoop:=1;       // 1= -1 убывание ; 0 = +1 рост
     signal_to_loop:=1; // sd->to loop =1 Ampl  
     useSD:=1;          // use SD  =1 ;
     usemod_U:=0;       // use mod U; not=0
@@ -284,11 +286,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
   LOOPGain=gain;
   set_GainPID(gain); // not virtual; not debug!
   retract();         //втянуть    
-  init_DACZ(confighardwareWB.DACZPort);   //v0??   //инициирование ЦАП3  DACZ
+  init_DACZ(confighardwareWB.DACZPort);   //инициирование ЦАП3  DACZ
   set_DACZ(0); 
 }
 
-void HARDWARE::GetSOFTHARDWAREVersion(uint8_t device)
+void HARDWARE::SetDev_GetSOFTHARDWAREVersion(uint8_t device)
 {
   afc.clear();
   afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
