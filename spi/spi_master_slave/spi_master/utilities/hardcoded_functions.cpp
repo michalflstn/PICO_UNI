@@ -434,15 +434,46 @@ case    WB:
   sleep_ms(100);
  */
 }
-
-void HARDWARE::setSignal_In_Loop(int8_t value)
+void  HARDWARE::ChooseLoopChannelInput(uint8_t channel, uint8_t nloop)
 {
-    switch (value)
+  //FPGA only!
+  FPGAWriteData writedata;
+  writedata.addr=inSwitchadress;
+  uint32_t chnl_select;
+  chnl_select=1<<(2*channel+nloop);
+  writedata.data=chnl_select;// set channel
+  WriteDataToFPGA(writedata);
+  sleep_ms(10);
+  if (flgDebug)  
+  {
+   afc.clear();
+   afc = code+std::to_string(DEBUG)+"debug PID Channel ="+ std::to_string(chnl_select);
+  }  
+}
+void HARDWARE::setSignal_In_Loop(uint8_t value)
+{
+  switch  (HARDWAREVERSION) 
  {
-  case 0:{integrator_inport->disable(); break;}// Ampl
-  case 1:{integrator_inport->enable();  break;}// I
+case BBFPGA:
+        {
+
+
+         break;
+        }   
+case    BB:
+         break;
+case    WB:
+  {
+    switch (value)
+   {
+    case 0:{integrator_inport->disable(); break;}// Ampl
+    case 1:{integrator_inport->enable();  break;}// I
+   }
+   break;
+  }
  }
 } 
+
 void HARDWARE::setUseSD(int8_t value)
 { 
   switch (value)

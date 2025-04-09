@@ -5,6 +5,8 @@
 #include "../../utilities/base_types/Spi.hpp"
 #include "../../utilities/base_types/decoder.hpp"
 
+#define maxint16_t               32767
+#define minint16_t              -32768
 // We are using pins 0 and 1, but see the GPIO function select table in the
 // datasheet for information on which other pins can be used.
 //#define UART_TX_PIN 16 //240703
@@ -31,6 +33,19 @@ control registers
     Чтобы включить фильтрацию на канале АЦП x (от 0 до 7) в регистр 0x08410028 
     нужно записать 0x0000010x, где x - номер канала (от 0 до 7).
 11  0x0841002C  not use   
+*/
+/* Перенос 250409
+extern uint8_t SignLoop;
+extern uint8_t ZPin;
+extern uint8_t AmplPin;       //amplitude
+extern uint8_t IPin;          //current
+extern uint8_t flgDebugLevel; //leveldebug
+extern int16_t ZValue;        //for simulation
+extern int16_t SignalValue;   //for simulation   
+extern int16_t ZMaxValue;
+extern int16_t SignalMaxValue;
+extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
+extern int8_t  SetPointScale;
 */
 extern uint16_t spiBuf[NmbADCSignals];
 extern uint8_t  FPGADELIM;
@@ -232,4 +247,8 @@ extern FPGALOOPCTRAdress    arrLoopModule_0;
 extern FPGALOOPCTRAdress    arrLoopModule_1;
 extern FPGALOOPCTRAdress    arrLoopModule;
 extern FPGA_ADCAdress       arrADCadress;
+extern uint32_t             inSwitchadress;
+extern uint8_t              channelampl; 
+extern uint8_t              channelcurrent;
+extern uint8_t              nloop; 
 #endif //PICO_EXAMPLES_DEVICE_VARIABLES_HPP

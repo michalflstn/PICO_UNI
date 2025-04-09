@@ -55,6 +55,7 @@ bool    flgUseUART = false;     // использовать UART для пере
 bool    flgLocalDebug=false;    // локальная отладка
 bool    flgTiming=false; 
 //данные для симуляции 
+/* 250409 перенос
 uint8_t SignLoop;
 int16_t ZValue         = maxint16_t;
 int16_t SignalValue    = maxint16_t;
@@ -66,7 +67,7 @@ int8_t  SetPointScale  = 1;  ///??????
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
 uint8_t IPin    = 2; // ток  
-
+*/
 
 bool Z_STATE = false; //???
 

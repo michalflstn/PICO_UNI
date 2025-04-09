@@ -52,7 +52,7 @@
 #define GridMovetoNextScan       41
 //#define LOCALDEBUG               42 // debug  в конкретном месте
 #define CHRONOMETRIA             42 // debug времени выполнения в конкретном месте
-
+#define SETDEVICE                43  // set device stm,sfm,sicm
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
 #define ChangeSpeed              52  //изменение скорости сканирования в процессе сканирования и тд
@@ -78,13 +78,7 @@
 #define LID_MOVE_UNTIL_STOP      80
 
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
-// const
-#define AxisX                    90 //коды осей
-#define AxisY                    95
-#define AxisZ                    99
 
-#define portx                    0 //порты пьезодвижетеля
-#define porty                    1
 
 extern const std::string  code;  
 extern const std::string  endln;
@@ -133,7 +127,8 @@ extern bool flgСritical_section;
 extern bool flgUseUART;  
 extern bool flgUseFPGA;       //Использовать ПЛИСС
 extern bool flgLocalDebug;  
-extern bool flgTiming;  
+extern bool flgTiming; 
+/* 
 extern uint8_t SignLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude
@@ -145,5 +140,6 @@ extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
 extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
+*/
 extern critical_section_t criticalSection;
 #endif //PICO_EXAMPLES_COMMON_VARIABLES_HPP

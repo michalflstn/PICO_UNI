@@ -1,5 +1,17 @@
 #include "device_variables.hpp"
 
+uint8_t SignLoop;
+int16_t ZValue         = maxint16_t;
+int16_t SignalValue    = maxint16_t;
+int16_t ZMaxValue      = maxint16_t;
+int16_t SignalMaxValue = maxint16_t; //add 240710
+int32_t ShiftDac       = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
+int8_t  SetPointScale  = 1;  ///??????
+
+uint8_t ZPin    = 0; // Z
+uint8_t AmplPin = 1; // амплитуда
+uint8_t IPin    = 2; // ток  
+
 //ADCData adcdata;
 uint8_t         FPGADELIM=0x0A; //0xAA?
 uint8_t        FPGACRCPAR=0xBB;
@@ -15,6 +27,11 @@ uint8_t   FPGAREADADCMALL=0x40;//C; // 0x40 + 0x0C  read array 12 registers
 uint32_t    ZAdress=0x08410004;
 uint32_t AmplAdress=0x08410008;
 uint32_t    IAdress=0x0841000C;
+
+uint8_t         channelcurrent=2; // channel current into LOOP
+uint8_t            channelampl=1; // channel amplitude into LOOP
+
+uint8_t                    nloop; // N LOOP choose arrModule_N  
 
 uint16_t     spiBuf[NmbADCSignals];
 
@@ -162,7 +179,7 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                          0x0843011C,//wbSetpoint
                          0x08430120 //pidControl // protract /retract
                          });     
-FPGALOOPCTRAdress    arrLoopModule;
+FPGALOOPCTRAdress arrLoopModule;
                            
 FPGA_ADCAdress    arrADCadress(
     {
@@ -175,4 +192,4 @@ FPGA_ADCAdress    arrADCadress(
      0x0841001C,
      0x08430020,    
      });
-
+ uint32_t         inSwitchadress=0x08420000;

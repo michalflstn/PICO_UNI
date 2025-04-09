@@ -183,6 +183,21 @@ case ChangeHardWare:
                 }
                break;
               } 
+case SETDEVICE:{
+                ALGCODE=ALGNONE; 
+                switch ((uint8_t)Vector[1])
+                {
+                 case STM:
+                          scanner->hardware->ChooseLoopChannelInput(channelcurrent,nloop); // channel, nloop
+                          break;        
+                 case SFM:
+                          scanner->hardware->ChooseLoopChannelInput(channelampl,nloop);    // channel, nloop
+                          break;        
+                case SICMDC:
+                          scanner->hardware->ChooseLoopChannelInput(channelcurrent,nloop); // channel, nloop
+                          break;  
+                }      
+               }                
 case INITCOMMMUTATION:
               {
                 ALGCODE=ALGNONE;

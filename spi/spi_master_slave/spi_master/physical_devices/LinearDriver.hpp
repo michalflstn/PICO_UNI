@@ -4,6 +4,12 @@
 #include "../utilities/base_types/Decoder.hpp"
 #include "../loop/common_data/device_variables.hpp"  
 #include "../loop/common_data/common_variables.hpp"
+// const //move from common_var 250409
+#define AxisX                    90 //коды осей
+#define AxisY                    95
+#define AxisZ                    99
+
+
 class LinearDriverBase
 {
  protected:

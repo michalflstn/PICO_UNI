@@ -13,6 +13,10 @@
 #include "../loop/common_data/device_variables.hpp"
 #include "../loop/common_data/common_variables.hpp"
 
+
+#define portx                    0 //порты сканнера! пьезодвижетеля ?
+#define porty                    1
+
 class HARDWARE
 {
 // WARNING HARDCODED FUNCTIONS
@@ -40,6 +44,9 @@ private:
  OutputPort *sensorport;       // порты  настройки выбор сенсора
  OutputPort *signloopport;     // знак ПИД
  OutputPort *integrator_inport;// выбор вход сигнала вход. на ПИД из Сд или ПТН(I)
+
+ uint8_t  flgmode;
+
 
  uint16_t *repeatTwoTimes(); 
 
@@ -95,7 +102,9 @@ public:
 
  void set_Freq(uint32_t freq);    // установка заданной частоты генератора
 
- void setSignal_In_Loop(int8_t value); // Ampl=1 ; I=0
+ void setSignal_In_Loop(uint8_t value); // Ampl=1 ; I=0
+
+ void ChooseLoopChannelInput(uint8_t channel, uint8_t nloop);
  
  void setUseSD(int8_t value);      // 1-> yes; 0->none use syncrodetector
  
