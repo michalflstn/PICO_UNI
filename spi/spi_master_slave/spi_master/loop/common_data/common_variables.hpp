@@ -9,8 +9,8 @@
 #define SFM                      0  // методики
 #define STM                      1
 #define SICMDC                   3  
-#define maxint16_t               32767
-#define minint16_t              -32768
+//#define maxint16_t               32767  //250409
+//#define minint16_t              -32768
 
 #define BB                        0  // код mother board
 #define WB                        1
@@ -53,6 +53,8 @@
 //#define LOCALDEBUG               42 // debug  в конкретном месте
 #define CHRONOMETRIA             42 // debug времени выполнения в конкретном месте
 #define SETDEVICE                43  // set device stm,sfm,sicm
+
+
 #define SCANNING                 50
 #define MOVE_TOX0Y0              51  //переместиться в начальную точку  скана из начальной точке предыдущего скана
 #define ChangeSpeed              52  //изменение скорости сканирования в процессе сканирования и тд
@@ -128,7 +130,7 @@ extern bool flgUseUART;
 extern bool flgUseFPGA;       //Использовать ПЛИСС
 extern bool flgLocalDebug;  
 extern bool flgTiming; 
-/* 
+/* move to device var 
 extern uint8_t SignLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude

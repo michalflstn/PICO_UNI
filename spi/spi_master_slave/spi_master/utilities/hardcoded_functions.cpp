@@ -140,7 +140,11 @@ void HARDWARE::reset_ADCPort()
 }
 void HARDWARE::init_FPGALOOP()
 {
-  arrLoopModule=arrLoopModule_1;
+  switch (nloop)
+ { 
+ case 0: { arrLoopModule=arrLoopModule_0; break;}
+ case 1: { arrLoopModule=arrLoopModule_1; break;};
+ } 
   FPGAWriteData writedata;
   writedata.data=0;
   writedata.addr=arrLoopModule.wbKx[1];
@@ -197,6 +201,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY
    init_FPGALOOP();
+   // channel is default ampl!!! need change  when changed dev
    uint32_t gain;
    gain=7; 
    LOOPGain=gain;
@@ -283,13 +288,12 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
   set_DACZ(0); 
 }
 
-void HARDWARE::GetSOFTHARDWAREVersion()
+void HARDWARE::GetSOFTHARDWAREVersion(uint8_t device)
 {
   afc.clear();
   afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
-        +",hardware "+std::to_string(HARDWAREVERSION);
+        +",hardware "+std::to_string(HARDWAREVERSION) + ",device "+std::to_string(device);
   afc +="\n";
- //  uart_write_blocking(FPGA_UART_ID,(afc),sz)
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -434,7 +438,7 @@ case    WB:
   sleep_ms(100);
  */
 }
-void  HARDWARE::ChooseLoopChannelInput(uint8_t channel, uint8_t nloop)
+void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t channel, uint8_t nloop)
 {
   //FPGA only!
   FPGAWriteData writedata;

@@ -98,13 +98,13 @@ public:
 
  void setDefaultSettings( ConfigHardWareWB  confighardware);      //WB
  
- void GetSOFTHARDWAREVersion();
+ void GetSOFTHARDWAREVersion(uint8_t device);
 
  void set_Freq(uint32_t freq);    // установка заданной частоты генератора
 
  void setSignal_In_Loop(uint8_t value); // Ampl=1 ; I=0
 
- void ChooseLoopChannelInput(uint8_t channel, uint8_t nloop);
+ void ChooseLoopChannelInputFPGA(uint8_t channel, uint8_t nloop);
  
  void setUseSD(int8_t value);      // 1-> yes; 0->none use syncrodetector
  

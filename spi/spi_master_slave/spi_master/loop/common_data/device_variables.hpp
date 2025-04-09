@@ -19,6 +19,8 @@
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
 #define NmbADCSignals   12 // 12 // ADC + control
+
+
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
@@ -34,7 +36,9 @@ control registers
     нужно записать 0x0000010x, где x - номер канала (от 0 до 7).
 11  0x0841002C  not use   
 */
-/* Перенос 250409
+//  add 250409
+extern uint8_t device;
+//* Перенос 250409
 extern uint8_t SignLoop;
 extern uint8_t ZPin;
 extern uint8_t AmplPin;       //amplitude
@@ -46,7 +50,7 @@ extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
 extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
-*/
+
 extern uint16_t spiBuf[NmbADCSignals];
 extern uint8_t  FPGADELIM;
 extern uint8_t  FPGACRCPAR;
@@ -250,5 +254,7 @@ extern FPGA_ADCAdress       arrADCadress;
 extern uint32_t             inSwitchadress;
 extern uint8_t              channelampl; 
 extern uint8_t              channelcurrent;
-extern uint8_t              nloop; 
+extern uint8_t              nloop;
+extern uint8_t              SignalIncrease; // Loop  follow increase signal
+extern uint8_t              SignalDecrease; 
 #endif //PICO_EXAMPLES_DEVICE_VARIABLES_HPP

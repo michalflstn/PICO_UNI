@@ -55,7 +55,7 @@ bool    flgUseUART = false;     // использовать UART для пере
 bool    flgLocalDebug=false;    // локальная отладка
 bool    flgTiming=false; 
 //данные для симуляции 
-/* 250409 перенос
+/* 250409 перенос to dev var
 uint8_t SignLoop;
 int16_t ZValue         = maxint16_t;
 int16_t SignalValue    = maxint16_t;

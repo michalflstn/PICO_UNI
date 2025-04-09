@@ -1,5 +1,5 @@
 #include "device_variables.hpp"
-
+uint8_t device;
 uint8_t SignLoop;
 int16_t ZValue         = maxint16_t;
 int16_t SignalValue    = maxint16_t;
@@ -11,7 +11,8 @@ int8_t  SetPointScale  = 1;  ///??????
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
 uint8_t IPin    = 2; // ток  
-
+uint8_t SignalIncrease=1; // Loop  follow increase signal
+uint8_t SignalDecrease=0; 
 //ADCData adcdata;
 uint8_t         FPGADELIM=0x0A; //0xAA?
 uint8_t        FPGACRCPAR=0xBB;
@@ -28,10 +29,10 @@ uint32_t    ZAdress=0x08410004;
 uint32_t AmplAdress=0x08410008;
 uint32_t    IAdress=0x0841000C;
 
-uint8_t         channelcurrent=2; // channel current into LOOP
-uint8_t            channelampl=1; // channel amplitude into LOOP
+uint8_t         channelcurrent=IPin;    //add  250409 channel current into LOOP
+uint8_t            channelampl=AmplPin; //    channel amplitude into LOOP
 
-uint8_t                    nloop; // N LOOP choose arrModule_N  
+uint8_t                    nloop=1; //add  250409 N LOOP choose arrModule_N=  arrModule_1
 
 uint16_t     spiBuf[NmbADCSignals];
 
