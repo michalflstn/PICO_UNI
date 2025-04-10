@@ -222,7 +222,7 @@ Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
   uint8_t  crcpar=FPGACRCPAR;
   uint8_t  delimend=FPGADELIM;
 };
-struct ConfigLinearDrive
+struct ConfigLinearDriveBB
 {
   uint8_t XA_Port;     
   uint8_t XB_Port;   
@@ -231,7 +231,7 @@ struct ConfigLinearDrive
   uint8_t ZA_Port;     
   uint8_t ZB_Port;     
 };
-struct ConfigLinearDriveNew
+struct ConfigLinearDriveWB
 {
   uint8_t A_Port;     
   uint8_t B_Port;   
@@ -245,8 +245,8 @@ extern Decoder              decoder;
 extern ConfigHardWareBB     confighardwareBB; //v0
 extern ConfigHardWareBBFPGA confighardwareBBFPGA; //v0
 extern ConfigHardWareWB     confighardwareWB; //v1
-extern ConfigLinearDrive    configlineardrivev0;
-extern ConfigLinearDriveNew configlineardrivev1;
+extern ConfigLinearDriveBB  configlineardriveBB; //v0
+extern ConfigLinearDriveWB  configlineardriveWB;
 extern FPGALOOPCTRAdress    arrLoopModule_0;
 extern FPGALOOPCTRAdress    arrLoopModule_1;
 extern FPGALOOPCTRAdress    arrLoopModule;

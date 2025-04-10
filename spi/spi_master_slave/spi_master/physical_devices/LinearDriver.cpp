@@ -10,7 +10,7 @@ LinearDriverBase::~LinearDriverBase()
 {
 }
 
-LinearDriverPico2040::~LinearDriverPico2040()
+LinearDriverBB::~LinearDriverBB()
 {
    delete(x_a);
    delete(x_b);
@@ -20,7 +20,7 @@ LinearDriverPico2040::~LinearDriverPico2040()
    delete(z_b);  
 }
 
-LinearDriverPico2040::LinearDriverPico2040(bool flgOnlyZ, ConfigLinearDrive configlineardrive)
+LinearDriverBB::LinearDriverBB(bool flgOnlyZ, ConfigLinearDriveBB configlineardrive)
 {
   _configlineardrive=configlineardrive;
   _flgOnlyZ=flgOnlyZ;
@@ -46,7 +46,7 @@ LinearDriverPico2040::LinearDriverPico2040(bool flgOnlyZ, ConfigLinearDrive conf
    z_a->disable();
    z_b->disable();
 }
-LinearDriverMotherBoard::~LinearDriverMotherBoard()
+LinearDriverWB::~LinearDriverWB()
 {
    delete(z_a);
    delete(z_b); 
@@ -54,7 +54,7 @@ LinearDriverMotherBoard::~LinearDriverMotherBoard()
    delete(turnon_y);  
    delete(turnon_z);  
 }
- LinearDriverMotherBoard::LinearDriverMotherBoard(ConfigLinearDriveNew configlineardrive)
+ LinearDriverWB::LinearDriverWB(ConfigLinearDriveWB configlineardrive)
  {
   if  (flgDebug)
   {
@@ -78,7 +78,7 @@ LinearDriverMotherBoard::~LinearDriverMotherBoard()
    turnon_z->disable();
  }
 
-void LinearDriverPico2040::move(int command, int freq, int duty, int nsteps, bool dir)  const ///
+void LinearDriverBB::move(int command, int freq, int duty, int nsteps, bool dir)  const ///
 {
   OutputPort *ptrA = z_a;
   OutputPort *ptrB = z_b;
@@ -127,7 +127,7 @@ void LinearDriverPico2040::move(int command, int freq, int duty, int nsteps, boo
   }
 }
 
-void LinearDriverMotherBoard::move(int command, int freq, int duty, int nsteps, bool dir) const ///
+void LinearDriverWB::move(int command, int freq, int duty, int nsteps, bool dir) const ///
 {
  /*
   if  (flgDebug)

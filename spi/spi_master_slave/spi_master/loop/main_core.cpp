@@ -32,7 +32,7 @@ void MainCore::launchOnCore1()
           flgVirtual=(bool)Vector[1];
           afc.clear();
           afc = code+std::to_string(DEBUG)+"set virtual "+ std::to_string(Vector[1]);
-          afc +=endln;//"\n";
+          afc +=endln;
           std::cout << afc;
           afc.clear();
           sleep_ms(100);              

@@ -21,31 +21,31 @@ class LinearDriverBase
    virtual void move(int command, int freq, int duty, int nsteps, bool dir) const;
 };
 
-class LinearDriverPico2040: public LinearDriverBase
+class LinearDriverBB: public LinearDriverBase
 {protected: 
   bool    _flgOnlyZ; 
-  ConfigLinearDrive _configlineardrive;
+  ConfigLinearDriveBB _configlineardrive;
   OutputPort *y_a;
   OutputPort *y_b;
   OutputPort *x_a;
   OutputPort *x_b;
  public:
-   LinearDriverPico2040(bool flgOnlyZ,ConfigLinearDrive configlineardrive);  
-  ~LinearDriverPico2040();
+   LinearDriverBB(bool flgOnlyZ,ConfigLinearDriveBB configlineardrive);  
+  ~LinearDriverBB();
    void move(int command, int freq, int duty, int nsteps, bool dir) const override;
 };
 
-class LinearDriverMotherBoard: public LinearDriverBase
+class LinearDriverWB: public LinearDriverBase
 {
  private:
     OutputPort *turnon_x;
     OutputPort *turnon_y;
     OutputPort *turnon_z ;
  protected:
-  ConfigLinearDriveNew _configlineardrive;
+  ConfigLinearDriveWB _configlineardrive;
  public:
-   LinearDriverMotherBoard(ConfigLinearDriveNew configlineardrive);
-   ~LinearDriverMotherBoard();
+   LinearDriverWB(ConfigLinearDriveWB configlineardrive);
+   ~LinearDriverWB();
    void move(int command, int freq, int duty, int nsteps, bool dir) const override;
 };
 #endif

@@ -90,7 +90,6 @@ extern std::string  SoftHARDWAREVERSION;  //  {0,1,....} or {0.1, 1.1...}
 extern int8_t       HARDWAREVERSION;      //PICO=0; MotherBoard=1
 extern uint32_t     DEBUG_LEVEL;
 extern std::string  afc;
-//extern uint16_t     spiBuf[12];
 
 extern std::vector<int32_t> Vector;
 extern std::vector<int32_t> Vupdateparams;
@@ -101,12 +100,10 @@ extern bool AD8400_SENDER;
 extern bool AD8400_SET_GAIN;   // AD8400
 extern bool AD5664;            
 
-extern bool ADC_ENABLE_DISABLE;//AD7606
-//extern bool ADC_RESET;       //AD7606     
+extern bool ADC_ENABLE_DISABLE;//AD7606 
 extern bool ADC_READ_FOREVER;  //AD7606
 extern bool ADC_GET_VALUE;     //AD7606
 
-extern bool LID;
 extern bool SET_IO_VALUE;
 extern bool Z_STATE;
 // add MF

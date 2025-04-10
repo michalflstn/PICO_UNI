@@ -15,7 +15,6 @@ std::string afc;  //dataout string
 std::vector<int32_t> Vector;
 std::vector<int32_t> Vupdateparams;
 int32_t  vectorSize;
-//uint16_t spiBuf[12]; //8 25/03/17
 std::atomic<int16_t>     ALGCODE;
 std::atomic<bool>  CONFIG_UPDATE;
 std::atomic<bool>  STOP;
@@ -42,7 +41,6 @@ bool AD8400_SET_GAIN = false;
 bool          AD5664 = false;
 bool    SET_IO_VALUE = false;
 bool ADC_ENABLE_DISABLE = false;
-//bool ADC_RESET = false;
 bool ADC_READ_FOREVER = false;
 bool    ADC_GET_VALUE = false;
 //************************************************

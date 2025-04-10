@@ -25,7 +25,7 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
      gainPID2=new OutputPort(confighardware.GainPID2); 
    freezeport=new OutputPort(confighardware.FreezePort);//заморозить/разморозить ПИД 
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
- linearDriver=new LinearDriverPico2040(true,configlineardrivev0);   
+ linearDriver=new LinearDriverBB(true,configlineardriveBB);   
 }
 HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
 {
@@ -46,7 +46,7 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
      gainPID2=new OutputPort(confighardware.GainPID2); 
    freezeport=new OutputPort(confighardware.FreezePort);//заморозить/разморозить ПИД 
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
- linearDriver=new LinearDriverPico2040(true,configlineardrivev0);   
+ linearDriver=new LinearDriverBB(true,configlineardriveBB);   
 }
 HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
 {
@@ -73,7 +73,7 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
         sensorport=new OutputPort(confighardware.SD_2Port);        // порты  настройки СД Cantilever=0; 1-Piezo
       signloopport=new OutputPort(confighardware.SignLoopPort);    // знак ПИД // 0=+ ; 1=-
  integrator_inport=new OutputPort(confighardware.Interator_InPort);// выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
-      linearDriver=new LinearDriverMotherBoard(configlineardrivev1);   
+      linearDriver=new LinearDriverWB(configlineardriveWB);   
 }
 
 HARDWARE::~HARDWARE()
