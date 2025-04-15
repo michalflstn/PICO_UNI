@@ -454,6 +454,10 @@ void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t channel, uint8_t nloop)
   {
    afc.clear();
    afc = code+std::to_string(DEBUG)+"debug PID Channel ="+ std::to_string(chnl_select);
+   afc += "\n";
+   std::cout << afc;
+   afc.clear();
+   sleep_ms(100);
   }  
 }
 void HARDWARE::setSignal_In_Loop(uint8_t value)
@@ -790,6 +794,7 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
       sleep_ms(200);
       afcc.clear();
     }
+  res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
   return int32_t(res);
 }
 void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
@@ -879,7 +884,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
    // for (size_t j = 0; j <szasc; ++j)
     {
       afcc +=separator +"ask="+std::to_string(outbuffer[1])+
-       "adress "+std::to_string((outbuffer[2]<<24)+(outbuffer[3]<<16)+(outbuffer[4]<<8)+outbuffer[5]);
+       " adress "+std::to_string((outbuffer[2]<<24)+(outbuffer[3]<<16)+(outbuffer[4]<<8)+outbuffer[5]);
     //   "data"   +std::to_string((outbuffer[6]<<24)+(outbuffer[7]<<16)+(outbuffer[8]<<8)+outbuffer[9]);  
     }
     afcc +=endln;
@@ -905,8 +910,12 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   case BBFPGA:
               FPGAWriteData writedata;
               writedata.addr=arrLoopModule.wbSetpoint;
-              writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));  
+              writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));    
               WriteDataToFPGA(writedata);
+              sleep_ms(200);
+              FPGAReadData readdata;
+              readdata.addr=arrLoopModule.wbSetpoint;
+              readsetpoint=ReadDataFromFPGA(readdata);
               break;
      }
   } 
@@ -928,8 +937,8 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   if  (flgDebug)
   {
    afc.clear();
-   afc =code+std::to_string(DEBUG)+ "debug SetPoint write "+ std::to_string(SetPoint) 
-                +", SetPoint read "+ std::to_string(readsetpoint);
+   afc =code+std::to_string(DEBUG)+ "debug SetPoint write="+ std::to_string(SetPoint) 
+                +", SetPoint read="+ std::to_string(readsetpoint);
    afc += endln;
    std::cout << afc;
    afc.clear();
