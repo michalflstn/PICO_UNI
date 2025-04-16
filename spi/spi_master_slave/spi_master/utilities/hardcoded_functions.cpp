@@ -1095,7 +1095,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
       if (flgDebug)  
       {
        afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(gain);
+       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(gain)+ " adress=" +std::to_string(writedata.addr);
       }  
    /*   if (abs(LOOPGain)<=abs(gain))
       {

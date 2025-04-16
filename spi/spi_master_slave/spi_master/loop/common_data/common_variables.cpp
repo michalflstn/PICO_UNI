@@ -2,7 +2,7 @@
 
 //////////////////////////////////////////////
 //std::string  SOFTVERSION="25.04.08.1 BB";
-std::string  SOFTVERSION="25.04.04.1 BBFPGA 12_LOOP";
+std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
 // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;

@@ -193,6 +193,7 @@ case ChangeHardWare:
                   {
                    afc.clear();
                    afc =code+std::to_string(ChangeHardWare)+ "error new scanner create "+std::to_string(HARDWAREVERSION);
+                   afc += endln;
                    std::cout << afc;
                    afc.clear();
                    sleep_ms(100); 
@@ -259,6 +260,7 @@ case SETDEVICE:{
           
                afc.clear();
                afc =code+std::to_string(DEBUG)+" device="+std::to_string(device);
+               afc += endln;
                std::cout << afc;
                afc.clear();
                sleep_ms(100); 
