@@ -147,6 +147,8 @@ public:
  void set_DACZ(int16_t value); 
 
  void set_DACZero();
+
+ void use_LowPassFilterADC(uint8_t turnon, uint8_t nchannel);
  
 // virtual void SetPIDMode(uint8_t mode)=0;
  

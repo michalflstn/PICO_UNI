@@ -174,6 +174,7 @@ struct FPGA_ADCAdress
   uint32_t Signal6;
   uint32_t Signal7;
   uint32_t Signal8;
+  uint32_t FilterADC;
 };
 /*
 Rx Frame format big-endian Offs:

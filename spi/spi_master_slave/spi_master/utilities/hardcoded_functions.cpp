@@ -212,7 +212,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
    dark();
-   init_DACSetPoint(confighardwarev.DACSetPointPort);  //инициирование ЦАП1  SetPoint
+   //init_DACSetPoint(confighardwarev.DACSetPointPort);  //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY
    init_LOOP();
@@ -446,7 +446,7 @@ void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t channel, uint8_t nloop)
   FPGAWriteData writedata;
   writedata.addr=inSwitchadress;
   uint32_t chnl_select;
-  chnl_select=1<<(2*channel+nloop);
+  chnl_select=1<<(2*channel+nloop); //??? for LOOP1  SFM =8 ; STM=32  
   writedata.data=chnl_select;// set channel
   WriteDataToFPGA(writedata);
   sleep_ms(10);
@@ -483,7 +483,25 @@ case    WB:
   }
  }
 } 
-
+void HARDWARE::use_LowPassFilterADC(uint8_t turnon, uint8_t nchannel)
+{
+  FPGAWriteData writedata;
+  writedata.addr=arrADCadress.FilterADC;
+  if (turnon==1) { writedata.data=nchannel+(1<<7);}
+            else { writedata.data=nchannel;       }
+  WriteDataToFPGA(writedata);
+  sleep_ms(10);
+  if (flgDebug)  
+  {
+   afc.clear();
+   afc = code+std::to_string(DEBUG)+"debug PID LowPass Filter Channel ="+ std::to_string(nchannel)
+   + " turnon="+std::to_string(writedata.data);
+   afc += "\n";
+   std::cout << afc;
+   afc.clear();
+   sleep_ms(100);
+  }  
+}
 void HARDWARE::setUseSD(int8_t value)
 { 
   switch (value)
@@ -844,10 +862,9 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
   buffer[6]=(uint8_t)((writedata.data&0xFF000000)>>24);
   buffer[7]=(uint8_t)((writedata.data&0x00FF0000)>>16);;
   buffer[8]=(uint8_t)((writedata.data&0x0000FF00)>>8);
-  buffer[9]=(uint8_t)(writedata.data&0x000000FF);
+  buffer[9]=(uint8_t)( writedata.data&0x000000FF);
   buffer[10]=writedata.crcpar;
   buffer[11]=writedata.delimend;
-   // memcpy(buffer, &writedata,sz);
   if (flgDebug)  
   {
     std::string afcc;
@@ -862,9 +879,6 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     sleep_ms(200);
     afcc.clear();
   }
- // while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}
-  //  uart_read_blocking(FPGA_UART_ID, outbuffer,szasc);
-
    uint8_t dst;
    while (uart_is_readable(FPGA_UART_ID)){ //250401 add oni
     tight_loop_contents();
@@ -881,11 +895,9 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     std::string afcc;
     afcc.clear();
     afcc=code+std::to_string(DEBUG)+"FPGA write ask"+separator+std::to_string(flgOK); 
-   // for (size_t j = 0; j <szasc; ++j)
     {
       afcc +=separator +"ask="+std::to_string(outbuffer[1])+
        " adress "+std::to_string((outbuffer[2]<<24)+(outbuffer[3]<<16)+(outbuffer[4]<<8)+outbuffer[5]);
-    //   "data"   +std::to_string((outbuffer[6]<<24)+(outbuffer[7]<<16)+(outbuffer[8]<<8)+outbuffer[9]);  
     }
     afcc +=endln;
     std::cout << afcc;
@@ -910,7 +922,7 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   case BBFPGA:
               FPGAWriteData writedata;
               writedata.addr=arrLoopModule.wbSetpoint;
-              writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));    
+              writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));    ///???
               WriteDataToFPGA(writedata);
               sleep_ms(200);
               FPGAReadData readdata;
@@ -1365,7 +1377,7 @@ void HARDWARE::retract() //втянуть
  {
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
-   writedata.data=0;   //3 250403
+   writedata.data=3;   //3 250403
    WriteDataToFPGA(writedata);
  }
 

@@ -75,6 +75,10 @@ void MainCore::launchOnCore1()
         delayHope=(uint16_t)Vector[1];
         ZJump    =(uint16_t)Vector[2];
         break;
+  case USELOWPASSFILTER_ADC:
+        ALGCODE=ALGNONE;              
+        scanner->hardware->use_LowPassFilterADC((uint8_t)Vector[1],(uint8_t)Vector[2]); // turnon=1, nchannel=[0..7]
+        break;
   case ADC_GET_VALUECmd:
         ALGCODE=ALGNONE;            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
