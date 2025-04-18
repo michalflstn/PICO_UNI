@@ -1109,11 +1109,12 @@ void HARDWARE::set_GainPID(uint32_t gain)
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(gain)+ " adress=" +std::to_string(writedata.addr);
       }  
-   /*   if (abs(LOOPGain)<=abs(gain))
+     /*
+      if (abs(LOOPGain)<=abs(gain))
       {
        for (size_t i = abs(LOOPGain); i >= abs(gain); i--)
        {
-        writedata.data=gain;//(uint32_t)gain; // gain need sign
+        writedata.data=gain;
         WriteDataToFPGA(writedata);
         sleep_ms(10);
        }
@@ -1122,7 +1123,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
       {
         for (size_t i = abs(LOOPGain); i > abs(gain); i--)
         {
-          writedata.data=gain;//(uint32_t)gain; // gain need sign
+          writedata.data=gain;
           WriteDataToFPGA(writedata); 
           sleep_ms(10);
         }
