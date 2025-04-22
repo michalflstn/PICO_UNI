@@ -2438,8 +2438,9 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
     //     -32768  вытянут
 	  int16_t Zt;
     int16_t dir;
-    if (stepsize>0) dir= 1;
+    if (stepsize>0) dir= 1; 
     else            dir=-1; 
+      
 	  Zt =Z0;
     uint16_t nsteps;
     uint16_t nreststeps;
@@ -2462,6 +2463,17 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
       sleep_us(10);      
       for(int16_t k=0; k < delay; k++) { }// задержка в каждом дискрете  ?????
 	  }
+/*
+    if  (flgDebug)
+  {
+   afc.clear();
+   afc =code+std::to_string(DEBUG)+ "zt="+ std::to_string(Zt); 
+   afc += endln;
+   std::cout << afc;
+   afc.clear();
+   sleep_ms(100); 
+  }
+   */
     if (nreststeps!=0)
     {
       if (dir==1)  //втягивание 
@@ -2519,7 +2531,7 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &Vector) // спектрос�
   {
     debugdata.emplace_back(Vector[j]);
   }
-  sendStrData(code+std::to_string(DEBUG)+" AI_Z parameters",debugdata,100,true);
+ // sendStrData(code+std::to_string(DEBUG)+" AI_Z parameters",debugdata,100,true);
  } 
  //start
   SignalValue=0;
@@ -2531,7 +2543,10 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &Vector) // спектрос�
     Z0=(int16_t) spiBuf[ZPin];
     hardware->retract();
     sleep_ms(50);
-    deltaZ=DACZMove(0,Z0-abs(ZStart),-10,delay);
+    deltaZ=DACZMove(0,Z0-abs(ZStart),-10,delay);  //z=0 втянут
+    debugdata.emplace_back(Z0);
+    debugdata.emplace_back(Z0-abs(ZStart));
+    sendStrData(code+std::to_string(DEBUG)+" AI_Z parameters",debugdata,100,true);
   }
 //////////////////////////////////////
   sleep_ms(200);      

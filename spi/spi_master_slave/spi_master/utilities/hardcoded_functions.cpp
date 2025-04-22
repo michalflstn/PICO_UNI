@@ -1336,7 +1336,7 @@ void HARDWARE::set_DACZ(int16_t value)
    case BBFPGA:
         FPGAWriteData writedata;
         writedata.addr=arrLoopModule.wbOutShift; //?????
-        writedata.data=(uint32_t)(int32_t(value)+ShiftDac);  
+        writedata.data=(uint32_t)(int32_t(value)+ShiftDac);  //????
         WriteDataToFPGA(writedata);
         break;
   }
