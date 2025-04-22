@@ -241,14 +241,14 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    ledPort->enable();
    dark();
    init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
-   init_DACBiasV(confighardwarev.DACBiasVPort);   //инициирование ЦАП1  BIAS
-   init_DACXY(confighardwarev.DACXYPort);    //инициирование ЦАП2  DACXY
+   init_DACBiasV(confighardwarev.DACBiasVPort);         //инициирование ЦАП1  BIAS
+   init_DACXY(confighardwarev.DACXYPort);               //инициирование ЦАП2  DACXY
    uint32_t gain;
    uint32_t gain0=7;
    gain=(gain0<<8)+100; 
    LOOPGain=gain;
-   set_GainPID(gain);                   // not virtual; not debug!
-   retract();                           // втянуть    
+   set_GainPID(gain);                    // not virtual; not debug!
+   retract();                            // втянуть    
    init_DACZ(confighardwareBB.DACZPort); // инициирование ЦАП3  DACZ
    set_DACZ(0); 
 }
@@ -259,7 +259,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
 // RX_core rxCore;
 // fixme mb should add & before isr
   gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
-
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 
   dec->enable();
@@ -1323,18 +1322,18 @@ void HARDWARE::set_DACXY(uint8_t channel, uint16_t value)
 void HARDWARE::set_DACZ(int16_t value) 
 {
     switch (HARDWAREVERSION)
-      {
-      case WB:
+  {
+   case WB:
        dacz->setSpiProps(); 
        dacz->writeB(int32_t(value)+ShiftDac);//A
        sleep_us(2);// 240405 
        break;
-      case BB: 
+   case BB: 
        dacz->setSpiProps(); 
        dacz->writeA(int32_t(value)+ShiftDac);//A
        sleep_us(2);// 240405 
        break;
-      case BBFPGA:
+   case BBFPGA:
         FPGAWriteData writedata;
         writedata.addr=arrLoopModule.wbOutShift; //?????
         writedata.data=(uint32_t)(int32_t(value)+ShiftDac);  
@@ -1402,7 +1401,6 @@ void HARDWARE::protract() //вытянуть
    writedata.data=1;  
    WriteDataToFPGA(writedata);
  }
-
 }
 /*
 void HARDWARE::protract(uint16_t delay,int16_t DacZ0,int16_t HeightJump) //вытянуть

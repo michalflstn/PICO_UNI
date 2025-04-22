@@ -142,18 +142,15 @@ case VersionCmd:
  case WB:
     {
      //uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_U
-      switch ((uint8_t)Vector[1])
+      switch (device)
      {
      case STM:
-              device=STM;
               scanner->hardware->init_Commutation(0 , SignalIncrease , IPin , 0, 0); //add 250409
               break;        
      case SFM:
-              device=SFM;
               scanner->hardware->init_Commutation(0 , SignalDecrease , AmplPin , 1, 0); //add 250409
               break;        
     case SICMDC:
-              device=SICMDC;
               scanner->hardware->init_Commutation(0 , SignalDecrease , IPin , 0, 0); //add 250409
               break;  
      }      
