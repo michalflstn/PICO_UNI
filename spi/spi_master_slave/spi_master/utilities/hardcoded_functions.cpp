@@ -142,11 +142,12 @@ void HARDWARE::init_LOOP()
 {
   //set dafault device SFM
   device=SFM;
+  sensor=PROBE;
   switch (HARDWAREVERSION)
   {
 case BBFPGA: 
     {
-     scanner->hardware->ChooseLoopChannelInputFPGA(channelampl,nloop);    // channel, nloop
+     scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
      switch (nloop)
      { 
      case 0: { arrLoopModule=arrLoopModule_0; break;}
@@ -169,7 +170,7 @@ case BBFPGA:
     } 
 case WB:
     {
-      scanner->hardware->init_Commutation(0 , SignalDecrease , AmplPin , 1, 0); //add 250409
+      scanner->hardware->init_Commutation(sensor, device); //add 250423
       break;        
     }      
     break;
@@ -439,12 +440,22 @@ case    WB:
   sleep_ms(100);
  */
 }
-void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t channel, uint8_t nloop)
+void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
 {
   //FPGA only!
+  uint8_t channel;
   FPGAWriteData writedata;
   writedata.addr=inSwitchadress;
   uint32_t chnl_select;
+  switch (dev)
+  {
+   case     STM: channel=channelcurrent;
+                 break;
+   case     SFM: channel=channelampl;
+                 break;
+   case  SICMDC: channel=channelcurrent;
+                 break;
+  }
   chnl_select=1<<(2*channel+nloop); //??? for LOOP1  SFM =8 ; STM=32  
   writedata.data=chnl_select;// set channel
   WriteDataToFPGA(writedata);
@@ -527,7 +538,7 @@ void HARDWARE::setModulateU(int8_t value)
   case 1:{modulateuport->enable();  break;}// вкл модуляцию U
  }
 }
-
+/*
 void HARDWARE::init_Commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_U)
 { 
  setSensor(sensor); 
@@ -536,6 +547,30 @@ void HARDWARE::init_Commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal
  setUseSD(useSD);
  setModulateU(useMod_U);
 }
+ */
+void HARDWARE::init_Commutation(int8_t sensor ,uint8_t dev)
+{ 
+   setSensor(sensor); 
+ switch (dev)
+ {
+   case STM: setLoopSign(SignalIncrease);
+             setSignal_In_Loop(IPin);
+             setUseSD(0);
+             setModulateU(0);
+             break; 
+   case SFM: setLoopSign(SignalDecrease);
+             setSignal_In_Loop(AmplPin); 
+             setUseSD(1);
+             setModulateU(0);
+             break;
+case SICMDC: setLoopSign(SignalIncrease);
+             setSignal_In_Loop(IPin); 
+             setUseSD(0);
+             setModulateU(0);
+             break;
+ }
+}
+
 void HARDWARE::init_SPI( uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4 )
 {
  decoder.activePort(port);

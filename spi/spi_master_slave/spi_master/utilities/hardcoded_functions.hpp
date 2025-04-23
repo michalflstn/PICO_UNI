@@ -104,7 +104,7 @@ public:
 
  void setSignal_In_Loop(uint8_t value); // Ampl=1 ; I=0
 
- void ChooseLoopChannelInputFPGA(uint8_t channel, uint8_t nloop);
+ void ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop);
  
  void setUseSD(int8_t value);      // 1-> yes; 0->none use syncrodetector
  
@@ -112,8 +112,8 @@ public:
  
  void setModulateU(int8_t value); // 0-> none; 1->use
 
- void init_Commutation(uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_u);
- 
+ void init_Commutation(int8_t sensor ,uint8_t dev);
+
  void init_SPI(uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4); //инициирование SPI
 
  void init_LOOP();

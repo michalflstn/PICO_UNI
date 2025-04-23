@@ -1,5 +1,6 @@
 #include "device_variables.hpp"
 uint8_t device;
+uint8_t sensor;
 uint8_t SignLoop;
 int16_t ZValue         = maxint16_t;
 int16_t SignalValue    = maxint16_t;

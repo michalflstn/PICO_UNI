@@ -9,6 +9,9 @@
 #define SFM                      0  // методики
 #define STM                      1
 #define SICMDC                   3  
+#define PROBE                    0  // зонд
+#define CANTILEVER               1
+
 //#define maxint16_t               32767  //250409
 //#define minint16_t              -32768
 

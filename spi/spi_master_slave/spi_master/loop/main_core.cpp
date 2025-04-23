@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../utilities/hardcoded_functions.hpp"
 #include "common_data/common_variables.hpp"
-#include "common_data/device_variables.hpp" //250409
+#include "common_data/device_variables.hpp" 
 #include "../physical_devices/scanner.hpp"
 #include "../utilities/debug_logger.hpp"
 #include <cmath>
@@ -126,8 +126,9 @@ case VersionCmd:
 {
   ALGCODE=ALGNONE;  
   device=(uint8_t)Vector[1]; //add 250409
+  sensor=(uint8_t)Vector[2]; //add 250423
   afc.clear();
-  afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device);
+  afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
   afc +=endln;//"\n";
   std::cout << afc;
   afc.clear();
@@ -141,19 +142,7 @@ case VersionCmd:
     }
  case WB:
     {
-     //uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_U
-      switch (device)
-     {
-     case STM:
-              scanner->hardware->init_Commutation(0 , SignalIncrease , IPin , 0, 0); //add 250409
-              break;        
-     case SFM:
-              scanner->hardware->init_Commutation(0 , SignalDecrease , AmplPin , 1, 0); //add 250409
-              break;        
-    case SICMDC:
-              scanner->hardware->init_Commutation(0 , SignalDecrease , IPin , 0, 0); //add 250409
-              break;  
-     }      
+     scanner->hardware->init_Commutation(sensor,device);     
      break;
     }  
   }              
@@ -216,49 +205,21 @@ case ChangeHardWare:
               } 
 case SETDEVICE:{
                 ALGCODE=ALGNONE; 
+                device=(uint8_t)Vector[1];
+                sensor=(uint8_t)Vector[2];
                 switch (HARDWAREVERSION)
                {
              case BBFPGA: 
                 {
-                  switch ((uint8_t)Vector[1])
-                 {
-                 case STM:
-                          device=STM;
-                          scanner->hardware->ChooseLoopChannelInputFPGA(channelcurrent,nloop); // channel, nloop
-                          break;        
-                 case SFM:
-                          device=SFM;
-                          scanner->hardware->ChooseLoopChannelInputFPGA(channelampl,nloop);    // channel, nloop
-                          break;        
-                case SICMDC:
-                          device=SICMDC;
-                          scanner->hardware->ChooseLoopChannelInputFPGA(channelcurrent,nloop); // channel, nloop
-                          break;  
-                 }      
+                 scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop); // device, nloop
                  break;
                 } 
              case WB:
                 {
-                  //uint8_t sensor ,uint8_t loopsign ,uint8_t signal_in_loop , uint8_t useSD,uint8_t useMod_U
-                   switch ((uint8_t)Vector[1])
-                  {
-                  case STM:
-                           device=STM;
-                           scanner->hardware->init_Commutation(0 , SignalIncrease , IPin , 0, 0); //add 250409
-                           break;        
-                  case SFM:
-                           device=SFM;
-                           scanner->hardware->init_Commutation(0 , SignalDecrease , AmplPin , 1, 0); //add 250409
-                           break;        
-                 case SICMDC:
-                           device=SICMDC;
-                           scanner->hardware->init_Commutation(0 , SignalDecrease , IPin , 0, 0); //add 250409
-                           break;  
-                  }      
+                  scanner->hardware->init_Commutation(sensor,device);    
                   break;
                  }  
-                }
-          
+                }        
                afc.clear();
                afc =code+std::to_string(DEBUG)+" device="+std::to_string(device);
                afc += endln;
@@ -270,7 +231,9 @@ case SETDEVICE:{
 case INITCOMMMUTATION:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->init_Commutation((uint8_t)Vector[1],(uint8_t)Vector[2],(uint8_t)Vector[3],(uint8_t)Vector[4],(uint8_t)Vector[5]);
+                device=(uint8_t)Vector[1];
+                sensor=(uint8_t)Vector[2];
+                scanner->hardware->init_Commutation(sensor,device);
                 break;
               }              
 case ADC_RESET:

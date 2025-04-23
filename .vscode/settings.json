@@ -100,7 +100,8 @@
         "xlocmes": "cpp",
         "xloctime": "cpp",
         "xtree": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "*.inc": "cpp"
     },
     "cmake.options.advanced": {
         "build": {

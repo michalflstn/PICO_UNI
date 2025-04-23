@@ -36,6 +36,7 @@ control registers
 */
 //  add 250409
 extern uint8_t device;
+extern uint8_t sensor;
 //* Перенос 250409
 extern uint8_t SignLoop;
 extern uint8_t ZPin;
