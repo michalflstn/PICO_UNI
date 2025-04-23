@@ -1,15 +1,14 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-std::string  SOFTVERSION="25.04.22.1 BB";
+int8_t       HARDWAREVERSION=BB;
+//int8_t       HARDWAREVERSION=WB;  
+//int8_t       HARDWAREVERSION=BBFPGA;
+std::string  SOFTVERSION="25.04.22.1 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
 // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИС;
-int8_t       HARDWAREVERSION=BB;
-//int8_t       HARDWAREVERSION=WB;  
-//int8_t       HARDWAREVERSION=BBFPGA;
-
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
 std::vector<int32_t> Vector;

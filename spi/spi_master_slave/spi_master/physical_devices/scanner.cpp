@@ -2436,6 +2436,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
 	{
     //  dacZ    0  втянут
     //     -32768  вытянут
+    // tested 250423 ok
 	  int16_t Zt;
     int16_t dir;
     if (stepsize>0) dir= 1; 
@@ -2543,7 +2544,7 @@ void Scanner::spectroscopyAIZ(std::vector<int32_t> &Vector) // спектрос�
     Z0=(int16_t) spiBuf[ZPin];
     hardware->retract();
     sleep_ms(50);
-    deltaZ=DACZMove(0,Z0-abs(ZStart),-10,delay);  //z=0 втянут
+    deltaZ=DACZMove(0,Z0-abs(ZStart),-10,delay);  //z=0 втянут tested 250423
     debugdata.emplace_back(Z0);
     debugdata.emplace_back(Z0-abs(ZStart));
     sendStrData(code+std::to_string(DEBUG)+" AI_Z parameters",debugdata,100,true);

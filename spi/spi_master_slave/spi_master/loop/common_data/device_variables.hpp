@@ -19,8 +19,6 @@
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
 #define NmbADCSignals   12 // 8 // ADC + control было 8 до FPGA
-
-
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
