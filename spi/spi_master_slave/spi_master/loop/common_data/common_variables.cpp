@@ -1,10 +1,10 @@
 #include "common_variables.hpp"
 
 //////////////////////////////////////////////
-int8_t       HARDWAREVERSION=BB;
+int8_t       HARDWAREVERSION=WB;
 //int8_t       HARDWAREVERSION=WB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SOFTVERSION="25.04.23.1 "+std::to_string(HARDWAREVERSION);
+std::string  SOFTVERSION="25.04.24.3 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";

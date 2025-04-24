@@ -201,17 +201,21 @@ void Scanner::readADC()
    }         
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-        debugdata.emplace_back(Vector[1]);
-        debugdata.emplace_back(SignLoop);
+      //  debugdata.emplace_back(setpoint-ShiftDac);
+     //   debugdata.emplace_back(Vector[1]);
+     //   debugdata.emplace_back(SignLoop);
+    //    debugdata.emplace_back(sensor);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);
   } 
   else
   {
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-        debugdata.emplace_back(Vector[1]);
-        debugdata.emplace_back(SignLoop);
-        sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
+       // debugdata.emplace_back(setpoint-ShiftDac);
+       // debugdata.emplace_back(Vector[1]);
+       // debugdata.emplace_back(SignLoop);
+       // debugdata.emplace_back(sensor);
+         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
 }
 bool Scanner::getHoppingFlg() //получить флаг- установлен ли флаг сканирования прыжками

@@ -45,8 +45,6 @@ private:
  OutputPort *signloopport;     // знак ПИД
  OutputPort *integrator_inport;// выбор вход сигнала вход. на ПИД из Сд или ПТН(I)
 
- uint8_t  flgmode;
-
 
  uint16_t *repeatTwoTimes(); 
 

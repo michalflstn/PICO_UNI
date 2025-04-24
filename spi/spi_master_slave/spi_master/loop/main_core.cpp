@@ -126,7 +126,8 @@ case VersionCmd:
 {
   ALGCODE=ALGNONE;  
   device=(uint8_t)Vector[1]; //add 250409
-  sensor=(uint8_t)Vector[2]; //add 250423
+  sensor=PROBE;
+ // sensor=(uint8_t)Vector[2]; //add 250423
   afc.clear();
   afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
   afc +=endln;//"\n";
@@ -221,7 +222,7 @@ case SETDEVICE:{
                  }  
                 }        
                afc.clear();
-               afc =code+std::to_string(DEBUG)+" device="+std::to_string(device);
+               afc =code+std::to_string(DEBUG)+"set device="+std::to_string(device)+" sensor=" +std::to_string(sensor);
                afc += endln;
                std::cout << afc;
                afc.clear();

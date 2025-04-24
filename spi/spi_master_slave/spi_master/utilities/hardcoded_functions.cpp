@@ -294,7 +294,8 @@ void HARDWARE::SetDev_GetSOFTHARDWAREVersion(uint8_t device)
 {
   afc.clear();
   afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
-        +",hardware "+std::to_string(HARDWAREVERSION) + ",device "+std::to_string(device);
+        +",hardware "+std::to_string(HARDWAREVERSION) + ",device "+std::to_string(device)
+        +",sensor "+std::to_string(sensor);
   afc +="\n";
   std::cout << afc;
   afc.clear();
@@ -396,17 +397,16 @@ case    WB:
          else set_BiasV(BiasV);
         break;
   } 
- /* if  (flgDebug)
+ if  (flgDebug)
  {
   afc.clear();
-  afc =code+std::to_string(DEBUG)+ "debug Bias+"+ std::to_string(BiasV)+" "+std::to_string(flg)+" "+std::to_string(SignLoopValue)
-  +" "+std::to_string(SetPointValue);
+  afc =code+std::to_string(DEBUG)+ "debug Bias="+ std::to_string(BiasV)+"retract="+std::to_string(flg)+"sign= "+std::to_string(SignLoopValue)
+  +"setpoint="+std::to_string(SetPointValue);
   afc += +"\n";
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
  }
- */
 }
 void HARDWARE::setLoopSign(int8_t value)
 {
@@ -486,8 +486,8 @@ case    WB:
   {
     switch (value)
    {
-    case 0:{integrator_inport->disable(); break;}// Ampl
-    case 1:{integrator_inport->enable();  break;}// I
+    case 0:{integrator_inport->disable(); break;}// I
+    case 1:{integrator_inport->enable();  break;}// Ampl
    }
    break;
   }
@@ -553,22 +553,30 @@ void HARDWARE::init_Commutation(int8_t sensor ,uint8_t dev)
    setSensor(sensor); 
  switch (dev)
  {
-   case STM: setLoopSign(SignalIncrease);
-             setSignal_In_Loop(IPin);
+   case STM: 
+             setLoopSign(SignalIncrease);
+             setSignal_In_Loop(0); //not use sd
              setUseSD(0);
              setModulateU(0);
              break; 
    case SFM: setLoopSign(SignalDecrease);
-             setSignal_In_Loop(AmplPin); 
+             setSignal_In_Loop(1); 
              setUseSD(1);
              setModulateU(0);
              break;
-case SICMDC: setLoopSign(SignalIncrease);
-             setSignal_In_Loop(IPin); 
+case SICMDC: setLoopSign(SignalDecrease);
+             setSignal_In_Loop(0); 
              setUseSD(0);
              setModulateU(0);
              break;
  }
+ afc.clear();
+ afc = code+std::to_string(DEBUG)+ "Init commutation " +"dev="+std::to_string(dev)+" signalIncrease " +std::to_string(SignalIncrease)+ " in-loop"+std::to_string(IPin);
+ afc+=" sensor "+std::to_string(sensor);
+ afc += +"\n";
+ std::cout << afc;
+ afc.clear();
+ sleep_ms(100);
 }
 
 void HARDWARE::init_SPI( uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4 )
@@ -875,11 +883,12 @@ void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
 
 void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
 {
- /* big_endian !!!! старшие - младшие байты
+ /*
+    big_endian !!!! старшие - младшие байты
     truct.pack("BBBBBBBBBBBB",self.DELIM, self.CMD_WRITE,\
     (address&0xFF000000)>>24,(address&0x00FF0000)>>16, (address&0x0000FF00)>>8,(address&0x000000FF),\
     (data&0xFF000000)>>24,(data&0x00FF0000)>>16, (data&0x0000FF00)>>8,(data&0x000000FF),\
-    self.CMD_CRC, self.DELIM\
+    self.CMD_CRC, self.DELIM
  */ 
   uint8_t flgOK;          
   size_t szwrite;
@@ -943,6 +952,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
 void HARDWARE::set_SetPoint( int32_t SetPoint)
 {//  code  22, 2, 8, 0, 1, 0, value
   int32_t readsetpoint;
+  setpoint=SetPoint+ShiftDac;
   if (!flgVirtual)
   {
       switch (HARDWAREVERSION)
@@ -983,8 +993,11 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   if  (flgDebug)
   {
    afc.clear();
-   afc =code+std::to_string(DEBUG)+ "debug SetPoint write="+ std::to_string(SetPoint) 
-                +", SetPoint read="+ std::to_string(readsetpoint);
+   afc =code+std::to_string(DEBUG)+ "debug SetPoint write="+ std::to_string(SetPoint) ;
+ //  afc+=", device="+ std::to_string(device);
+ //  afc+=", signloop="+ std::to_string(SignLoop);
+ //  afc+=", sensor="+ std::to_string(sensor);
+   if (HARDWAREVERSION==BBFPGA)  afc+=", SetPoint read="+ std::to_string(readsetpoint);
    afc += endln;
    std::cout << afc;
    afc.clear();
@@ -1009,8 +1022,6 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
  //   sleep_us(2);//240405 
     decoder.activePort(7);
   } 
-
-
 */
     switch (HARDWAREVERSION)
       {
