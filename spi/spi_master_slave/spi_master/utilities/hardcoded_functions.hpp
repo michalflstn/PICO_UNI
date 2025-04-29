@@ -40,10 +40,10 @@ private:
  OutputPort *protractport;     // втянуть сканнер/вытянуть сканнер
  // add
  OutputPort *modulateuport;    // вкл модуляцию U
- OutputPort *i_stmport;        // порты  настройки СД читать modulalate signal I_STM
+ OutputPort *usesdport;        // порты  настройки СД читать modulalate signal I_STM
  OutputPort *sensorport;       // порты  настройки выбор сенсора
  OutputPort *signloopport;     // знак ПИД
- OutputPort *integrator_inport;// выбор вход сигнала вход. на ПИД из Сд или ПТН(I)
+ OutputPort *integratorinport; // выбор входного сигнала в ПИД из CD или ПТН(I)
 
 
  uint16_t *repeatTwoTimes(); 

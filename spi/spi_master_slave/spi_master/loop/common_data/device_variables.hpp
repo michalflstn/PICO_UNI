@@ -141,17 +141,17 @@ struct ConfigHardWareWB  //WB
   uint8_t RDBPort;      //23
  // uint8_t IO1_0;        //11
  // uint8_t IO1_1;        //12
-  uint8_t GainPID0;     //13 SD
+  uint8_t GainPID0;     //13 
   uint8_t GainPID1;     //14
   uint8_t GainPID2;     //15
   uint8_t FreezePort;   //26 заморозить сканнер=1; разморозить =0
   uint8_t ProtractPort; //27 втянуть    сканнер=1; вытянуть    =0
 
   uint8_t ModulateUPort;   // вкл=1; выкд=0 модуляцию U  
-  uint8_t SD_1Port;        //13  порты  настройки СД I_STM=1; 0 =др
-  uint8_t SD_2Port;        //   порты  настройки СД Cantilever=0; 1-Piezo
+  uint8_t SD_1Port;        // 13  порты  настройки СД I_STM=1; 0 =др
+  uint8_t SD_2Port;        // порты  настройки СД Cantilever=0; 1-Piezo
   uint8_t SignLoopPort;    // знак ПИД // 0=+ ; 1=-
-  uint8_t Interator_InPort;// выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
+  uint8_t IntegratorInPort;// выбор входного сигнала в ПИД из 1-SD (Использовать SD); 0=ПТН(I) (не использовать SD)
 };
 
 struct FPGALOOPCTRAdress

@@ -9,9 +9,9 @@
 HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
 {
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
-        dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(confighardware.DACXYMode);   //set mode DAC X,Y
-         dacz=new DAC8563(confighardware.DACZMode);    //set mode DAC Z  
+        dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
          conv=new OutputPort(confighardware.CONV);
           dec=new OutputPort(confighardware.DEC);
@@ -23,16 +23,16 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
      gainPID0=new OutputPort(confighardware.GainPID0);
      gainPID1=new OutputPort(confighardware.GainPID1); 
      gainPID2=new OutputPort(confighardware.GainPID2); 
-   freezeport=new OutputPort(confighardware.FreezePort);//заморозить/разморозить ПИД 
+   freezeport=new OutputPort(confighardware.FreezePort);  //заморозить/разморозить ПИД 
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
  linearDriver=new LinearDriverBB(true,configlineardriveBB);   
 }
 HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
 {
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
-        dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(confighardware.DACXYMode);   //set mode DAC X,Y
-         dacz=new DAC8563(confighardware.DACZMode);    //set mode DAC Z  
+        dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
          conv=new OutputPort(confighardware.CONV);
           dec=new OutputPort(confighardware.DEC);
@@ -44,16 +44,16 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
      gainPID0=new OutputPort(confighardware.GainPID0);
      gainPID1=new OutputPort(confighardware.GainPID1); 
      gainPID2=new OutputPort(confighardware.GainPID2); 
-   freezeport=new OutputPort(confighardware.FreezePort);//заморозить/разморозить ПИД 
+   freezeport=new OutputPort(confighardware.FreezePort);  //заморозить/разморозить ПИД 
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер  
  linearDriver=new LinearDriverBB(true,configlineardriveBB);   
 }
 HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
 {
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
-        dacbv=new DAC8563(confighardware.DACBiasVMode); //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(confighardware.DACXYMode);   //set mode DAC X,Y
-         dacz=new DAC8563(confighardware.DACZMode);    //set mode DAC Z  
+        dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
          conv=new OutputPort(confighardware.CONV);
           dec=new OutputPort(confighardware.DEC);
@@ -69,10 +69,10 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер 
 //add new ports
      modulateuport=new OutputPort(confighardware.ModulateUPort);   // вкл=1; выкд=0 модуляцию U  
-         i_stmport=new OutputPort(confighardware.SD_1Port);        // порты  настройки СД I_STM=1; 0 =др
+        usesdport=new OutputPort(confighardware.SD_1Port);         // порты  настройки СД I_STM=1; 0 =др
         sensorport=new OutputPort(confighardware.SD_2Port);        // порты  настройки СД Cantilever=0; 1-Piezo
       signloopport=new OutputPort(confighardware.SignLoopPort);    // знак ПИД // 0=+ ; 1=-
- integrator_inport=new OutputPort(confighardware.Interator_InPort);// выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
+ integratorinport=new OutputPort(confighardware.IntegratorInPort); // выбор входного сигнала в ПИД из 1-SD(AMPL); из 0=ПТН(I) 
       linearDriver=new LinearDriverWB(configlineardriveWB);   
 }
 
@@ -98,10 +98,10 @@ HARDWARE::~HARDWARE()
    if (HARDWAREVERSION==WB) 
    {       
      delete(modulateuport);
-     delete(i_stmport);
+     delete(usesdport);
      delete(sensorport);
      delete(signloopport);
-     delete(integrator_inport);
+     delete(integratorinport);
    }
    if (linearDriver!=0) delete(linearDriver);
 // io_ports.clear();
@@ -486,8 +486,8 @@ case    WB:
   {
     switch (value)
    {
-    case 0:{integrator_inport->disable(); break;}// I
-    case 1:{integrator_inport->enable();  break;}// Ampl
+    case 0:{integratorinport->disable(); break;}// I
+    case 1:{integratorinport->enable();  break;}// Ampl
    }
    break;
   }
@@ -516,8 +516,8 @@ void HARDWARE::setUseSD(int8_t value)
 { 
   switch (value)
  {
-  case 0:{i_stmport->disable(); break;} 
-  case 1:{i_stmport->enable();  break;} //Loop use модуляцию I->SD
+  case 0:{usesdport->disable(); break;} 
+  case 1:{usesdport->enable();  break;} //Loop use модуляцию I->SD
  }
 }
  

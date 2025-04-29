@@ -2,7 +2,7 @@
 
 //////////////////////////////////////////////
 // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИСC;
-int8_t       HARDWAREVERSION=WB;
+int8_t       HARDWAREVERSION=BB;
 //int8_t       HARDWAREVERSION=BB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
 std::string  SOFTVERSION="25.04.24.3 "+std::to_string(HARDWAREVERSION);
@@ -51,7 +51,7 @@ bool    flgСritical_section=true;
 uint8_t flgDebugLevel = 3;      // уровень отладки
 bool    flgUseUART = false;     // использовать UART для передачи данных
 bool    flgLocalDebug=false;    // локальная отладка
-bool    flgTiming=false; 
+bool    flgTiming=false;        // рассчет времени выполнения блока
 //данные для симуляции 
 /* 250409 перенос to dev var
 uint8_t SignLoop;
