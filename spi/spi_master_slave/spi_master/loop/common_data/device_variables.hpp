@@ -78,11 +78,11 @@ struct ConfigHardWareBB //BB
 {
   uint8_t DACSetPointPort;  //2 DAC8563_1  BIAS SetPoint
   uint8_t DACSetPointMode;  //1 DAC8563_1  BIAS SetPoint
-  uint8_t DACBiasVPort;  //2 DAC8563_1  BIAS SetPoint
-  uint8_t DACBiasVMode;  //1 DAC8563_1  BIAS SetPoint
-  uint8_t DACXYPort;    //3 DAC8563_2  XY
-  uint8_t DACXYMode;    //2 DAC8563_2  XY
-  uint8_t DACZPort;     //4 dac8563_3  Z
+  uint8_t DACBiasVPort;     //2 DAC8563_1  BIAS SetPoint
+  uint8_t DACBiasVMode;     //1 DAC8563_1  BIAS SetPoint
+  uint8_t DACXYPort;        //3 DAC8563_2  XY
+  uint8_t DACXYMode;        //2 DAC8563_2  XY
+  uint8_t DACZPort;         //4 dac8563_3  Z
   uint8_t DACZMode;     //1 
   uint8_t BUSYPort;     //16
   uint8_t CONV;         //7
@@ -103,11 +103,11 @@ struct ConfigHardWareBBFPGA // BBFPGA
 {
   uint8_t DACSetPointPort;  //2 DAC8563_1  BIAS SetPoint
   uint8_t DACSetPointMode;  //1 DAC8563_1  BIAS SetPoint
-  uint8_t DACBiasVPort;  //2 DAC8563_1  BIAS SetPoint
-  uint8_t DACBiasVMode;  //1 DAC8563_1  BIAS SetPoint
-  uint8_t DACXYPort;    //3 DAC8563_2  XY
-  uint8_t DACXYMode;    //2 DAC8563_2  XY
-  uint8_t DACZPort;     //4 dac8563_3  Z
+  uint8_t DACBiasVPort;     //2 DAC8563_1  BIAS SetPoint
+  uint8_t DACBiasVMode;     //1 DAC8563_1  BIAS SetPoint
+  uint8_t DACXYPort;        //3 DAC8563_2  XY
+  uint8_t DACXYMode;        //2 DAC8563_2  XY
+  uint8_t DACZPort;         //4 dac8563_3  Z
   uint8_t DACZMode;     //1 
   uint8_t BUSYPort;     //16
   uint8_t CONV;         //7
@@ -125,13 +125,13 @@ struct ConfigHardWareBBFPGA // BBFPGA
 };
 struct ConfigHardWareWB  //WB
 {
-  uint8_t DACSetPointPort;    //2 DAC8563_1  BIAS SetPoint
+  uint8_t DACSetPointPort; //2 DAC8563_1  BIAS SetPoint
   uint8_t DACSetPointMode; //1 DAC8563_1  BIAS SetPoint
   uint8_t DACBiasVPort;    //2
   uint8_t DACBiasVMode;    //1 DAC8563_1  BIAS SetPoint
-  uint8_t DACXYPort;    //3 DAC8563_2  XY
-  uint8_t DACXYMode;    //2 DAC8563_2  XY
-  uint8_t DACZPort;     //4 dac8563_3  Z
+  uint8_t DACXYPort;       //3 DAC8563_2  XY
+  uint8_t DACXYMode;       //2 DAC8563_2  XY
+  uint8_t DACZPort;        //4 dac8563_3  Z
   uint8_t DACZMode;     //1 
   uint8_t BUSYPort;     //16
   uint8_t CONV;         //7
@@ -146,9 +146,9 @@ struct ConfigHardWareWB  //WB
   uint8_t GainPID2;     //15
   uint8_t FreezePort;   //26 заморозить сканнер=1; разморозить =0
   uint8_t ProtractPort; //27 втянуть    сканнер=1; вытянуть    =0
-
+// специфические
   uint8_t ModulateUPort;   // вкл=1; выкд=0 модуляцию U  
-  uint8_t SD_1Port;        // 13  порты  настройки СД I_STM=1; 0 =др
+  uint8_t SD_1Port;        // 13  порты  настройки СД вкл =1; выкл = 0 
   uint8_t SD_2Port;        // порты  настройки СД Cantilever=0; 1-Piezo
   uint8_t SignLoopPort;    // знак ПИД // 0=+ ; 1=-
   uint8_t IntegratorInPort;// выбор входного сигнала в ПИД из 1-SD (Использовать SD); 0=ПТН(I) (не использовать SD)

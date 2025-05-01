@@ -62,8 +62,7 @@ void MainCore::launchOnCore1()
   //***************************************  
   case SET_PID_GAIN:
         ALGCODE=ALGNONE;
-        if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint32_t)Vector[1]); //250116
-        else                         scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
+        scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
         break;  
   case ChangeSpeed:
         ALGCODE=ALGNONE;

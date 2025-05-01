@@ -69,7 +69,7 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
  protractport=new OutputPort(confighardware.ProtractPort);//вытянуть сканнер /втянуть сканнер 
 //add new ports
      modulateuport=new OutputPort(confighardware.ModulateUPort);   // вкл=1; выкд=0 модуляцию U  
-        usesdport=new OutputPort(confighardware.SD_1Port);         // порты  настройки СД I_STM=1; 0 =др
+        usesdport=new OutputPort(confighardware.SD_1Port);         // порты  настройки СД вкл =1; выкл = 0 
         sensorport=new OutputPort(confighardware.SD_2Port);        // порты  настройки СД Cantilever=0; 1-Piezo
       signloopport=new OutputPort(confighardware.SignLoopPort);    // знак ПИД // 0=+ ; 1=-
  integratorinport=new OutputPort(confighardware.IntegratorInPort); // выбор входного сигнала в ПИД из 1-SD(AMPL); из 0=ПТН(I) 

@@ -68,37 +68,7 @@ ConfigHardWareBB     confighardwareBB
                        }
                       );
 
-//
-/*
-ConfigHardWare       confighardwarev0
-                      (
-                       {                        
-                        2, //DACSetPointPort
-                        1, //DACSetPointMode
-                        2, //DACBiasVPort
-                        1, //DACBiasVMode
-                        3, //DACXYPort
-                        2, //DACXYMode
-                        4, //DACZport
-                        1, //DACZMode
-                        16,//BUSYPort
-                        7, //CONV
-                        10,//DEC
-                        17,//ResetPort
-                        PICO_DEFAULT_LED_PIN,//LEDPort
-                        23,//RDBPort
-                        11,//IO1_0
-                        12,//IO1_1
-                        13,//GainPID0
-                        14,//GainPID1
-                        15,//GainPID2
-                        26,//FreezePort  заморозить сканнер=1; разморозить =0
-                        27 //ProtractPor  втянуть    сканнер=1; вытянуть    =0
-                       }
-                      );
-*/
 
-//
 ConfigHardWareBBFPGA    confighardwareBBFPGA
                       (
                        {                        
@@ -148,7 +118,7 @@ ConfigHardWareWB    confighardwareWB
                         26,//FreezePort   заморозить сканнер=1; разморозить =0
                         27,//ProtractPort втянуть    сканнер=1; вытянуть    =0
                         28,//ModulateUPort вкл=1; выкд=0 модуляцию U  
-                        11,//SD_1Port Порты  настройки СД I_STM=1; 0 =др
+                        11,//SD_1Port Порты  настройки СД вкл =1; выкл = 0 
                         12,//SD_2Port порты  настройки СД Cantilever=0; 1-Piezo
                         8, //SignLoopPort знак ПИД // 0=+ ; 1=-
                         13 //Interator_InPort выбор вход сигнала на ПИД из1-SD; 0=ПТН(I) 
