@@ -2462,11 +2462,11 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
       {
         if (Zt<=(minint16_t-stepsize)) { Zt=minint16_t;}
         else  Zt=Zt+stepsize; 
-      } 
-    //   Zt=Zt+stepsize;         
+      }         
       if (!flgVirtual) hardware->set_DACZ(Zt);    
-      sleep_us(10);      
-      for(int16_t k=0; k < delay; k++) { }// задержка в каждом дискрете  ?????
+      //sleep_us(10); 
+      sleep_us(delay); //250514
+      //for(int16_t k=0; k < delay; k++) { }// задержка в каждом шаге  ?????
 	  }
 /*
     if  (flgDebug)
@@ -2492,7 +2492,8 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
         else Zt=Zt-nreststeps;
       } 
       if (!flgVirtual) hardware->set_DACZ(Zt);   
-      sleep_us(300);     
+     //sleep_us(300); // 250514    
+     sleep_us(30); // 250514    
     }   
     return(Zt);
 	}
