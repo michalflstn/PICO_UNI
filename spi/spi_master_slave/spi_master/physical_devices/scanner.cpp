@@ -2809,7 +2809,8 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
   int16_t  SET_POINT;
   int16_t  GATE_Z_MAX, GATE_Z_MIN;
   int16_t  freq, duty;//
-  int16_t  GAIN, NSTEPS;
+  uint16_t GAIN;
+  int16_t  NSTEPS;
   uint16_t INTDELAY, SCANNERDECAY;
   int16_t  flgDev;
   int16_t  BiasV;
@@ -2823,7 +2824,7 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
   DIR            =(bool)    Vector[5]; //  int dir
   APPROACHDIR    =(bool)    Vector[6]; //  APPRoach dir read from ini file
   INTDELAY       =(uint16_t)Vector[7]; // initdelay
-  GAIN           =(uint16_t)Vector[8]; // gain  //240320
+  GAIN           =(uint32_t)Vector[8]; // gain  //240320
   SCANNERDECAY   =(uint16_t)Vector[9]; // scannerDelay 
   freq           =(int16_t) Vector[10]; // freq
   duty           =(int16_t) Vector[11]; // scv
@@ -2842,7 +2843,7 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
  } 
   hardware->set_SetPoint(SET_POINT); 
   if (flgDev!=SFM) hardware->set_BiasV(BiasV);  
-  hardware->set_GainPID((uint16_t)GAIN); 
+  hardware->set_GainPID((uint32_t)GAIN); 
   if (!flgVirtual)
   {
     hardware->getValuesFromAdc(); 
@@ -2892,13 +2893,13 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
       NSTEPS       = Vupdateparams[4];
       DIR          =(bool)Vupdateparams[5]; //  int dir
       INTDELAY     = Vupdateparams[6];
-      GAIN         =(uint16_t) Vupdateparams[7];
+      GAIN         =(uint32_t) Vupdateparams[7];
       SCANNERDECAY = Vupdateparams[8];
      
      // if (flgDev!=SFM) set_Bias(1,Bias);  240211
       hardware->set_SetPoint(SET_POINT); 
       sleep_ms(100);  // need for virtual для разделение afc //240314
-      hardware->set_GainPID((uint16_t)GAIN); //240316
+      hardware->set_GainPID(GAIN); //240316
       sleep_ms(100);  // need for virtual для разделение afc //240314
       if (flgDebug)
       {  
