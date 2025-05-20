@@ -71,8 +71,9 @@ void RX_core::launchOnCore1()
        break;  
       case SET_PID_GAIN:
            // ALGCODE=ALGNONE;
-            if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint16_t)Vector[1]);
-            else                         scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
+            //if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint32_t)Vector[1]);
+            //else                      
+            scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
             break;      
       case ADC_GET_VALUECmd:            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      

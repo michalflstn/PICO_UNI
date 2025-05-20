@@ -351,11 +351,11 @@ void HARDWARE::set_BiasV(int32_t BiasV)
               break;
       case BB:
   case BBFPGA:
-              dacbv->writeB(BiasV+ShiftDac);
+              dacbv->writeB(-BiasV+ShiftDac); //+
               break;       
       }
   }    
-/*
+
  if  (flgDebug)
  {
   afc.clear();
@@ -365,7 +365,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
   afc.clear();
   sleep_ms(100);
  }
- */
+
 }   
 void HARDWARE::setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue)
 {
@@ -722,7 +722,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
   outbuffer[5]=(uint8_t)((readdata.addr&0x000000FF));
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
- /*
+/*
  if (flgDebug)  
   {
     std::string afcc;
@@ -737,7 +737,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
     sleep_ms(200);
     afcc.clear();
   }
- */
+*/
   //add 250401
   uint8_t dst;
   while (uart_is_readable(FPGA_UART_ID)) //clean buffer
@@ -751,8 +751,9 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
    uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
 
    uart_read_blocking(FPGA_UART_ID, inbuffer,szasc); 
- /* std::string afcc;
-  if (flgDebug)  
+  std::string afcc;
+/* 
+   if (flgDebug)  
    {
      afcc.clear();
      afcc=code+std::to_string(DEBUG)+"write"; 
@@ -763,7 +764,12 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
      afcc +=endln;
      std::cout << afcc;
    }
-     */
+*/
+   if (flgDebug)  
+   {
+     afcc.clear();
+     afcc=code+std::to_string(DEBUG)+"read "; 
+   }
   //}
   uint8_t k=6; //0A 80 adress=4 ??
   uint32_t val;
@@ -775,17 +781,20 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //16
       {
        val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
        arrayout[j]=(uint16_t)val;
+       if (flgDebug)  
+       {
+        afcc +=separator + std::to_string(arrayout[j]);
+       }
        k+=4;
       }
     }   
- /*  if (flgDebug)  
+  if (flgDebug)  
    {
      afcc +=endln;
      std::cout << afcc;
      sleep_ms(200);
-     afcc.clear();}
-   } 
-     */
+     afcc.clear();
+   }  
      return res; 
  }
 int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
@@ -908,7 +917,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
   buffer[9]=(uint8_t)( writedata.data&0x000000FF);
   buffer[10]=writedata.crcpar;
   buffer[11]=writedata.delimend;
-  if (flgDebug)  
+ /* if (flgDebug)  
   {
     std::string afcc;
     afcc.clear();
@@ -922,7 +931,8 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     sleep_ms(200);
     afcc.clear();
   }
-   uint8_t dst;
+*/
+  uint8_t dst;
    while (uart_is_readable(FPGA_UART_ID)){ //250401 add oni
     tight_loop_contents();
     dst = (uint8_t) uart_get_hw(FPGA_UART_ID)->dr;
@@ -933,6 +943,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
   uart_read_blocking(FPGA_UART_ID, outbuffer,szasc);
   flgOK=1;  
   if (outbuffer[1]==FPGAWRITEOK) {flgOK=0;}
+  /*
   if (flgDebug)  
   {
     std::string afcc;
@@ -947,6 +958,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
     sleep_ms(200);
     afcc.clear();
   }
+    */
 }
 
 void HARDWARE::set_SetPoint( int32_t SetPoint)
