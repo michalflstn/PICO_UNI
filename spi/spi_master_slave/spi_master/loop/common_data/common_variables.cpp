@@ -5,23 +5,26 @@
 int8_t       HARDWAREVERSION=WB;
 //int8_t       HARDWAREVERSION=BB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SOFTVERSION="25.05.14.1 "+std::to_string(HARDWAREVERSION);
+std::string  SOFTVERSION="25.05.12.1"+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
+
 //int8_t       HARDWAREVERSION_I=-1;
 std::string afc;  //dataout string
-std::vector<int32_t>  Vector;
-std::vector<int32_t>  Vupdateparams;
-int32_t               vectorSize;
-std::atomic<int16_t>  ALGCODE;
-std::atomic<bool>     CONFIG_UPDATE;
-std::atomic<bool>     STOP;
-std::atomic<bool>     TheadDone;   //need dor synchronization with PC 
-std::atomic<bool>     DrawDone=true;    //need dor synchronization with PC 
-std::atomic<bool>     ADC_IS_READY_TO_READ = true;
-std::atomic<bool>     flgVirtual = false; // start value!!! setPIDGain
-std::atomic<bool>     flgDebug   = false; // strat value!!!
+
+
+std::vector<int32_t> Vector;
+std::vector<int32_t> Vupdateparams;
+int32_t  vectorSize;
+std::atomic<int16_t>     ALGCODE;
+std::atomic<bool>  CONFIG_UPDATE;
+std::atomic<bool>  STOP;
+std::atomic<bool>  TheadDone;   //need dor synchronization with PC 
+std::atomic<bool>  DrawDone=true;    //need dor synchronization with PC 
+std::atomic<bool>  ADC_IS_READY_TO_READ = true;
+std::atomic<bool>  flgVirtual = false; // start value!!! setPIDGain
+std::atomic<bool>  flgDebug   = false; // strat value!!!
 std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
 std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
 std::atomic<uint16_t> delayHope;    //hopping
