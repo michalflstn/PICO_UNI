@@ -187,7 +187,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  // gpio_set_function(USBUART_RX_PIN, GPIO_FUNC_UART); 
  // gpio_pull_down(resetport->getPort());
  //   ShiftDac=0; //250522
-    SetPointScale=2;  ////????????
+    SetPointScale=1;// 2;  //250522
     stdio_init_all(); //add 250325
     uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); 
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
@@ -223,7 +223,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    LOOPGain=gain;
    set_GainPID(gain);  // 250522             // not virtual; not debug!
    retract();          // 250522             // втянуть    
-   init_DACZ(confighardwareBBFPGA.DACZPort); // инициирование ЦАП3  DACZ
    init_DACZ(confighardwarev.DACZPort);      // инициирование ЦАП3  DACZ
    set_DACZ(0); //250522
 }
@@ -251,7 +250,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    LOOPGain=gain;
    set_GainPID(gain);                    // not virtual; not debug!
    retract();                            // втянуть    
- //  init_DACZ(confighardwareBB.DACZPort); // инициирование ЦАП3  DACZ
    init_DACZ(confighardwarev.DACZPort); // инициирование ЦАП3  DACZ
    set_DACZ(0); 
 }
@@ -358,7 +356,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
               break;       
       }
   }    
-
+/*
  if  (flgDebug)
  {
   afc.clear();
@@ -368,7 +366,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
   afc.clear();
   sleep_ms(100);
  }
-
+*/
 }   
 void HARDWARE::setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue)
 {
