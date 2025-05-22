@@ -349,9 +349,10 @@ void HARDWARE::set_BiasV(int32_t BiasV)
       case WB:
               dacbv->writeB(-BiasV+ShiftDac);
               break;
-      case BB:
+      case BB:dacbv->writeB(-BiasV+ShiftDac); //+
+              break;    
   case BBFPGA:
-              dacbv->writeB(-BiasV+ShiftDac); //+
+              dacbv->writeB(BiasV); //+
               break;       
       }
   }    
