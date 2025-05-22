@@ -186,7 +186,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  // gpio_set_function(USBUART_TX_PIN, GPIO_FUNC_UART);
  // gpio_set_function(USBUART_RX_PIN, GPIO_FUNC_UART); 
  // gpio_pull_down(resetport->getPort());
-    ShiftDac=0;
+ //   ShiftDac=0; //250522
     SetPointScale=2;  ////????????
     stdio_init_all(); //add 250325
     uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); 
@@ -216,15 +216,16 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    //init_DACSetPoint(confighardwarev.DACSetPointPort);  //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY
-   init_LOOP();
+   init_LOOP(); //250522
    // channel is default ampl!!! need change  when changed dev
    uint32_t gain;
    gain=7; 
    LOOPGain=gain;
-   set_GainPID(gain);                   // not virtual; not debug!
-   retract();                           // втянуть    
+   set_GainPID(gain);  // 250522             // not virtual; not debug!
+   retract();          // 250522             // втянуть    
    init_DACZ(confighardwareBBFPGA.DACZPort); // инициирование ЦАП3  DACZ
-   set_DACZ(0); 
+   init_DACZ(confighardwarev.DACZPort);      // инициирование ЦАП3  DACZ
+   set_DACZ(0); //250522
 }
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
@@ -250,7 +251,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    LOOPGain=gain;
    set_GainPID(gain);                    // not virtual; not debug!
    retract();                            // втянуть    
-   init_DACZ(confighardwareBB.DACZPort); // инициирование ЦАП3  DACZ
+ //  init_DACZ(confighardwareBB.DACZPort); // инициирование ЦАП3  DACZ
+   init_DACZ(confighardwarev.DACZPort); // инициирование ЦАП3  DACZ
    set_DACZ(0); 
 }
 void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB  
@@ -352,7 +354,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
       case BB:dacbv->writeB(-BiasV+ShiftDac); //+
               break;    
   case BBFPGA:
-              dacbv->writeB(BiasV); //+
+              dacbv->writeB(BiasV+ShiftDac); //+
               break;       
       }
   }    
@@ -965,7 +967,7 @@ void HARDWARE::WriteDataToFPGA(FPGAWriteData writedata)
 void HARDWARE::set_SetPoint( int32_t SetPoint)
 {//  code  22, 2, 8, 0, 1, 0, value
   int32_t readsetpoint;
-  setpoint=SetPoint+ShiftDac;
+  setpoint=(uint16_t)(SetPoint+ShiftDac);
   if (!flgVirtual)
   {
       switch (HARDWAREVERSION)

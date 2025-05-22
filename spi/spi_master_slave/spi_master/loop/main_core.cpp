@@ -210,12 +210,12 @@ case SETDEVICE:{
                 switch (HARDWAREVERSION)
                {
              case BBFPGA: 
-                {
-                 scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop); // device, nloop
-                 break;
-                } 
+                 {
+                  scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop); // device, nloop
+                  break;
+                 } 
              case WB:
-                {
+                 {
                   scanner->hardware->init_Commutation(sensor,device);    
                   break;
                  }  
@@ -227,7 +227,7 @@ case SETDEVICE:{
                afc.clear();
                sleep_ms(100); 
                break;
-              }                
+              }             
 case INITCOMMMUTATION:
               {
                 ALGCODE=ALGNONE;

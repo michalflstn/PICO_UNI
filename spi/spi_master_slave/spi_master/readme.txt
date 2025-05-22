@@ -1,3 +1,6 @@
+//250522
+ исправлена ошибка BBFPGA shiftDAC дожен быть не 0
+решитьвопрос со знаком BIASV И I 
 //250321
 работа с uart в cmakelist.txt добалено pico_sdk_init()
 и  в target_link_libraries hardware_uart?
