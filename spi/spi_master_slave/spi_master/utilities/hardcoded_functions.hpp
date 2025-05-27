@@ -49,6 +49,8 @@ private:
  uint16_t *repeatTwoTimes(); 
 
  uint16_t gainPID;
+
+ uint8_t signloop;
   
  void get_result_from_adc();       // чтение АЦП
 

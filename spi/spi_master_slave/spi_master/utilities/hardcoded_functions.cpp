@@ -414,10 +414,30 @@ void HARDWARE::setLoopSign(int8_t value)
    switch  (HARDWAREVERSION) 
   {
 case BBFPGA:
+     {
+      FPGAWriteData writedata;
+      FPGAReadData readdata;  
+   //   signloop=value;
+      readdata.addr=arrLoopModule.pidControl; //250527
+      int32_t readpidcontrol=ReadDataFromFPGA(readdata);
+      writedata.addr=arrLoopModule.pidControl;
+      writedata.data=(value<<7 & readpidcontrol);
+      WriteDataToFPGA(writedata);
+      sleep_ms(10);
+      if (flgDebug)  
+      {
+       afc.clear();
+       afc = code+std::to_string(DEBUG)+"debug PID sign="+ std::to_string(readpidcontrol)+" val="+std::to_string(value)+ " adress=" +std::to_string(writedata.addr);
+       afc += endln;
+       std::cout << afc;
+       afc.clear();
+       sleep_ms(100); 
+       }  
+       break;
+      } 
+case  BB:
          break;
-case    BB:
-         break;
-case    WB:
+case  WB:
         // SignLoop=value;// debug
          //втянуть
        //  retract(); 
@@ -839,8 +859,8 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
     uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
   }
   int32_t res;  //
-  uint32_t  adr;
-  uint32_t ures;
+ // uint32_t  adr;
+ // uint32_t ures;
  // res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
  //get array adc 0A 80 adress data BB 0A
   int8_t flgOk;
@@ -852,19 +872,23 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
     {
       std::string afcc;
       afcc.clear();
-      afcc=code+std::to_string(DEBUG)+"read "+ std::to_string(flgOk) ; 
+      afcc=code+std::to_string(DEBUG)+"read="+ std::to_string(flgOk) ; 
     //  afcc +=separator +"adr="+std::to_string(adr);
     //  afcc +=separator +"res+"+std::to_string(ures);
+   /* 
     for (size_t j = 0; j <szasc; ++j)
     {
       afcc +=separator + std::to_string(inbuffer[j]);
     }
+   */   
+    res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
+    afcc +=" val=" + std::to_string(res); 
       afcc +=endln;
       std::cout << afcc;
       sleep_ms(200);
       afcc.clear();
     }
-  res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
+ // res=(inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9];
   return int32_t(res);
 }
 void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
@@ -1434,10 +1458,13 @@ void HARDWARE::retract() //втянуть
  }
  else
  {
-   FPGAWriteData writedata;
-   writedata.addr=arrLoopModule.pidControl;
-   writedata.data=3;   //3 250403
-   WriteDataToFPGA(writedata);
+     FPGAReadData readdata;  
+     readdata.addr=arrLoopModule.pidControl; //250527
+     int32_t readpidcontrol=ReadDataFromFPGA(readdata);
+     FPGAWriteData writedata;
+     writedata.addr=arrLoopModule.pidControl;
+     writedata.data=readpidcontrol & 3;   //3 250403
+     WriteDataToFPGA(writedata);
  }
 
 }
@@ -1455,9 +1482,12 @@ void HARDWARE::protract() //вытянуть
  } 
  else
  {
+   FPGAReadData readdata;  
+   readdata.addr=arrLoopModule.pidControl; //250527
+   int32_t readpidcontrol=ReadDataFromFPGA(readdata);
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
-   writedata.data=1;  
+   writedata.data=readpidcontrol & 1;  
    WriteDataToFPGA(writedata);
  }
 }
@@ -1480,9 +1510,12 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
  }
  else 
  {
+   FPGAReadData readdata;  
+   readdata.addr=arrLoopModule.pidControl; //250527
+   int32_t readpidcontrol=ReadDataFromFPGA(readdata);
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
-   writedata.data=0;  
+   writedata.data=readpidcontrol & 0;  
    WriteDataToFPGA(writedata);
  }
 }
@@ -1496,9 +1529,12 @@ if (HARDWAREVERSION!=BBFPGA)
  }
  else 
  {
+   FPGAReadData readdata;  
+   readdata.addr=arrLoopModule.pidControl; //250527
+   int32_t readpidcontrol=ReadDataFromFPGA(readdata);
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;
-   writedata.data=1;  
+   writedata.data=readpidcontrol & 1;  
    WriteDataToFPGA(writedata);
  }
 }
