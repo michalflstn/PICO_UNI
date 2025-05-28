@@ -50,7 +50,12 @@ private:
 
  uint16_t gainPID;
 
- uint8_t signloop;
+ uint8_t PID_FBABS;
+ uint8_t PID_ENA;
+ uint8_t PID_STOP;
+ uint8_t PID_SIGN;
+ 
+
   
  void get_result_from_adc();       // чтение АЦП
 
