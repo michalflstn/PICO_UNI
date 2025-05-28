@@ -132,7 +132,7 @@ public:
  void init_DACZ(uint8_t spiport);    //инициирование ЦАП2  Z
 
  void set_BiasV(int32_t BiasV);      //установка заданного значения напряжения
- //void set_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue); // flg=1 изменять знак ПИД
+
  void setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue);
 
  void setLoopSign(int8_t value);  // 0->+ ; 1-> -1
@@ -141,11 +141,11 @@ public:
 
  void set_GainApmlMod(uint8_t gain); //установить усиления модуляции амплитуды
 
- void set_GainPID(uint16_t gain);    //установить усиления ПИД
+ void set_GainPID(uint16_t gain);    //установить усиления ПИД  не используется
 
  void set_GainPID(uint32_t gain);    //установить усиления ПИД
 
- void set_GainPIDFPGA(uint32_t gain);    //установить усиления ПИД
+ void set_GainPIDFPGA(uint32_t gain);    //установить усиления ПИД не используется
  
  void set_DACXY(uint8_t channel, uint16_t value); 
 
@@ -154,16 +154,13 @@ public:
  void set_DACZero();
 
  void use_LowPassFilterADC(uint8_t turnon, uint8_t nchannel);
- 
-// virtual void SetPIDMode(uint8_t mode)=0;
- 
+
  void reset_ADCPort();
  
  void move_scannerX(int x);
 
  void move_scannerY(int y);
 
- //uint16_t *getValuesFromAdc();  // чтение АЦП
  void getValuesFromAdc();  // чтение АЦП
 
  int32_t ReadDataFromFPGA(FPGAReadData readdata);
@@ -181,8 +178,6 @@ public:
  void freezeLOOP(uint16_t delay);    // заморозить ПИД
 
  void unfreezeLOOP(uint16_t delay);  // разморозить ПИД 
-
- // void protract(uint16_t delay,int16_t DacZ0,int16_t HeightJump) ; //разморозить ПИД 
  
 };
 #endif

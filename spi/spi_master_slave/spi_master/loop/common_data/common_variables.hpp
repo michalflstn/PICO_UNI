@@ -111,14 +111,14 @@ extern bool ADC_GET_VALUE;     //AD7606
 extern bool SET_IO_VALUE;
 extern bool Z_STATE;
 // add MF
-extern std::atomic<int16_t> ALGCODE;
-extern std::atomic<bool> CONFIG_UPDATE;
-extern std::atomic<bool> STOP;
-extern std::atomic<bool> TheadDone;   //need dor synchronization with PC 
-extern std::atomic<bool> DrawDone;    //need dor synchronization with PC 
-extern std::atomic<bool> ADC_IS_READY_TO_READ;
-extern std::atomic<bool> flgVirtual; 
-extern std::atomic<bool> flgDebug;
+extern std::atomic<int16_t>  ALGCODE;
+extern std::atomic<bool>     CONFIG_UPDATE;
+extern std::atomic<bool>     STOP;
+extern std::atomic<bool>     TheadDone;   //need dor synchronization with PC 
+extern std::atomic<bool>     DrawDone;    //need dor synchronization with PC 
+extern std::atomic<bool>     ADC_IS_READY_TO_READ;
+extern std::atomic<bool>     flgVirtual; 
+extern std::atomic<bool>     flgDebug;
 extern std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
 extern std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
 extern std::atomic<uint16_t> delayHope;  
@@ -131,18 +131,5 @@ extern bool flgUseUART;
 extern bool flgUseFPGA;       //Использовать ПЛИСС
 extern bool flgLocalDebug;  
 extern bool flgTiming; 
-/* move to device var 
-extern uint8_t SignLoop;
-extern uint8_t ZPin;
-extern uint8_t AmplPin;       //amplitude
-extern uint8_t IPin;          //current
-extern uint8_t flgDebugLevel; //leveldebug
-extern int16_t ZValue;        //for simulation
-extern int16_t SignalValue;   //for simulation   
-extern int16_t ZMaxValue;
-extern int16_t SignalMaxValue;
-extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
-extern int8_t  SetPointScale;
-*/
 extern critical_section_t criticalSection;
 #endif //PICO_EXAMPLES_COMMON_VARIABLES_HPP

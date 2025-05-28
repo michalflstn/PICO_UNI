@@ -147,6 +147,10 @@ void HARDWARE::init_LOOP()
   {
 case BBFPGA: 
     {
+     PID_FBABS=1<<8;    // abs value into loop
+     PID_SIGN =1<<7;    //???
+     PID_ENA=1;
+     PID_STOP=0;
      scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
      switch (nloop)
      { 
@@ -166,6 +170,10 @@ case BBFPGA:
       sleep_ms(30);
       writedata.addr=arrLoopModule.wbOutMulKoef;
       writedata.data=1;
+      WriteDataToFPGA(writedata);
+      sleep_ms(30);
+      writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP;
+      writedata.addr=arrLoopModule.pidControl;
       WriteDataToFPGA(writedata);
       sleep_ms(30);
       break;        
@@ -190,7 +198,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  // gpio_pull_down(resetport->getPort());
  //   ShiftDac=0; //250522
     SetPointScale=1;// 2;  //250522
-    PID_FBABS=1<<7; // abs value into loop
     stdio_init_all(); //add 250325
     uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); 
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
@@ -227,7 +234,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    set_GainPID(gain);  // 250522             // not virtual; not debug!
    retract();          // 250522             // втянуть    
    init_DACZ(confighardwarev.DACZPort);      // инициирование ЦАП3  DACZ
-   set_DACZ(0); //250522
+   set_DACZ(0);        //250522
 }
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
@@ -352,7 +359,8 @@ void HARDWARE::set_BiasV(int32_t BiasV)
       case WB:
               dacbv->writeB(-BiasV+ShiftDac);
               break;
-      case BB:dacbv->writeB(-BiasV+ShiftDac); //+
+      case BB:
+              dacbv->writeB(-BiasV+ShiftDac); //+
               break;    
   case BBFPGA:
               dacbv->writeB(BiasV+ShiftDac); //+
@@ -412,25 +420,23 @@ case    WB:
   sleep_ms(100);
  }
 }
-void HARDWARE::setLoopSign(int8_t value)
+void HARDWARE::setLoopSign(int8_t value) //??????
 {
    switch  (HARDWAREVERSION) 
   {
 case BBFPGA:
      {
       FPGAWriteData writedata;
-      FPGAReadData readdata;  
-   //   signloop=value;
-      readdata.addr=arrLoopModule.pidControl; //250527
-      int32_t readpidcontrol=ReadDataFromFPGA(readdata);
       writedata.addr=arrLoopModule.pidControl;
-      writedata.data=(value<<7 & readpidcontrol);
+      PID_SIGN=value;
+      writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP;
       WriteDataToFPGA(writedata);
       sleep_ms(10);
       if (flgDebug)  
       {
        afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID sign="+ std::to_string(readpidcontrol)+" val="+std::to_string(value)+ " adress=" +std::to_string(writedata.addr);
+       afc = code+std::to_string(DEBUG)+"debug PID sign val="+std::to_string(PID_FBABS+PID_SIGN+PID_ENA+PID_STOP)
+       + " adress=" +std::to_string(writedata.addr);
        afc += endln;
        std::cout << afc;
        afc.clear();
@@ -501,8 +507,7 @@ void HARDWARE::setSignal_In_Loop(uint8_t value)
 case BBFPGA:
         {
 
-
-         break;
+          break;
         }   
 case    BB:
          break;
@@ -1019,6 +1024,7 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   {
     if (HARDWAREVERSION==BBFPGA)
     {
+     /*
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbSetpoint;
       writedata.data=(uint32_t)(SetPointScale*(SetPoint+ShiftDac));    
@@ -1027,6 +1033,7 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       FPGAReadData readdata;
       readdata.addr=arrLoopModule.wbSetpoint;
       readsetpoint=ReadDataFromFPGA(readdata);
+      */
     }
   }
   // отладка
@@ -1034,9 +1041,6 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ "debug SetPoint write="+ std::to_string(SetPoint) ;
- //  afc+=", device="+ std::to_string(device);
- //  afc+=", signloop="+ std::to_string(SignLoop);
- //  afc+=", sensor="+ std::to_string(sensor);
    if (HARDWAREVERSION==BBFPGA)  afc+=", SetPoint read="+ std::to_string(readsetpoint);
    afc += endln;
    std::cout << afc;
@@ -1461,16 +1465,11 @@ void HARDWARE::retract() //втянуть
  }
  else
  {
-  /*
-     FPGAReadData readdata;  
-     readdata.addr=arrLoopModule.pidControl; //250527
-     int32_t readpidcontrol=ReadDataFromFPGA(readdata);
-  */   
      FPGAWriteData writedata;
      writedata.addr=arrLoopModule.pidControl;
      PID_ENA=1;
      PID_STOP=2;
-     writedata.data=PID_FBABS+PID_ENA+PID_STOP;   //3 250403
+     writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP;   //3 250403
      WriteDataToFPGA(writedata);
  }
 
@@ -1492,20 +1491,11 @@ void HARDWARE::protract() //вытянуть
    FPGAWriteData writedata;
    PID_ENA=1;
    PID_STOP=0;
-   writedata.data=PID_FBABS+PID_ENA+PID_STOP;
+   writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP;
    writedata.addr=arrLoopModule.pidControl;
    WriteDataToFPGA(writedata);
  }
 }
-/*
-void HARDWARE::protract(uint16_t delay,int16_t DacZ0,int16_t HeightJump) //вытянуть
-{
- // unfreezeLOOP(delay); 
-   protract();
-  //set_DACZ(0,0); 
-   ZMove(DacZ0,HeightJump,-20, delay);
-}
-*/
 
 void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
 {
@@ -1520,7 +1510,7 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
    writedata.addr=arrLoopModule.pidControl;
    PID_ENA=0;
    PID_STOP=0;
-   writedata.data=PID_FBABS+PID_ENA+PID_STOP; 
+   writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP; 
    WriteDataToFPGA(writedata);
  }
 }
@@ -1538,8 +1528,7 @@ if (HARDWAREVERSION!=BBFPGA)
    writedata.addr=arrLoopModule.pidControl;
    PID_ENA=1;
    PID_STOP=0;
-   writedata.data=PID_FBABS+PID_ENA+PID_STOP; 
-   writedata.data=PID_FBABS+PID_ENA+PID_STOP;  
+   writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP;  
    WriteDataToFPGA(writedata);
  }
 }
