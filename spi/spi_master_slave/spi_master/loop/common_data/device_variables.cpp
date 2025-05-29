@@ -34,7 +34,7 @@ uint32_t    IAdress=0x0841000C;
 uint8_t         channelcurrent=IPin;    //add  250409 channel current into LOOP
 uint8_t            channelampl=AmplPin; //    channel amplitude into LOOP
 
-uint8_t                    nloop=1; //add  250409 N LOOP choose arrModule_N=  arrModule_1
+uint8_t                    nloop=0; //add  250409 N LOOP choose arrModule_N=  arrModule_1
 
 uint16_t     spiBuf[NmbADCSignals];
 

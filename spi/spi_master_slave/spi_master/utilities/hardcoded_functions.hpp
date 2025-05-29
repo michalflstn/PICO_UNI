@@ -50,10 +50,10 @@ private:
 
  uint16_t gainPID;
 
- uint8_t PID_FBABS;
- uint8_t PID_ENA;
- uint8_t PID_STOP;
- uint8_t PID_SIGN;
+ uint32_t PID_FBABS;
+ uint32_t PID_ENA;
+ uint32_t PID_STOP;
+ uint32_t PID_SIGN;
  
 
   
@@ -165,7 +165,7 @@ public:
 
  int32_t ReadDataFromFPGA(FPGAReadData readdata);
  
- uint8_t ReadDataFromFPGAArray(uint8_t count, uint16_t *arrayout);
+ uint8_t ReadDataFromFPGAArray(uint8_t count, uint32_t adr, uint16_t *arrayout);
 
  uint8_t ReadDataFromFPGAArrayALL(uint16_t *arrayout);
 

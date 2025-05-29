@@ -1,6 +1,9 @@
+//250529
+in sfm need to use  filter
 //250522
- исправлена ошибка BBFPGA shiftDAC дожен быть не 0
-решитьвопрос со знаком BIASV И I 
+ исправлена ошибка для BBFPGA val int32 смещение не нужно
+для не FPGA shiftDAC дожен быть не 0
+решить вопрос со знаком BIASV И I 
 //250321
 работа с uart в cmakelist.txt добалено pico_sdk_init()
 и  в target_link_libraries hardware_uart?
