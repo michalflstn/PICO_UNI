@@ -437,8 +437,9 @@ case BBFPGA:
       sleep_ms(10);
       if (flgDebug)  
       {
+       int32_t val=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP;
        afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID sign val="+std::to_string(PID_FBABS+PID_SIGN+PID_ENA+PID_STOP)
+       afc = code+std::to_string(DEBUG)+"debug PID sign val="+std::to_string(val)
        + " adress=" +std::to_string(writedata.addr);
        afc += endln;
        std::cout << afc;
