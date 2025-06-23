@@ -50,6 +50,7 @@ extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
 extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
+extern int8_t  GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
 
 extern uint16_t spiBuf[NmbADCSignals];
 extern uint8_t  FPGADELIM;
@@ -158,7 +159,7 @@ struct FPGALOOPCTRAdress
 {
  uint32_t wbKx[3];
  uint32_t wbInMulKoef;
- uint32_t wbInShift;
+ uint32_t wbInSetup;//wbInShift; в младших 8 битах указывается количество разрядов после запятой в коэффициентах// 250623
  uint32_t wbOutMulKoef;
  uint32_t wbOutShift; //DACZ
  uint32_t wbSetpoint;

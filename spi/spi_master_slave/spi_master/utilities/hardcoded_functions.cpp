@@ -148,7 +148,7 @@ void HARDWARE::init_LOOP()
 case BBFPGA: 
     {
      PID_FBABS=1<<8;    // abs value into loop
-     PID_SIGN=1<<7;    //???
+     PID_SIGN=1<<7;    //up or  down ???
      PID_ENA=1;
      PID_STOP=0;
      scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
@@ -158,11 +158,15 @@ case BBFPGA:
      case 1: { arrLoopModule=arrLoopModule_1; break;};
      } 
       FPGAWriteData writedata;
-      writedata.data=1;
+      writedata.addr=arrLoopModule.wbInSetup;// 250623
+      writedata.data=GainScale;           
+      WriteDataToFPGA(writedata);
+      sleep_ms(10);
+      writedata.data=1*(2<<GainScale);
       writedata.addr=arrLoopModule.wbKx[0]; //tp
       WriteDataToFPGA(writedata);
       sleep_ms(30);
-      writedata.data=1;
+      writedata.data=1*(2<<GainScale);
       writedata.addr=arrLoopModule.wbKx[1]; //ti
       WriteDataToFPGA(writedata);
       sleep_ms(30);
@@ -1136,8 +1140,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
  case  BBFPGA:   
      {
       FPGAWriteData writedata;
-      writedata.addr=arrLoopModule.wbKx[1];//  0x08430000;  //adress gain need sign
-      writedata.data=gain;                 //(uint32_t)gain; // gain need sign
+      writedata.addr=arrLoopModule.wbKx[1];//0x08430000;  //adress gain need sign
+      writedata.data=gain;                 //(uint32_t)gain; // gain need sign??
       WriteDataToFPGA(writedata);
       sleep_ms(10);
       FPGAReadData readdata;

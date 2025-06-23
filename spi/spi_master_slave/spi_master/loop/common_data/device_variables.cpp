@@ -9,6 +9,7 @@ int16_t ZMaxValue      = maxint16_t;
 int16_t SignalMaxValue = maxint16_t; //add 240710
 int32_t ShiftDac       = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 int8_t  SetPointScale  = 1;  ///??????
+int8_t  GainScale      = 8; //Gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
 
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
@@ -134,7 +135,7 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                        0x08430004,//wbKx[1] //интегратор
                        0x08430008,//wbKx[2]
                        0x0843000C,//wbInMulKoef
-                       0x08430010,//wbInShift //?
+                       0x08430010,//wbInSetup
                        0x08430014,//wbOutMulKoef
                        0x08430018,//wbOutShift //DACZ
                        0x0843001C,//wbSetpoint
@@ -146,7 +147,7 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                          0x08430104,//wbKx[1] //интегратор
                          0x08430108,//wbKx[2]
                          0x0843010C,//wbInMulKoef
-                         0x08430110,//wbInShift //?
+                         0x08430110,//wbInSetup
                          0x08430114,//wbOutMulKoef
                          0x08430118,//wbOutShift //DACZ
                          0x0843011C,//wbSetpoint
