@@ -233,7 +233,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY   
    init_DACZ(confighardwarev.DACZPort);                //инициирование ЦАП3  DACZ
-   if (flgVirtual==0)
+   if (!flgVirtual)
    {
     init_LOOP(); //250522
    // channel is default ampl!!! need change  when changed dev
