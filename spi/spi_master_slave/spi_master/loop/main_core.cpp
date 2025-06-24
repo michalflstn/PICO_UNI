@@ -126,7 +126,18 @@ case VersionCmd:
   ALGCODE=ALGNONE;  
   device=(uint8_t)Vector[1]; //add 250409
   sensor=PROBE;
- // sensor=(uint8_t)Vector[2]; //add 250423
+  flgVirtual=(bool)Vector[2]; //add 250423
+  if(flgVirtual==0)
+  {
+    scanner->hardware->init_LOOP(); //250522
+   // channel is default ampl!!! need change  when changed dev
+    uint32_t gain;
+    gain=7; 
+    scanner->hardware->LOOPGain=gain;
+    scanner->hardware->set_GainPID(gain);  // 250522             // not virtual; not debug!
+ //  retract();          // 250522             // втянуть    
+    scanner->hardware->set_DACZ(0); 
+  } 
   afc.clear();
   afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
   afc +=endln;//"\n";
@@ -137,7 +148,7 @@ case VersionCmd:
  {
    case BBFPGA: 
     {
-     scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);
+     if(flgVirtual==0) scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);
      break;
     }
  case WB:
@@ -471,6 +482,7 @@ MainCore()
            }
     case BBFPGA:
            { 
+            flgVirtual=true;
             scanner=new  Scanner(confighardwareBBFPGA); 
             scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
             break; 
