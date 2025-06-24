@@ -158,15 +158,15 @@ case BBFPGA:
      case 1: { arrLoopModule=arrLoopModule_1; break;};
      } 
       FPGAWriteData writedata;
-      writedata.addr=arrLoopModule.wbInSetup;// 250623
-      writedata.data=GainScale;           
-      WriteDataToFPGA(writedata);
-      sleep_ms(10);
-      writedata.data=1*(2<<GainScale);
+    //  writedata.addr=arrLoopModule.wbInSetup;// 250623
+    //  writedata.data=GainScale;           
+    //  WriteDataToFPGA(writedata);
+    //  sleep_ms(10);
+      writedata.data=1;//*(2<<GainScale);
       writedata.addr=arrLoopModule.wbKx[0]; //tp
       WriteDataToFPGA(writedata);
       sleep_ms(30);
-      writedata.data=1*(2<<GainScale);
+      writedata.data=1;//*(2<<GainScale);
       writedata.addr=arrLoopModule.wbKx[1]; //ti
       WriteDataToFPGA(writedata);
       sleep_ms(30);
@@ -240,7 +240,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    set_GainPID(gain);  // 250522             // not virtual; not debug!
  //  retract();          // 250522             // втянуть    
    init_DACZ(confighardwarev.DACZPort);      // инициирование ЦАП3  DACZ
-   set_DACZ(0);        //250522
+   //set_DACZ(0);        //250522
 }
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
