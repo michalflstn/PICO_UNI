@@ -127,7 +127,8 @@ case VersionCmd:
   device=(uint8_t)Vector[1]; //add 250409
   sensor=PROBE;
   flgVirtual=(bool)Vector[2]; //add 250423
-  if(flgVirtual==0)
+  flgDebug=(bool)Vector[3];
+  if(!flgVirtual)
   {
     scanner->hardware->init_LOOP(); //250522
    // channel is default ampl!!! need change  when changed dev

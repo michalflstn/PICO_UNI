@@ -229,10 +229,10 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
    dark();
-   //init_DACSetPoint(confighardwarev.DACSetPointPort);  //инициирование ЦАП1  SetPoint
+   //init_DACSetPoint(confighardwarev.DACSetPointPort);//инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY   
-   init_DACZ(confighardwarev.DACZPort);      // инициирование ЦАП3  DACZ
+   init_DACZ(confighardwarev.DACZPort);                //инициирование ЦАП3  DACZ
    if (flgVirtual==0)
    {
     init_LOOP(); //250522
@@ -498,7 +498,7 @@ void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
                  break;
   }
   chnl_select=1<<(2*channel+nloop); //??? for LOOP1  SFM =8 ; STM=32  
-  writedata.data=chnl_select;// set channel
+  writedata.data=chnl_select;       // set channel
   WriteDataToFPGA(writedata);
   sleep_ms(10);
   if (flgDebug)  
@@ -1096,6 +1096,10 @@ void HARDWARE::set_GainPID(uint32_t gain)
       {
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd)+ "gainprev="+std::to_string(LOOPGain);
+       afc += endln;
+       std::cout << afc;
+       afc.clear();
+       sleep_ms(100); 
       }  
       break;
   case WB:  
@@ -1138,6 +1142,10 @@ void HARDWARE::set_GainPID(uint32_t gain)
      {
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain WB "+ std::to_string(255-gain)+ "gainprev="+std::to_string(LOOPGain); //?????
+       afc += endln;
+       std::cout << afc;
+       afc.clear();
+       sleep_ms(100); 
      } 
      break;
  case  BBFPGA:   
@@ -1147,8 +1155,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
       writedata.data=gain;                 //(uint32_t)gain; // gain need sign??
       WriteDataToFPGA(writedata);
       sleep_ms(10);
+   /*
       FPGAReadData readdata;
-    /*
       readdata.addr=arrLoopModule.wbKx[0];
       int32_t val0=ReadDataFromFPGA(readdata);
       readdata.addr=arrLoopModule.wbKx[1];
@@ -1196,13 +1204,6 @@ void HARDWARE::set_GainPID(uint32_t gain)
       break;
      }    
   }
-  if (flgDebug)  
-  {
-   afc += endln;
-   std::cout << afc;
-   afc.clear();
-   sleep_ms(100); 
-  }  
   LOOPGain=gain;
  }
  void HARDWARE::set_GainPIDFPGA(uint32_t gain)
