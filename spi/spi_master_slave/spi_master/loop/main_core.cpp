@@ -149,7 +149,7 @@ case VersionCmd:
  {
    case BBFPGA: 
     {
-     if(flgVirtual==0) scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);
+     if(!flgVirtual) scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);
      break;
     }
  case WB:
