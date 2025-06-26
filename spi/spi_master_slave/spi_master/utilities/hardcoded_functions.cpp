@@ -162,11 +162,11 @@ case BBFPGA:
       writedata.data=GainScale;           
       WriteDataToFPGA(writedata);
       sleep_ms(10);
-      writedata.data=1*(2<<GainScale);
+      writedata.data=1;//uint32_t(1*(2<<GainScale));
       writedata.addr=arrLoopModule.wbKx[0]; //tp
       WriteDataToFPGA(writedata);
       sleep_ms(30);
-      writedata.data=1*(2<<GainScale);
+      writedata.data=uint32_t(0.01*(2<<GainScale));
       writedata.addr=arrLoopModule.wbKx[1]; //ti
       WriteDataToFPGA(writedata);
       sleep_ms(30);
@@ -777,11 +777,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
    uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
    uart_read_blocking(FPGA_UART_ID, inbuffer,szasc); 
    std::string afcc;
-   if (flgDebug)  
-   { 
-    afcc.clear();
-    afcc=code+std::to_string(DEBUG)+"read "; 
-   }    
+
      uint8_t k=6; //0A 80 adress=4 ??
      uint32_t val;
      res=1;
@@ -792,20 +788,9 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
       {
        val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
        arrayout[j]=(uint16_t)val;
-       if (flgDebug)  
-       {
-        afcc +=separator + std::to_string(arrayout[j]);
-       }
        k+=4;
       }
     }   
-  if (flgDebug)  
-   {
-     afcc +=endln;
-     std::cout << afcc;
-     sleep_ms(200);
-     afcc.clear();
-   }  
   }
    return res; 
  }
@@ -1168,7 +1153,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[1];//0x08430000;  //adress gain need sign
-      writedata.data=gain;                 //(uint32_t)gain; // gain need sign??
+      writedata.data=uint32_t(gain/1000*2<<GainScale);                 //(uint32_t)gain; // gain need sign??
       WriteDataToFPGA(writedata);
       sleep_ms(10);
    /*
