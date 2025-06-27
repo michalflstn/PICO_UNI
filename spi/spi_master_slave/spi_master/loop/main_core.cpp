@@ -94,6 +94,7 @@ void MainCore::launchOnCore1()
         ALGCODE=ALGNONE;
         STOP=true; // stop the active algorithm 
         break; 
+         
   default: 
       {
         if (Vector[0]>=0 && Vector[0]<100)  {ALGCODE=(int16_t)Vector[0];}
@@ -121,13 +122,26 @@ void MainCore::loop()
     switch (ALGCODE)
     {
 case   ALGNONE:{break;}
+case TEST: //add 250727
+{
+        ALGCODE=ALGNONE;
+        GainScale=Vector[1];
+        FPGAWriteData writedata;
+        writedata.addr=arrLoopModule.wbInSetup;// 250623
+        writedata.data=GainScale;           
+        scanner->hardware->WriteDataToFPGA(writedata);
+        sleep_ms(100);
+        GainScaleVal=1<<GainScale;
+        scanner->hardware->set_GainPID((uint32_t)Vector[2]); 
+        break;
+}
 case VersionCmd:
 {
-  ALGCODE=ALGNONE;  
-  device=(uint8_t)Vector[1]; //add 250409
+  ALGCODE=ALGNONE; 
   sensor=PROBE;
+   device=(uint8_t)Vector[1]; //add 250409
   flgVirtual=(bool)Vector[2]; //add 250423
-  flgDebug=(bool)Vector[3];
+    flgDebug=(bool)Vector[3];
   if(!flgVirtual)
   {
     scanner->hardware->init_LOOP(); //250522

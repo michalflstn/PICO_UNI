@@ -5,7 +5,7 @@
 //int8_t       HARDWAREVERSION=WB;
 //int8_t       HARDWAREVERSION=BB;  
 int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SOFTVERSION="25.06.25.01 "+std::to_string(HARDWAREVERSION);
+std::string  SOFTVERSION="25.06.27.04 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
@@ -33,7 +33,7 @@ const std::string  endln="\n";
 //=std::endl 
 //The usual convention is to just use std::endl instead of simply outputting '\n'; 
 // std::endl outputs a '\n' and then flushes the stream ????
-const char         separator=',';
+const char   separator=',';
 
 bool   AD9833_SENDER = false;
 bool   AD8400_SENDER = false;

@@ -85,6 +85,7 @@
 
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
 
+#define TEST                     85 // for testing
 
 extern const std::string  code;  
 extern const std::string  endln;

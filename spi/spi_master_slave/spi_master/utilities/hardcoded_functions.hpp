@@ -45,17 +45,15 @@ private:
  OutputPort *signloopport;     // знак ПИД
  OutputPort *integratorinport; // выбор входного сигнала в ПИД из CD или ПТН(I)
 
-
- uint16_t *repeatTwoTimes(); 
+ uint16_t   *repeatTwoTimes(); 
 
  uint16_t gainPID;
-
+ uint32_t PID_CONTROL;
  uint32_t PID_FBABS;
  uint32_t PID_ENA;
  uint32_t PID_STOP;
  uint32_t PID_SIGN;
  
-
   
  void get_result_from_adc();       // чтение АЦП
 
@@ -68,8 +66,6 @@ private:
  void activateRed();
 
  void activateBlue();
-
- void WriteDataToFPGA(FPGAWriteData writedata);
 
  void AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len);
 
@@ -97,6 +93,8 @@ public:
 
 [[noreturn]] void activateError();
  //инициирование ЦАП1  SetPoint,BIAS
+ void WriteDataToFPGA(FPGAWriteData writedata);
+ 
  void setDefaultSettings( ConfigHardWareBB  confighardware);      //BB
 
  void setDefaultSettings( ConfigHardWareBBFPGA  confighardware);  //FPGA
@@ -178,6 +176,5 @@ public:
  void freezeLOOP(uint16_t delay);    // заморозить ПИД
 
  void unfreezeLOOP(uint16_t delay);  // разморозить ПИД 
- 
 };
 #endif
