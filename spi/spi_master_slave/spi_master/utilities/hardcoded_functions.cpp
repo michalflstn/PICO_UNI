@@ -452,7 +452,7 @@ case BBFPGA:
       if (flgDebug)  
       {
        afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID sign val="+std::to_string(PID_CONTROL)
+       afc = code+std::to_string(DEBUG)+"debug set PID sign PIDcontrol="+std::to_string(PID_CONTROL)
        + " adress=" +std::to_string(writedata.addr);
        afc += endln;
        std::cout << afc;
@@ -510,7 +510,8 @@ void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
   if (flgDebug)  
   {
    afc.clear();
-   afc = code+std::to_string(DEBUG)+"debug PID Channel ="+ std::to_string(chnl_select);
+   afc = code+std::to_string(DEBUG)+"debug PID Channel ="+ std::to_string(chnl_select)
+             +"pidcontrol="+std::to_string(PID_CONTROL);
    afc += "\n";
    std::cout << afc;
    afc.clear();
@@ -1391,6 +1392,12 @@ void HARDWARE::retract() //втянуть
      PID_ENA=1;
      PID_STOP=2;
      PID_CONTROL=PID_CONTROL|(PID_STOP+PID_ENA);
+     if (flgDebug)  
+     {
+      afc.clear();
+      afc = code+std::to_string(DEBUG)+"debug retract "+ std::to_string(PID_CONTROL);
+      sleep_ms(40);
+     }  
      writedata.data=PID_CONTROL;   //3 250403
      WriteDataToFPGA(writedata);
  }
@@ -1413,6 +1420,12 @@ void HARDWARE::protract() //вытянуть
    PID_ENA=1; PID_STOP=0;
    PID_CONTROL=PID_CONTROL|(0x00000001);
    PID_CONTROL=PID_CONTROL&(~(0x0000010));
+   if (flgDebug)  
+   {
+    afc.clear();
+    afc = code+std::to_string(DEBUG)+"debug protract "+ std::to_string(PID_CONTROL);
+    sleep_ms(40);
+   }  
    writedata.data=PID_CONTROL;
    writedata.addr=arrLoopModule.pidControl;
    WriteDataToFPGA(writedata);
@@ -1434,6 +1447,12 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
    PID_STOP=0;
    PID_CONTROL=PID_CONTROL|(0x00000001);
    PID_CONTROL=PID_CONTROL&(~(0x0000010));
+   if (flgDebug)  
+   {
+    afc.clear();
+    afc = code+std::to_string(DEBUG)+"debug freeze "+ std::to_string(PID_CONTROL);
+    sleep_ms(40);
+   }  
    writedata.data=PID_CONTROL;
    writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP; 
    WriteDataToFPGA(writedata);
@@ -1455,6 +1474,12 @@ if (HARDWAREVERSION!=BBFPGA)
    PID_STOP=0;
    PID_CONTROL=PID_CONTROL|(0x00000001);
    PID_CONTROL=PID_CONTROL&(~(0x0000010));
+   if (flgDebug)  
+   {
+    afc.clear();
+    afc = code+std::to_string(DEBUG)+"debug unfreeze "+ std::to_string(PID_CONTROL);
+    sleep_ms(40);
+   }  
    writedata.data=PID_CONTROL;
    WriteDataToFPGA(writedata);
  }
