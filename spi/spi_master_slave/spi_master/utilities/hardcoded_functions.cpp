@@ -1423,8 +1423,9 @@ void HARDWARE::protract() //вытянуть
    if (flgDebug)  
    {
     afc.clear();
-    afc = code+std::to_string(DEBUG)+"debug protract "+ std::to_string(PID_CONTROL);
-    sleep_ms(40);
+    afc = code+std::to_string(DEBUG)+"debug protract "
+          +std::to_string(PID_CONTROL);
+     sleep_ms(40);
    }  
    writedata.data=PID_CONTROL;
    writedata.addr=arrLoopModule.pidControl;
