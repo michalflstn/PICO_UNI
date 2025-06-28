@@ -53,8 +53,7 @@ private:
  uint32_t PID_ENA;
  uint32_t PID_STOP;
  uint32_t PID_SIGN;
- 
-  
+   
  void get_result_from_adc();       // чтение АЦП
 
  void set_clock_enable();
@@ -68,6 +67,8 @@ private:
  void activateBlue();
 
  void AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len);
+
+ void WriteDataToFPGA(FPGAWriteData writedata);
 
 public:
    uint32_t LOOPGain;
@@ -93,7 +94,6 @@ public:
 
 [[noreturn]] void activateError();
  //инициирование ЦАП1  SetPoint,BIAS
- void WriteDataToFPGA(FPGAWriteData writedata);
  
  void setDefaultSettings( ConfigHardWareBB  confighardware);      //BB
 
@@ -176,5 +176,7 @@ public:
  void freezeLOOP(uint16_t delay);    // заморозить ПИД
 
  void unfreezeLOOP(uint16_t delay);  // разморозить ПИД 
+ 
+ void test();
 };
 #endif

@@ -124,16 +124,9 @@ void MainCore::loop()
 case   ALGNONE:{break;}
 case TEST: //add 250727
 {
-        ALGCODE=ALGNONE;
-        GainScale=Vector[1];
-        FPGAWriteData writedata;
-        writedata.addr=arrLoopModule.wbInSetup;
-        writedata.data=GainScale;           
-        scanner->hardware->WriteDataToFPGA(writedata);
-        sleep_ms(100);
-        GainScaleVal=1<<GainScale;
-        scanner->hardware->set_GainPID((uint32_t)Vector[2]); 
-        break;
+  ALGCODE=ALGNONE;
+  scanner->hardware->test();  
+  break;
 }
 case VersionCmd:
 {

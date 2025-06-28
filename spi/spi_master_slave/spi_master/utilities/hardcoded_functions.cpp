@@ -1619,3 +1619,14 @@ void HARDWARE::activateDark()
     busy_wait_at_least_cycles(85);
   }
 }
+ void HARDWARE::test()
+ {
+    GainScale=Vector[1];
+    FPGAWriteData writedata;
+    writedata.addr=arrLoopModule.wbInSetup;
+    writedata.data=GainScale;           
+    scanner->hardware->WriteDataToFPGA(writedata);
+    sleep_ms(100);
+    GainScaleVal=1<<GainScale;
+    scanner->hardware->set_GainPID((uint32_t)Vector[2]);
+ }
