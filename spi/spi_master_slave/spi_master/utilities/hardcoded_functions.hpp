@@ -139,7 +139,7 @@ public:
 
  void set_GainApmlMod(uint8_t gain); //установить усиления модуляции амплитуды
 
- void set_GainPID(uint16_t gain);    //установить усиления ПИД  не используется
+ //void set_GainPID(uint16_t gain);    //установить усиления ПИД  не используется
 
  void set_GainPID(uint32_t gain);    //установить усиления ПИД
 

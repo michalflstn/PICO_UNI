@@ -937,7 +937,6 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
               break;
      }
   } 
-  // отладка
   if  (flgDebug)
   {
    afc.clear();
@@ -996,10 +995,8 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
              intBuf[0] = (uint8_t)gain;
              spi_write_blocking(spi_default, intBuf, 1);
              decoder.activePort(7);
-              break;
+             break;
      }
-//  }   
-     // отладка
   if (flgDebug)  
   {
    afc.clear();
@@ -1097,39 +1094,18 @@ void HARDWARE::set_GainPID(uint32_t gain)
       writedata.data=uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??
       afc.clear();
       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(gain)
-       +" gainscaleval=" +std::to_string(GainScaleVal);
+            +" gainscaleval=" +std::to_string(GainScaleVal);
       afc += endln;
       std::cout << afc;
       afc.clear();
       sleep_ms(100);  
       WriteDataToFPGA(writedata);       
       sleep_ms(10);
-   /*
-      FPGAReadData readdata;
-      readdata.addr=arrLoopModule.wbKx[0];
-      int32_t val0=ReadDataFromFPGA(readdata);
-      readdata.addr=arrLoopModule.wbKx[1];
-      int32_t val1=ReadDataFromFPGA(readdata);
-      readdata.addr=arrLoopModule.wbKx[2];
-      int32_t val2=ReadDataFromFPGA(readdata);
-      readdata.addr=arrLoopModule.wbOutMulKoef;
-      int32_t val3=ReadDataFromFPGA(readdata);
-      readdata.addr=arrLoopModule.pidControl;
-      int32_t val4=ReadDataFromFPGA(readdata);
-      if (flgDebug)  
-      {
-       afc.clear();
-       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(gain)+ " adress=" +std::to_string(writedata.addr)
-       +" val0="+std::to_string(val0)+" val1="+std::to_string(val1)+" val2="+std::to_string(val2)
-       +" val3="+std::to_string(val3)+" val4="+std::to_string(val4);
-      }  
-     */     
-       if (flgDebug&&(!flgVirtual))  
+      if (flgDebug&&(!flgVirtual))  
        {
         uint16_t arrayout[9];
         ReadDataFromFPGAArray(9,arrLoopModule.wbKx[0],arrayout); 
        }  
- 
      /*
       if (abs(LOOPGain)<=abs(gain))
       {
@@ -1149,7 +1125,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
           sleep_ms(10);
         }
       } 
-        */
+     */
       break;
      }    
   }
@@ -1203,6 +1179,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
   } 
   LOOPGain=gain; 
  }
+/*
 void HARDWARE::set_GainPID(uint16_t gain)
 {
    uint8_t ti;
@@ -1217,12 +1194,7 @@ void HARDWARE::set_GainPID(uint16_t gain)
     binary[2] == '1' ? gainPID0->enable() : gainPID0->disable();
     binary[1] == '1' ? gainPID1->enable() : gainPID1->disable();
     binary[0] == '1' ? gainPID2->enable() : gainPID2->disable();
-     /* 
-    (ti&0x04) == 1 ? gainPID0->enable() : gainPID0->disable();
-    (ti&0x02) == 1 ? gainPID1->enable() : gainPID1->disable();
-    (ti&0x01) == 1 ? gainPID2->enable() : gainPID2->disable();
-   */ 
-    // отладка SPI
+     // отладка SPI
      uint8_t intBuf[1]; 
      decoder.activePort(6);
      Spi::setProperties(8, 0, 0);
@@ -1310,7 +1282,7 @@ void HARDWARE::set_GainPID(uint16_t gain)
    sleep_ms(100); 
   }  
 }
-
+*/
 void HARDWARE::set_clock_enable()
 {
   uint8_t intBuf[1];
@@ -1327,10 +1299,10 @@ void HARDWARE::set_DACZero()
 }
 void HARDWARE::set_DACXY(uint8_t channel, uint16_t value) 
 {
-  dacxy->setSpiProps(); //241214 ??
+  dacxy->setSpiProps(); 
   if (channel == 0)  dacxy->writeA(value);
   if (channel == 1)  dacxy->writeB(value);
-  sleep_us(2);// 240405
+  sleep_us(2);
 }
 
 void HARDWARE::set_DACZ(int16_t value) 
@@ -1387,8 +1359,6 @@ void HARDWARE::retract() //втянуть
  }
  else
  {
-     FPGAWriteData writedata;
-     writedata.addr=arrLoopModule.pidControl;
      PID_ENA=1;
      PID_STOP=2;
      PID_CONTROL=PID_CONTROL|(PID_STOP+PID_ENA);
@@ -1398,8 +1368,10 @@ void HARDWARE::retract() //втянуть
       afc = code+std::to_string(DEBUG)+"debug retract "+ std::to_string(PID_CONTROL);
       sleep_ms(40);
      }  
-     writedata.data=PID_CONTROL;   //3 250403
-     WriteDataToFPGA(writedata);
+    FPGAWriteData writedata;
+    writedata.addr=arrLoopModule.pidControl;
+    writedata.data=PID_CONTROL;   
+    WriteDataToFPGA(writedata);
  }
 }
 void HARDWARE::retract(int16_t HeightJump) //втянуть на HeightJump
@@ -1416,7 +1388,6 @@ void HARDWARE::protract() //вытянуть
  } 
  else
  {
-   FPGAWriteData writedata;
    PID_ENA=1; PID_STOP=0;
    PID_CONTROL=PID_CONTROL|(0x00000001);
    PID_CONTROL=PID_CONTROL&(~(0x0000010));
@@ -1426,7 +1397,8 @@ void HARDWARE::protract() //вытянуть
     afc = code+std::to_string(DEBUG)+"debug protract "
           +std::to_string(PID_CONTROL);
      sleep_ms(40);
-   }  
+   } 
+   FPGAWriteData writedata;
    writedata.data=PID_CONTROL;
    writedata.addr=arrLoopModule.pidControl;
    WriteDataToFPGA(writedata);
@@ -1442,11 +1414,9 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
  }
  else 
  {
-   FPGAWriteData writedata;
-   writedata.addr=arrLoopModule.pidControl;
    PID_ENA=0;
    PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(0x00000001);
+   PID_CONTROL=PID_CONTROL|(0x00000000);
    PID_CONTROL=PID_CONTROL&(~(0x0000010));
    if (flgDebug)  
    {
@@ -1454,8 +1424,9 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
     afc = code+std::to_string(DEBUG)+"debug freeze "+ std::to_string(PID_CONTROL);
     sleep_ms(40);
    }  
+   FPGAWriteData writedata;
+   writedata.addr=arrLoopModule.pidControl;  
    writedata.data=PID_CONTROL;
-   writedata.data=PID_FBABS+PID_SIGN+PID_ENA+PID_STOP; 
    WriteDataToFPGA(writedata);
  }
 }
@@ -1469,8 +1440,6 @@ if (HARDWAREVERSION!=BBFPGA)
  }
  else 
  {
-   FPGAWriteData writedata;
-   writedata.addr=arrLoopModule.pidControl;
    PID_ENA=1;
    PID_STOP=0;
    PID_CONTROL=PID_CONTROL|(0x00000001);
@@ -1481,6 +1450,8 @@ if (HARDWAREVERSION!=BBFPGA)
     afc = code+std::to_string(DEBUG)+"debug unfreeze "+ std::to_string(PID_CONTROL);
     sleep_ms(40);
    }  
+   FPGAWriteData writedata;
+   writedata.addr=arrLoopModule.pidControl;
    writedata.data=PID_CONTROL;
    WriteDataToFPGA(writedata);
  }

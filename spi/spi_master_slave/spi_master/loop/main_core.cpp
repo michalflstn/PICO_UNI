@@ -127,7 +127,7 @@ case TEST: //add 250727
         ALGCODE=ALGNONE;
         GainScale=Vector[1];
         FPGAWriteData writedata;
-        writedata.addr=arrLoopModule.wbInSetup;// 250623
+        writedata.addr=arrLoopModule.wbInSetup;
         writedata.data=GainScale;           
         scanner->hardware->WriteDataToFPGA(writedata);
         sleep_ms(100);
@@ -139,23 +139,23 @@ case VersionCmd:
 {
   ALGCODE=ALGNONE; 
   sensor=PROBE;
-   device=(uint8_t)Vector[1]; //add 250409
-  flgVirtual=(bool)Vector[2]; //add 250423
+   device=(uint8_t)Vector[1];
+  flgVirtual=(bool)Vector[2]; 
     flgDebug=(bool)Vector[3];
   if(!flgVirtual)
   {
-    scanner->hardware->init_LOOP(); //250522
+    scanner->hardware->init_LOOP(); 
    // channel is default ampl!!! need change  when changed dev
     uint32_t gain;
     gain=7; 
     scanner->hardware->LOOPGain=gain;
-    scanner->hardware->set_GainPID(gain);  // 250522             // not virtual; not debug!
- //  retract();          // 250522             // втянуть    
+    scanner->hardware->set_GainPID(gain);   
+ //  retract();          // 250522   втянуть    
     scanner->hardware->set_DACZ(0); 
   } 
   afc.clear();
   afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
-  afc +=endln;//"\n";
+  afc +=endln;
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -180,7 +180,7 @@ case ChangeHardWare:
                 ALGCODE=ALGNONE;
                 afc.clear();
                 afc =code+std::to_string(ChangeHardWare)+ " hardware "+ std::to_string(Vector[1]);
-                afc += endln;//"\n";
+                afc += endln;
                 std::cout << afc;
                 afc.clear();
                 sleep_ms(300);       
@@ -356,8 +356,7 @@ case SENDDATALIN:
                 ALGCODE=ALGNONE;
                 scanner->readDATALin();
                 break;
-              }              
-             
+              }                          
 case SET_AMPLMOD_GAIN: // усиление раскачка зонда 
               {
                 ALGCODE=ALGNONE;
@@ -390,9 +389,9 @@ case SET_SIGN_LOOP:
               }
 case Set_SIGN_LOOP_BIASV:              
               {
-               ALGCODE=ALGNONE;
-               scanner->hardware->setLoopSign_BiasV(Vector[1],Vector[2],Vector[3],Vector[4]);
-               break;
+                ALGCODE=ALGNONE;
+                scanner->hardware->setLoopSign_BiasV(Vector[1],Vector[2],Vector[3],Vector[4]);
+                break;
               }
   case SET_Z: { 
                 ALGCODE=ALGNONE;
@@ -418,24 +417,24 @@ case ADC_READCmd: //TIMER
                 ALGCODE=ALGNONE;
                 switch (HARDWAREVERSION)
                 {       
-              case BBFPGA:
-                {
-                  scanner->readADC();
-                  break;  
-                }
-                case BB:
-                case WB:
-                { 
-                 if (ADC_IS_READY_TO_READ)
+               case BBFPGA:
                  {
                   scanner->readADC();
-                 }
-                 break;
-                }
-              }  
-              break;  
-            }
-case ReadFPGA:{ 
+                  break;  
+                  }
+                case BB:
+                case WB:
+                  { 
+                   if (ADC_IS_READY_TO_READ)
+                   {
+                    scanner->readADC();
+                   }
+                   break;
+                  }
+                 }  
+                 break;  
+              }
+case ReadFPGA:{ //?????? read setpoint
                  ALGCODE=ALGNONE;
                  FPGAReadData readdata;
                  readdata.addr=arrLoopModule_1.wbSetpoint;
