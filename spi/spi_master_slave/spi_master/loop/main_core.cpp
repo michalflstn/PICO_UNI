@@ -122,7 +122,7 @@ void MainCore::loop()
     switch (ALGCODE)
     {
 case   ALGNONE:{break;}
-case TEST: //add 250727
+case TEST: //add 250727 for testing algorithms
 {
   ALGCODE=ALGNONE;
   scanner->hardware->test();  

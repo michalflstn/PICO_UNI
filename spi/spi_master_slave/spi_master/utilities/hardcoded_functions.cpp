@@ -444,7 +444,7 @@ case BBFPGA:
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.pidControl;
-      if (value==1) PID_CONTROL=PID_CONTROL|(1<<7);
+      if (value==1) PID_CONTROL=PID_CONTROL|(1<<7);  // *(-1)
                     PID_CONTROL=PID_CONTROL&(~(1<<7)) ;
       writedata.data=PID_CONTROL;
       WriteDataToFPGA(writedata);
