@@ -5,7 +5,11 @@
 //int8_t       HARDWAREVERSION=WB;
 //int8_t       HARDWAREVERSION=BB;  
 int8_t       HARDWAREVERSION=BBFPGA;
+<<<<<<< HEAD
 std::string  SOFTVERSION="25.07.01.01 "+std::to_string(HARDWAREVERSION);
+=======
+std::string  SOFTVERSION="25.06.30.05 "+std::to_string(HARDWAREVERSION);
+>>>>>>> 8ab15c329de6b1ba81a2561cbaec101fea9df0db
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
