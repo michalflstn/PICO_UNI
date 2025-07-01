@@ -9,8 +9,8 @@ int16_t ZMaxValue      = maxint16_t;
 int16_t SignalMaxValue = maxint16_t; //add 240710
 int32_t ShiftDac       = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 int8_t  SetPointScale  = 1;  ///??????
-int8_t  GainScale      = 8; //Gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
-int32_t GainScaleVal   = 1<<GainScale;
+uint8_t  GainScale      = 8; //Gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
+uint32_t GainScaleVal  = 1<<GainScale;
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
 uint8_t IPin    = 2; // ток  
@@ -68,7 +68,6 @@ ConfigHardWareBB     confighardwareBB
                         27 //ProtractPor  втянуть    сканнер=1; вытянуть    =0
                        }
                       );
-
 
 ConfigHardWareBBFPGA    confighardwareBBFPGA
                       (
@@ -142,7 +141,7 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                        0x08430020 //pidControl // protract /retract
                        });
  FPGALOOPCTRAdress    arrLoopModule_1(
-                        {
+                      {
                          0x08430100,//wbKx[0]
                          0x08430104,//wbKx[1] //интегратор
                          0x08430108,//wbKx[2]
@@ -152,7 +151,7 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                          0x08430118,//wbOutShift //DACZ
                          0x0843011C,//wbSetpoint 
                          0x08430120 //pidControl // protract /retract
-                         });     
+                      });     
 FPGALOOPCTRAdress arrLoopModule;
                            
 FPGA_ADCAdress    arrADCadress(

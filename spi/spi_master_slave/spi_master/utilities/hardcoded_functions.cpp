@@ -138,19 +138,19 @@ void HARDWARE::reset_ADCPort()
   sleep_us(10);
   resetport->disable();
 }
-void HARDWARE::init_LOOP()
+void HARDWARE::init_LOOP(uint8_t device)
 {
   //set dafault device SFM
-  device=SFM;
+ // device=SFM;
   sensor=PROBE;
   switch (HARDWAREVERSION)
   {
 case BBFPGA: 
     {
      PID_FBABS=0x00000100; // 1<<8;    // abs value into loop
-     PID_SIGN =0x00000080; // 1<<7;     // up or  down ???
-     PID_ENA=  0x00000001;
-     PID_STOP= 0x00000000;
+     PID_SIGN =0x00000080; // 1<<7;    // up or  down ???
+     PID_ENA  =0x00000001;
+     PID_STOP =0x00000000;
      PID_CONTROL=PID_FBABS|PID_SIGN|PID_ENA|PID_STOP;
      scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
      switch (nloop)
@@ -186,7 +186,7 @@ case BBFPGA:
       {
        FPGAReadData readdata; 
        readdata.addr=arrLoopModule.pidControl;
-       int8_t readpidcontroltok=ReadDataFromFPGA(readdata); 
+      // int32_t readpidcontroltok=ReadDataFromFPGA(readdata); //250701
        sleep_ms(30);
       } 
       break;        
@@ -240,9 +240,10 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY   
    init_DACZ(confighardwarev.DACZPort);                //инициирование ЦАП3  DACZ
+   device=SFM;
    if (!flgVirtual)
    {
-    init_LOOP(); //250522
+    init_LOOP(device); //250522
    // channel is default ampl!!! need change  when changed dev
     uint32_t gain;
     gain=7; 
@@ -294,7 +295,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
   dark();
-  init_LOOP();//250409
+  device=SFM;
+  init_LOOP(device);//250409
  // init_Commutation(0 , 1 , 1 , 1, 0);   //default afm 
   /*
     default afm probe ?????
@@ -487,7 +489,9 @@ case  WB:
   sleep_ms(100);
  */
 }
-void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
+void  HARDWARE::
+
+ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
 {
   //FPGA only!
   uint8_t channel;
@@ -516,7 +520,8 @@ void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
    std::cout << afc;
    afc.clear();
    sleep_ms(100);
-  }  
+  } 
+  
 }
 void HARDWARE::setSignal_In_Loop(uint8_t value)
 {
@@ -694,7 +699,8 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, uint16_t *ar
        k+=4;
        if (flgDebug)  
        {
-        afcc +=separator + std::to_string(float(arrayout[j]));
+       // afcc +=separator + std::to_string(float(arrayout[j]));
+        afcc +=separator + std::to_string((arrayout[j]));
        }
      } 
      if (flgDebug)  
@@ -759,7 +765,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
 
 int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
 {
- int8_t flgOk;
+ int32_t flgOk;
  flgOk=1;
  if (!flgVirtual) 
  {
@@ -775,6 +781,7 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   outbuffer[5]=(uint8_t)(readdata.addr&0x000000FF);
   outbuffer[6]=readdata.crcpar;
   outbuffer[7]=readdata.delimend;
+ /*
   if (flgDebug)  
   {
     std::string afcc;
@@ -789,6 +796,7 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
     sleep_ms(200);
     afcc.clear();
   }
+ */
  while (uart_is_readable(FPGA_UART_ID)) //clean buffer //250402
  { 
   tight_loop_contents();
@@ -813,7 +821,7 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
       afcc.clear();
     }
  } 
-  return int32_t(flgOk);
+  return flgOk;
 }
 void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
 {

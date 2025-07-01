@@ -137,7 +137,7 @@ case VersionCmd:
     flgDebug=(bool)Vector[3];
   if(!flgVirtual)
   {
-    scanner->hardware->init_LOOP(); 
+    scanner->hardware->init_LOOP(device); 
    // channel is default ampl!!! need change  when changed dev
     uint32_t gain;
     gain=7; 
@@ -156,7 +156,7 @@ case VersionCmd:
  {
    case BBFPGA: 
     {
-     if(!flgVirtual) scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);
+     if(!flgVirtual) scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop); //250701
      break;
     }
  case WB:
