@@ -1,4 +1,5 @@
 #include "main_core.hpp"
+#include "tusb.h" //add 250630
 #include <bitset>
 #include <iostream>
 #include "../utilities/hardcoded_functions.hpp"
@@ -149,7 +150,18 @@ case VersionCmd:
   afc.clear();
   afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
   afc +=endln;
-  std::cout << afc;
+//  std::cout << afc;
+
+     if (tud_cdc_connected()) {
+                      if (tud_cdc_available()) {
+                     //     uint8_t buf[64];
+                     //     uint32_t count = tud_cdc_read(buf, sizeof(buf));
+                    //      tud_cdc_write(buf, count);
+                          tud_cdc_write_str(afc.c_str());
+                          tud_cdc_write_flush();
+                      }
+                  }
+               
   afc.clear();
   sleep_ms(100);
   switch (HARDWAREVERSION) 

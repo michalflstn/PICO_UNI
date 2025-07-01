@@ -1,5 +1,6 @@
 #include <iostream>
 #include <bitset>
+#include "tusb.h" //add 250630
 #include <pico/multicore.h>
 #include <pico/multicore.h>
 #include "../transceiver/rx_core.hpp"
@@ -212,6 +213,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  //   ShiftDac=0; //250522
     SetPointScale=1;// 2;  //250522
     stdio_init_all(); //add 250325
+    tusb_init();
     uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); 
     gpio_set_function(FPGAUART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(FPGAUART_RX_PIN, GPIO_FUNC_UART);  
@@ -323,7 +325,17 @@ void HARDWARE::SetDev_GetSOFTHARDWAREVersion(uint8_t device)
         +",hardware "+std::to_string(HARDWAREVERSION) + ",device "+std::to_string(device)
         +",sensor "+std::to_string(sensor);
   afc +="\n";
-  std::cout << afc;
+ // std::cout << afc;
+    if (tud_cdc_connected()) {
+                      if (tud_cdc_available()) {
+                     //     uint8_t buf[64];
+                     //     uint32_t count = tud_cdc_read(buf, sizeof(buf));
+                    //      tud_cdc_write(buf, count);
+                          tud_cdc_write_str(afc.c_str());
+                          tud_cdc_write_flush();
+                      }
+                  }
+                    
   afc.clear();
   sleep_ms(100);
 }
