@@ -50,8 +50,8 @@ extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
 extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
-extern int8_t  GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
 extern int32_t  GainScaleVal;
+extern uint32_t  GainScaleVal;
 extern uint16_t spiBuf[NmbADCSignals];
 extern uint8_t  FPGADELIM;
 extern uint8_t  FPGACRCPAR;
