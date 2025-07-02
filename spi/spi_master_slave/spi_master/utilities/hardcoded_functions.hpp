@@ -48,11 +48,11 @@ private:
  uint16_t   *repeatTwoTimes(); 
 
  uint16_t gainPID;
- uint32_t PID_CONTROL;
- uint32_t PID_FBABS;
- uint32_t PID_ENA;
- uint32_t PID_STOP;
- uint32_t PID_SIGN;
+ int32_t PID_CONTROL;
+ int32_t PID_FBABS;
+ int32_t PID_ENA;
+ int32_t PID_STOP;
+ int32_t PID_SIGN;
    
  void get_result_from_adc();       // чтение АЦП
 
@@ -71,7 +71,7 @@ private:
  void WriteDataToFPGA(FPGAWriteData writedata);
 
 public:
-   uint32_t LOOPGain;
+   int32_t LOOPGain;
    LinearDriverBase  *linearDriver;
 
    HARDWARE(ConfigHardWareBB confighardware);
@@ -141,7 +141,7 @@ public:
 
  //void set_GainPID(uint16_t gain);    //установить усиления ПИД  не используется
 
- void set_GainPID(uint32_t gain);    //установить усиления ПИД
+ void set_GainPID(int32_t gain);    //установить усиления ПИД
 
  void set_GainPIDFPGA(uint32_t gain);    //установить усиления ПИД не используется
  

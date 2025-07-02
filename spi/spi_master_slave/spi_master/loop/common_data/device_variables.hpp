@@ -50,8 +50,8 @@ extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
 extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
-extern int32_t  GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
-extern int32_t  GainScaleVal;
+//extern int32_t  GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
+//extern int32_t  GainScaleVal;
 extern uint16_t spiBuf[NmbADCSignals];//???
 extern uint8_t  FPGADELIM;
 extern uint8_t  FPGACRCPAR;
@@ -182,6 +182,17 @@ Rx Frame format big-endian Offs:
   Size:      1       1       4        4         1         1
 Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
 */
+ struct FPGALOOPPARAMS
+ {
+  int32_t Kp;
+  int32_t Ki;
+  int32_t Kd;
+  int32_t K1;
+  int32_t K2;
+  int32_t K3;
+  int32_t GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
+  int32_t GainScaleVal;
+ };
  struct FPGAWriteData
  {
   uint8_t  delimbegin=FPGADELIM;
@@ -253,6 +264,7 @@ extern FPGALOOPCTRAdress    arrLoopModule_0;
 extern FPGALOOPCTRAdress    arrLoopModule_1;
 extern FPGALOOPCTRAdress    arrLoopModule;
 extern FPGA_ADCAdress       arrADCadress;
+extern FPGALOOPPARAMS       loopParams;
 extern uint32_t             inSwitchadress;
 extern uint8_t              channelampl; 
 extern uint8_t              channelcurrent;
