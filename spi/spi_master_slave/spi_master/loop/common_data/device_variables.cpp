@@ -9,8 +9,8 @@ int16_t ZMaxValue      = maxint16_t;
 int16_t SignalMaxValue = maxint16_t; //add 240710
 int32_t ShiftDac       = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 int8_t  SetPointScale  = 1;  ///??????
-int32_t GainScaleVal   = 1<<GainScale;
-uint32_t GainScaleVal  = 1<<GainScale;
+int32_t GainScale      = 8; //Gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
+int32_t GainScaleVal  = 1<<GainScale;
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
 uint8_t IPin    = 2; // ток  

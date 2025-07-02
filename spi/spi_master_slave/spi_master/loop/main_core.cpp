@@ -137,7 +137,6 @@ case VersionCmd:
     flgDebug=(bool)Vector[3];
   if(!flgVirtual)
   {
-    scanner->hardware->init_LOOP(); 
     scanner->hardware->init_LOOP(device); 
    // channel is default ampl!!! need change  when changed dev
     uint32_t gain;

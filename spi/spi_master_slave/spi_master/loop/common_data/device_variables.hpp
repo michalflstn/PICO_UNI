@@ -50,9 +50,9 @@ extern int16_t ZMaxValue;
 extern int16_t SignalMaxValue;
 extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 extern int8_t  SetPointScale;
+extern int32_t  GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
 extern int32_t  GainScaleVal;
-extern uint32_t  GainScaleVal;
-extern uint16_t spiBuf[NmbADCSignals];
+extern uint16_t spiBuf[NmbADCSignals];//???
 extern uint8_t  FPGADELIM;
 extern uint8_t  FPGACRCPAR;
 extern uint8_t  FPGAREAD;
@@ -187,7 +187,7 @@ Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
   uint8_t  delimbegin=FPGADELIM;
   uint8_t  cmd=FPGAWRITE;
   uint32_t addr;
-  uint32_t data;
+  int32_t  data; // uint32_t 250702
   uint8_t  crcpar=FPGACRCPAR;
   uint8_t  delimend=FPGADELIM;
  };

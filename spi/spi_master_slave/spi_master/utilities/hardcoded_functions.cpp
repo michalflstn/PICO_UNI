@@ -138,11 +138,9 @@ void HARDWARE::reset_ADCPort()
   sleep_us(10);
   resetport->disable();
 }
-void HARDWARE::init_LOOP()
 void HARDWARE::init_LOOP(uint8_t device)
 {
   //set dafault device SFM
-  device=SFM;
  // device=SFM;
   sensor=PROBE;
   switch (HARDWAREVERSION)
@@ -188,7 +186,6 @@ case BBFPGA:
       {
        FPGAReadData readdata; 
        readdata.addr=arrLoopModule.pidControl;
-       int8_t readpidcontroltok=ReadDataFromFPGA(readdata); 
       // int32_t readpidcontroltok=ReadDataFromFPGA(readdata); //250701
        sleep_ms(30);
       } 
@@ -246,7 +243,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    device=SFM;
    if (!flgVirtual)
    {
-    init_LOOP(); //250522
     init_LOOP(device); //250522
    // channel is default ampl!!! need change  when changed dev
     uint32_t gain;
@@ -299,7 +295,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
   dark();
-  init_LOOP();//250409
   device=SFM;
   init_LOOP(device);//250409
  // init_Commutation(0 , 1 , 1 , 1, 0);   //default afm 
@@ -704,6 +699,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, uint16_t *ar
        k+=4;
        if (flgDebug)  
        {
+       // afcc +=separator + std::to_string(float(arrayout[j]));
         afcc +=separator + std::to_string((arrayout[j]));
        }
      } 
@@ -769,7 +765,6 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
 
 int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
 {
- int8_t flgOk;
  int32_t flgOk;
  flgOk=1;
  if (!flgVirtual) 
@@ -826,7 +821,6 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
       afcc.clear();
     }
  } 
-  return int32_t(flgOk);
   return flgOk;
 }
 void HARDWARE::AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len)
