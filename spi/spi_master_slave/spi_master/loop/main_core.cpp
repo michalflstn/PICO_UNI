@@ -431,9 +431,7 @@ case ADC_READCmd: //TIMER
               }
 case ReadFPGA:{ //?????? read setpoint
                  ALGCODE=ALGNONE;
-                 FPGAReadData readdata;
-                 readdata.addr=arrLoopModule_1.wbSetpoint;
-                 scanner->hardware->ReadDataFromFPGA(readdata);
+                 scanner->hardware->ReadDataFromFPGA(arrLoopModule.wbSetpoint);
                  break;
               }            
 case GET_CURRENTX0Y0:

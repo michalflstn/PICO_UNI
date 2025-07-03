@@ -158,8 +158,7 @@ void HARDWARE::init_LOOP(uint8_t device)
   {
 case BBFPGA: 
     {
-     SetLOOPParams(1,1,0,8);//int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
-     PID_FBABS=0x00000100; // 1<<8;    // abs value into loop
+       PID_FBABS=0x00000100; // 1<<8;    // abs value into loop
      PID_SIGN =0x00000080; // 1<<7;    // up or  down ???
      PID_ENA  =0x00000001;
      PID_STOP =0x00000000;
@@ -170,7 +169,29 @@ case BBFPGA:
      case 1: { arrLoopModule=arrLoopModule_1; break;};
      }  
      scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
-   
+     
+      SetLOOPParams(1,1,0,8);//int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
+    /*
+      ПИД в дискретном виде
+      u[k]=u[k−1]+Kout2N(K1e[k]+K2e[k−1]+K3e[k−2])+uc
+      где:
+      u[k]−выходнашагеk
+      e[k]−отклонениевходаотsetpointнашагеk
+      Регистр wbInSetup[7, 0].KPOW
+      N−количестворазрядовдробнойчастикоэффициентов
+      Регистр wbOutMulKoef
+      Kout−коэффициентмасштабавыхода
+      Регистр wbOutShift
+      uc−смещениевыхода
+      Регистр wbKx[0]
+      K1=KP+KI+KD
+      Регистр wbKx[1]  
+      K2=−KP−2KD
+      Регистр wbKx[2]
+      K3=KD
+      KP,KI,KD−непосредственно сами коэффициенты регулятора
+    */
+    
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbInSetup;// 250623
       writedata.data=loopParams.GainScale;           
@@ -198,9 +219,7 @@ case BBFPGA:
       sleep_ms(30);
       if(flgDebug && (!flgVirtual))
       {
-       FPGAReadData readdata; 
-       readdata.addr=arrLoopModule.pidControl;
-       int32_t readpidcontroltok=ReadDataFromFPGA(readdata); //250701
+       int32_t readpidcontroltok=ReadDataFromFPGA(arrLoopModule.pidControl); //250701
        sleep_ms(30);
       } 
       break;        
@@ -255,18 +274,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY   
    init_DACZ(confighardwarev.DACZPort);                //инициирование ЦАП3  DACZ
    device=SFM; 
-
-   //int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
-   /*
-   loopParams.GainScale=8;
-   loopParams.GainScaleVal=1<<loopParams.GainScale;
-   loopParams.Ki= 1*1<<loopParams.GainScale;
-   loopParams.Kp= 1;
-   loopParams.Kd= 0;
-   loopParams.K1= loopParams.Kp+loopParams.Ki+loopParams.Kd;
-   loopParams.K2=-loopParams.Kp-2*loopParams.Kd;
-   loopParams.K3= loopParams.Kd;
-   */
    if (!flgVirtual)
    { 
     init_LOOP(device); //250522
@@ -793,9 +800,10 @@ uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout)
    return res; 
  }
 
-int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
+int32_t HARDWARE::ReadDataFromFPGA(uint32_t adress)
 {
  int32_t flgOk;
+ FPGAReadData readdata;
  flgOk=1;
  if (!flgVirtual) 
  {
@@ -803,6 +811,7 @@ int32_t HARDWARE::ReadDataFromFPGA(FPGAReadData readdata)
   uint8_t szasc=12; //get array adc 0A 80 adress data BB 0A
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
+  readdata.addr=adress;
   outbuffer[0]=readdata.delimbegin;
   outbuffer[1]=readdata.cmd;  // 0x00
   outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
@@ -969,9 +978,7 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
               writedata.data=(uint32_t)(SetPointScale*(SetPoint));   //+ShiftDac ?????ABS
               WriteDataToFPGA(writedata);
               sleep_ms(200);
-              FPGAReadData readdata;
-              readdata.addr=arrLoopModule.wbSetpoint;
-              readsetpointok=ReadDataFromFPGA(readdata);
+              readsetpointok=ReadDataFromFPGA(arrLoopModule.wbSetpoint);
               break;
      }
   } 
