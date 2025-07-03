@@ -138,6 +138,17 @@ void HARDWARE::reset_ADCPort()
   sleep_us(10);
   resetport->disable();
 }
+void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
+{
+  loopParams.GainScale=gainscale;
+  loopParams.GainScaleVal=1<<loopParams.GainScale;
+  loopParams.Ki=ki;
+  loopParams.Kp=kp;
+  loopParams.Kd=kd;
+  loopParams.K1=(loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
+  loopParams.K2=(-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal;
+  loopParams.K3=loopParams.Kd*loopParams.GainScaleVal;
+}
 void HARDWARE::init_LOOP(uint8_t device)
 {
   //set dafault device SFM
@@ -147,6 +158,7 @@ void HARDWARE::init_LOOP(uint8_t device)
   {
 case BBFPGA: 
     {
+     SetLOOPParams(1,1,0,8);//int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
      PID_FBABS=0x00000100; // 1<<8;    // abs value into loop
      PID_SIGN =0x00000080; // 1<<7;    // up or  down ???
      PID_ENA  =0x00000001;
@@ -243,7 +255,9 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY   
    init_DACZ(confighardwarev.DACZPort);                //инициирование ЦАП3  DACZ
    device=SFM; 
-   
+
+   //int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
+   /*
    loopParams.GainScale=8;
    loopParams.GainScaleVal=1<<loopParams.GainScale;
    loopParams.Ki= 1*1<<loopParams.GainScale;
@@ -252,6 +266,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    loopParams.K1= loopParams.Kp+loopParams.Ki+loopParams.Kd;
    loopParams.K2=-loopParams.Kp-2*loopParams.Kd;
    loopParams.K3= loopParams.Kd;
+   */
    if (!flgVirtual)
    { 
     init_LOOP(device); //250522
@@ -1649,11 +1664,23 @@ void HARDWARE::activateDark()
  void HARDWARE::test()
  {
     loopParams.GainScale=Vector[1];
+    SetLOOPParams(loopParams.Kp,loopParams.Ki,loopParams.Kd,loopParams.GainScale);
     FPGAWriteData writedata;
-    writedata.addr=arrLoopModule.wbInSetup;
+    writedata.addr=arrLoopModule.wbInSetup;// 250623
     writedata.data=loopParams.GainScale;           
-    scanner->hardware->WriteDataToFPGA(writedata);
-    sleep_ms(100);
-    loopParams.GainScaleVal=1<<loopParams.GainScale;
-    scanner->hardware->set_GainPID((uint32_t)Vector[2]);
+    WriteDataToFPGA(writedata);
+    sleep_ms(10);
+    writedata.data=loopParams.K1;// 1;//uint32_t(1*(2<<GainScale));
+    writedata.addr=arrLoopModule.wbKx[0]; //tp
+    WriteDataToFPGA(writedata);
+    sleep_ms(30);
+    writedata.data=loopParams.K2;//uint32_t(0.01*GainScaleVal);
+    writedata.addr=arrLoopModule.wbKx[1]; //ti
+    WriteDataToFPGA(writedata);
+    sleep_ms(30);
+    writedata.data=loopParams.K3;//uint32_t(0.0);
+    writedata.addr=arrLoopModule.wbKx[2]; 
+    WriteDataToFPGA(writedata); 
+    sleep_ms(30);
+    //scanner->hardware->set_GainPID((uint32_t)Vector[2]);
  }

@@ -53,7 +53,9 @@ private:
  int32_t PID_ENA;
  int32_t PID_STOP;
  int32_t PID_SIGN;
-   
+
+ void SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale);  
+
  void get_result_from_adc();       // чтение АЦП
 
  void set_clock_enable();
