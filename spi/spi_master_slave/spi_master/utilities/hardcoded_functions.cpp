@@ -553,9 +553,12 @@ case    WB:
 } 
 void HARDWARE::use_LowPassFilterADC(uint8_t turnon, uint8_t nchannel)
 {
+//Регистр управления controlReg2[31..0].
+//controlReg2[3..0].FirSelect - 4 бита номера канала АЦП для подключения фильтра;
+//controlReg2[8].FirEnable - бит включения/выключения фильтра
   FPGAWriteData writedata;
   writedata.addr=arrADCadress.FilterADC;
-  if (turnon==1) { writedata.data=nchannel+(1<<7);}
+  if (turnon==1) { writedata.data=nchannel+(1<<8);}//7
             else { writedata.data=nchannel;       }
   WriteDataToFPGA(writedata);
   sleep_ms(10);
