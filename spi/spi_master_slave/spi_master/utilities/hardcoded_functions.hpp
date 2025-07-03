@@ -141,7 +141,7 @@ public:
 
  //void set_GainPID(uint16_t gain);    //установить усиления ПИД  не используется
 
- void set_GainPID(int32_t gain);    //установить усиления ПИД
+ void set_GainPID(uint32_t gain);    //установить усиления ПИД
 
  void set_GainPIDFPGA(uint32_t gain);    //установить усиления ПИД не используется
  
@@ -163,7 +163,7 @@ public:
 
  int32_t ReadDataFromFPGA(FPGAReadData readdata);
  
- uint8_t ReadDataFromFPGAArray(uint8_t count, uint32_t adr, uint16_t *arrayout);
+ uint8_t ReadDataFromFPGAArray(uint8_t count, uint32_t adr, int32_t *arrayout);
 
  uint8_t ReadDataFromFPGAArrayALL(uint16_t *arrayout);
 

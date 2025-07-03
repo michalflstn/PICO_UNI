@@ -152,12 +152,13 @@ case BBFPGA:
      PID_ENA  =0x00000001;
      PID_STOP =0x00000000;
      PID_CONTROL=PID_FBABS|PID_SIGN|PID_ENA|PID_STOP;
-     scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
      switch (nloop)
      { 
      case 0: { arrLoopModule=arrLoopModule_0; break;}
      case 1: { arrLoopModule=arrLoopModule_1; break;};
-     } 
+     }  
+     scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
+   
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbInSetup;// 250623
       writedata.data=loopParams.GainScale;           
@@ -182,6 +183,7 @@ case BBFPGA:
       writedata.data=PID_CONTROL;
       writedata.addr=arrLoopModule.pidControl;
       WriteDataToFPGA(writedata);
+      sleep_ms(30);
       if(flgDebug && (!flgVirtual))
       {
        FPGAReadData readdata; 
@@ -240,19 +242,21 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
    init_DACBiasV(confighardwarev.DACBiasVPort);        //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);              //инициирование ЦАП2  DACXY   
    init_DACZ(confighardwarev.DACZPort);                //инициирование ЦАП3  DACZ
-   device=SFM;
+   device=SFM; 
+   
+   loopParams.GainScale=8;
+   loopParams.GainScaleVal=1<<loopParams.GainScale;
+   loopParams.Ki= 1*1<<loopParams.GainScale;
+   loopParams.Kp= 1;
+   loopParams.Kd= 0;
+   loopParams.K1= loopParams.Kp+loopParams.Ki+loopParams.Kd;
+   loopParams.K2=-loopParams.Kp-2*loopParams.Kd;
+   loopParams.K3= loopParams.Kd;
    if (!flgVirtual)
-   {
-    loopParams.Kp= 1;
-    loopParams.Kd= 0;
-    loopParams.K1= loopParams.Kp+loopParams.Ki+loopParams.Kd;
-    loopParams.K2=-loopParams.Kp-2*loopParams.Kd;
-    loopParams.K3= loopParams.Kd;
-    loopParams.GainScale=8;
-    loopParams.GainScaleVal=1<<loopParams.GainScale;
+   { 
     init_LOOP(device); //250522
    // channel is default ampl!!! need change  when changed dev
-    int32_t gain;
+    uint32_t gain;
     gain=7; //?????
     LOOPGain=gain;
     set_GainPID(gain);  // 250522             // not virtual; not debug!
@@ -515,9 +519,10 @@ ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
                  break;
   }
   chnl_select=1<<(2*channel+nloop); //??? for LOOP1  SFM =8 ; STM=32  
-  writedata.data=chnl_select;       // set channel
+  writedata.data=(int32_t)chnl_select;       // set channel
   WriteDataToFPGA(writedata);
   sleep_ms(10);
+ 
   if (flgDebug)  
   {
    afc.clear();
@@ -666,7 +671,7 @@ void HARDWARE::move_scannerY(int y)
  dacxy->writeB(y);
 }
 
-uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, uint16_t *arrayout)
+uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arrayout)
 {
  if (!flgVirtual) 
  {
@@ -705,7 +710,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, uint16_t *ar
      for (size_t j = 0; j < count;j++)
      {
        val=(inbuffer[k]<<24)+(inbuffer[k+1]<<16)+(inbuffer[k+2]<<8)+inbuffer[k+3];
-       arrayout[j]=(uint16_t)val;
+       arrayout[j]=(int32_t)val;
        k+=4;
        if (flgDebug)  
        {
@@ -1025,7 +1030,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
    sleep_ms(100); 
   } 
 }
-void HARDWARE::set_GainPID(int32_t gain)
+void HARDWARE::set_GainPID(uint32_t gain)
 { 
     uint8_t ti; 
    switch (HARDWAREVERSION)  
@@ -1108,23 +1113,24 @@ void HARDWARE::set_GainPID(int32_t gain)
  case  BBFPGA:   
      {
       FPGAWriteData writedata;
-      writedata.addr=arrLoopModule.wbKx[1];//0x08430000;  //adress gain need sign
-      loopParams.Ki=int32_t(gain*0.001*loopParams.GainScaleVal);
+      writedata.addr=arrLoopModule.wbKx[0];//  1    0x08430000;  //adress gain need sign
+      loopParams.Ki=int32_t(gain*loopParams.GainScaleVal);
       loopParams.K1=loopParams.Kp+loopParams.Ki+loopParams.Kd;
-      writedata.data=loopParams.K1; //uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??
-      
+      writedata.data=loopParams.K1; //uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??    
+    /*
       afc.clear();
       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(gain)
             +" gainscaleval=" +std::to_string(loopParams.GainScaleVal);
       afc += endln;
       std::cout << afc;
       afc.clear();
-      sleep_ms(100);  
+      sleep_ms(100);
+    */    
       WriteDataToFPGA(writedata);       
       sleep_ms(10);
       if (flgDebug&&(!flgVirtual))  
        {
-        uint16_t arrayout[9];
+        int32_t arrayout[9];
         ReadDataFromFPGAArray(9,arrLoopModule.wbKx[0],arrayout); 
        }  
      /*
@@ -1343,7 +1349,7 @@ void HARDWARE::set_DACZ(int16_t value)
    case BBFPGA:
         FPGAWriteData writedata;
         writedata.addr=arrLoopModule.wbOutShift; //?????
-        writedata.data=(uint32_t)value;//+ShiftDac);  //250529
+        writedata.data=(int32_t)value;//+ShiftDac);  //250529
         WriteDataToFPGA(writedata);
         break;
   }

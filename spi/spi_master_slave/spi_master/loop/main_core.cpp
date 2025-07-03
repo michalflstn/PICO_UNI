@@ -62,7 +62,7 @@ void MainCore::launchOnCore1()
   //***************************************  
   case SET_PID_GAIN:
         ALGCODE=ALGNONE;
-        scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
+        scanner->hardware->set_GainPID((int32_t)Vector[1]); 
         break;  
   case ChangeSpeed:
         ALGCODE=ALGNONE;
@@ -146,12 +146,14 @@ case VersionCmd:
  //  retract();          // 250522   втянуть    
     scanner->hardware->set_DACZ(0); 
   } 
+/*  
   afc.clear();
   afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
   afc +=endln;
   std::cout << afc;
   afc.clear();
-  sleep_ms(100);
+  sleep_ms(200);
+  */
   switch (HARDWAREVERSION) 
  {
    case BBFPGA: 
