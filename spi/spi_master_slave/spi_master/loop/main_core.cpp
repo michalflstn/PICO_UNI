@@ -139,9 +139,7 @@ case VersionCmd:
   {
     scanner->hardware->init_LOOP(device); 
    // channel is default ampl!!! need change  when changed dev
-    uint32_t gain;
-    gain=7; 
-    scanner->hardware->LOOPGain=gain;
+    uint32_t gain=7;
     scanner->hardware->set_GainPID(gain);   
  //  retract();          // 250522   втянуть    
     scanner->hardware->set_DACZ(0); 

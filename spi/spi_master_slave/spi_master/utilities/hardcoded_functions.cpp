@@ -145,9 +145,9 @@ void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
   loopParams.Ki=ki;
   loopParams.Kp=kp;
   loopParams.Kd=kd;
-  loopParams.K1=(loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
-  loopParams.K2=(-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal;
-  loopParams.K3=loopParams.Kd*loopParams.GainScaleVal;
+  loopParams.K1=loopParams.Kp+(loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
+  loopParams.K2=(-loopParams.Kp-2*loopParams.Kd);//*loopParams.GainScaleVal;
+  loopParams.K3=loopParams.Kd;//*loopParams.GainScaleVal;
 }
 void HARDWARE::init_LOOP(uint8_t device)
 {
@@ -158,7 +158,7 @@ void HARDWARE::init_LOOP(uint8_t device)
   {
 case BBFPGA: 
     {
-       PID_FBABS=0x00000100; // 1<<8;    // abs value into loop
+     PID_FBABS=0x00000100; // 1<<8;    // abs value into loop
      PID_SIGN =0x00000080; // 1<<7;    // up or  down ???
      PID_ENA  =0x00000001;
      PID_STOP =0x00000000;
@@ -1438,15 +1438,16 @@ void HARDWARE::protract() //вытянуть
  else
  {
    PID_ENA=1; PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(0x00000001);
-   PID_CONTROL=PID_CONTROL&(~(0x0000010));
-   if (flgDebug)  
+   PID_CONTROL=PID_CONTROL|( 0x00000001);
+   PID_CONTROL=PID_CONTROL&(~0x00000010);
+  /* if (flgDebug)  
    {
     afc.clear();
     afc = code+std::to_string(DEBUG)+"debug protract "
           +std::to_string(PID_CONTROL);
      sleep_ms(40);
-   } 
+   }
+     */ 
    FPGAWriteData writedata;
    writedata.data=PID_CONTROL;
    writedata.addr=arrLoopModule.pidControl;
@@ -1465,8 +1466,8 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
  {
    PID_ENA=0;
    PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(0x00000000);
-   PID_CONTROL=PID_CONTROL&(~(0x0000010));
+   PID_CONTROL=PID_CONTROL|(  0x00000000);
+   PID_CONTROL=PID_CONTROL&(~(0x00000010));
    if (flgDebug)  
    {
     afc.clear();
@@ -1491,8 +1492,8 @@ if (HARDWAREVERSION!=BBFPGA)
  {
    PID_ENA=1;
    PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(0x00000001);
-   PID_CONTROL=PID_CONTROL&(~(0x0000010));
+   PID_CONTROL=PID_CONTROL|(  0x00000001);
+   PID_CONTROL=PID_CONTROL&(~(0x00000010));
    if (flgDebug)  
    {
     afc.clear();
