@@ -1410,7 +1410,7 @@ void HARDWARE::retract() //втянуть
  {
      PID_ENA=1;
      PID_STOP=2;
-     PID_CONTROL=PID_CONTROL|(PID_STOP+PID_ENA);
+     PID_CONTROL=PID_CONTROL|0x00000011;
      if (flgDebug)  
      {
       afc.clear();
@@ -1438,8 +1438,8 @@ void HARDWARE::protract() //вытянуть
  else
  {
    PID_ENA=1; PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|( 0x00000001);
-   PID_CONTROL=PID_CONTROL&(~0x00000010);
+   PID_CONTROL=PID_CONTROL|(0x00000001);
+   PID_CONTROL=PID_CONTROL&0x11111101;
   /* if (flgDebug)  
    {
     afc.clear();
@@ -1455,7 +1455,7 @@ void HARDWARE::protract() //вытянуть
  }
 }
 
-void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
+void HARDWARE::freezeLOOP(uint16_t delay) // заморозить ПИД
 {
  if (HARDWAREVERSION!=BBFPGA)
  {
@@ -1466,8 +1466,8 @@ void HARDWARE::freezeLOOP(uint16_t delay)    // заморозить ПИД
  {
    PID_ENA=0;
    PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(  0x00000000);
-   PID_CONTROL=PID_CONTROL&(~(0x00000010));
+   PID_CONTROL=PID_CONTROL|(0x00000000);
+   PID_CONTROL=PID_CONTROL&(0x11111100);
    if (flgDebug)  
    {
     afc.clear();
@@ -1492,8 +1492,8 @@ if (HARDWAREVERSION!=BBFPGA)
  {
    PID_ENA=1;
    PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(  0x00000001);
-   PID_CONTROL=PID_CONTROL&(~(0x00000010));
+   PID_CONTROL=PID_CONTROL|0x00000001;
+   PID_CONTROL=PID_CONTROL&0x11111101;
    if (flgDebug)  
    {
     afc.clear();
