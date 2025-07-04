@@ -28,7 +28,7 @@ LinearDriverBB::LinearDriverBB(bool flgOnlyZ, ConfigLinearDriveBB configlineardr
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ "Pico2040 ";
-   afc += endln;//"\n";
+   afc += endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 
@@ -60,7 +60,7 @@ LinearDriverWB::~LinearDriverWB()
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ " MB Pico2040 ";
-   afc += endln;//"\n";
+   afc += endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 
@@ -134,7 +134,7 @@ void LinearDriverWB::move(int command, int freq, int duty, int nsteps, bool dir)
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ " MB Pico2040 active ";
-   afc += +endln;//"\n";
+   afc += +endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 

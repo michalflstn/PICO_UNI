@@ -29,7 +29,7 @@ void Scanner::sendStrData(std::string const& header)
  std::string afcc;
   afcc.clear();
   afcc=header; 
-  afcc +=endln;//"\n";
+  afcc +=endln;
   std::cout << afcc;
   afcc.clear();
  // sleep_ms(100);
@@ -64,7 +64,7 @@ void Scanner::sendStrData(std::string const& header,std::vector<int16_t> &data, 
   {
    afcc +=separator + std::to_string(data[j]);
   }
-  afcc +=endln;//"\n";
+  afcc +=endln;
   std::cout << afcc;
   afcc.clear();
   sleep_ms(delay);

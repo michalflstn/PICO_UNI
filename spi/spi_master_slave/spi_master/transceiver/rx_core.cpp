@@ -44,7 +44,7 @@ void RX_core::launchOnCore1()
         flgVirtual=(bool)Vector[1];
         afc.clear();
         afc = code+std::to_string(DEBUG)+" virtual "+ std::to_string(Vector[1]);
-        afc +=endln;//"\n";
+        afc +=endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
@@ -57,7 +57,7 @@ void RX_core::launchOnCore1()
         flgDebug=(bool)(Vector[1]);
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(Vector[1]);
-        afc +=endln;//"\n";
+        afc +=endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 

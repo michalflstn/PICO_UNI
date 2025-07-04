@@ -50,7 +50,7 @@ void MainCore::launchOnCore1()
        /* 
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(flgDebug);
-        afc += endln;//"\n";
+        afc += endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
@@ -497,6 +497,7 @@ MainCore()
    {
      afc.clear();
      afc =code+std::to_string(ChangeHardWare)+ "error new scanner create "+std::to_string(HARDWAREVERSION);
+     afc += endln;
      std::cout << afc;
      afc.clear();
      sleep_ms(100); 

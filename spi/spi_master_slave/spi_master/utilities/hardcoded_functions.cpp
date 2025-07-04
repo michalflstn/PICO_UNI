@@ -357,7 +357,7 @@ void HARDWARE::SetDev_GetSOFTHARDWAREVersion(uint8_t device)
   afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
         +",hardware "+std::to_string(HARDWAREVERSION) + ",device "+std::to_string(device)
         +",sensor "+std::to_string(sensor);
-  afc +="\n";
+  afc +=endln;
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -423,7 +423,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
  {
   afc.clear();
   afc =code+std::to_string(DEBUG)+ "debug Bias"+ std::to_string(BiasV);
-  afc += +"\n";
+  afc += endln;
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -465,7 +465,7 @@ case    WB:
   afc.clear();
   afc =code+std::to_string(DEBUG)+ "debug Bias="+ std::to_string(BiasV)+"retract="+std::to_string(flg)+"sign= "+std::to_string(SignLoopValue)
   +"setpoint="+std::to_string(SetPointValue);
-  afc += +"\n";
+  afc +=endln;
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -516,7 +516,7 @@ case  WB:
  /*
   afc.clear();
   afc = code+std::to_string(DEBUG)+ "debug sign loop " + std::to_string(value);
-  afc += +"\n";
+  afc += endln;
   std::cout << afc;
   afc.clear();
   sleep_ms(100);
@@ -550,7 +550,7 @@ ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
    afc.clear();
    afc = code+std::to_string(DEBUG)+"debug PID Channel ="+ std::to_string(chnl_select)
              +"pidcontrol="+std::to_string(PID_CONTROL);
-   afc += "\n";
+   afc +=endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100);
@@ -594,7 +594,7 @@ void HARDWARE::use_LowPassFilterADC(uint8_t turnon, uint8_t nchannel)
    afc.clear();
    afc = code+std::to_string(DEBUG)+"debug PID LowPass Filter Channel ="+ std::to_string(nchannel)
          + " turnon="+std::to_string(writedata.data);
-   afc += "\n";
+   afc +=endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100);
@@ -651,7 +651,7 @@ case SICMDC: setLoopSign(SignalDecrease);
  afc.clear();
  afc = code+std::to_string(DEBUG)+ "Init commutation " +"dev="+std::to_string(dev)+" signalIncrease " +std::to_string(SignalIncrease)+ " in-loop"+std::to_string(IPin);
  afc+=" sensor "+std::to_string(sensor);
- afc += +"\n";
+ afc +=endln;
  std::cout << afc;
  afc.clear();
  sleep_ms(100);
@@ -1410,12 +1410,15 @@ void HARDWARE::retract() //втянуть
  {
      PID_ENA=1;
      PID_STOP=2;
-     PID_CONTROL=PID_CONTROL|0x00000011;
+     PID_CONTROL=PID_CONTROL|0x00000003;
      if (flgDebug)  
      {
       afc.clear();
       afc = code+std::to_string(DEBUG)+"debug retract "+ std::to_string(PID_CONTROL);
-      sleep_ms(40);
+      afc += endln;
+      std::cout << afc;
+      afc.clear();
+      sleep_ms(100);
      }  
     FPGAWriteData writedata;
     writedata.addr=arrLoopModule.pidControl;
@@ -1438,16 +1441,18 @@ void HARDWARE::protract() //вытянуть
  else
  {
    PID_ENA=1; PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(0x00000001);
-   PID_CONTROL=PID_CONTROL&0x11111101;
-  /* if (flgDebug)  
+   PID_CONTROL=PID_CONTROL|0x00000001;
+   PID_CONTROL=PID_CONTROL&0xFFFFFFF1;
+   if (flgDebug)  
    {
     afc.clear();
     afc = code+std::to_string(DEBUG)+"debug protract "
           +std::to_string(PID_CONTROL);
-     sleep_ms(40);
+    afc += endln;
+    std::cout << afc;
+    afc.clear();
+    sleep_ms(100);
    }
-     */ 
    FPGAWriteData writedata;
    writedata.data=PID_CONTROL;
    writedata.addr=arrLoopModule.pidControl;
@@ -1466,13 +1471,16 @@ void HARDWARE::freezeLOOP(uint16_t delay) // заморозить ПИД
  {
    PID_ENA=0;
    PID_STOP=0;
-   PID_CONTROL=PID_CONTROL|(0x00000000);
-   PID_CONTROL=PID_CONTROL&(0x11111100);
+   //PID_CONTROL=PID_CONTROL|(0x00000000);
+   PID_CONTROL=PID_CONTROL&(0xFFFFFFF0);
    if (flgDebug)  
    {
     afc.clear();
     afc = code+std::to_string(DEBUG)+"debug freeze "+ std::to_string(PID_CONTROL);
-    sleep_ms(40);
+    afc += endln;
+    std::cout << afc;
+    afc.clear();
+    sleep_ms(100);
    }  
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;  
@@ -1493,12 +1501,15 @@ if (HARDWAREVERSION!=BBFPGA)
    PID_ENA=1;
    PID_STOP=0;
    PID_CONTROL=PID_CONTROL|0x00000001;
-   PID_CONTROL=PID_CONTROL&0x11111101;
+   PID_CONTROL=PID_CONTROL&0xFFFFFFF1;
    if (flgDebug)  
    {
     afc.clear();
     afc = code+std::to_string(DEBUG)+"debug unfreeze "+ std::to_string(PID_CONTROL);
-    sleep_ms(40);
+    afc += endln;
+    std::cout << afc;
+    afc.clear();
+    sleep_ms(100);
    }  
    FPGAWriteData writedata;
    writedata.addr=arrLoopModule.pidControl;

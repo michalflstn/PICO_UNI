@@ -82,7 +82,7 @@ int main() {
       afc ="debug"; 
       for (size_t i = 0; i < sz; i++)
       { afc+=','+std::to_string(inbuffer[i]);}
-        afc += "\n";
+        afc += endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100);
