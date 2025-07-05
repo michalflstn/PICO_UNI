@@ -190,6 +190,7 @@ Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
   int32_t K1;
   int32_t K2;
   int32_t K3;
+  float   scale;
   int32_t GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
   int32_t GainScaleVal;
  };

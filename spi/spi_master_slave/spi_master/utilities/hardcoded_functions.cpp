@@ -140,6 +140,7 @@ void HARDWARE::reset_ADCPort()
 }
 void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
 {
+//  loopParams.scale=scale;
   loopParams.GainScale=gainscale;
   loopParams.GainScaleVal=1<<loopParams.GainScale;
   loopParams.Ki=ki;
@@ -171,6 +172,7 @@ case BBFPGA:
      scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
      
       SetLOOPParams(1,1,0,8);//int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
+      loopParams.scale=1.0;
     /*
       ПИД в дискретном виде
       u[k]=u[k−1]+Kout2N(K1e[k]+K2e[k−1]+K3e[k−2])+uc
@@ -1129,7 +1131,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain WB "+ std::to_string(255-gain)+ "gainprev="+std::to_string(LOOPGain); //?????
        afc += endln;
-       std::cout << afc;
+       SendDataSynchro(flgDebugSynchronize,flgDebugGetOk,afc);
+     //  std::cout << afc;
        afc.clear();
        sleep_ms(100); 
      } 
@@ -1137,8 +1140,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
  case  BBFPGA:   
      {
       FPGAWriteData writedata;
-      writedata.addr=arrLoopModule.wbKx[0];//  1    0x08430000;  //adress gain need sign
-      loopParams.Ki=int32_t(gain*loopParams.GainScaleVal);
+      writedata.addr=arrLoopModule.wbKx[0];// 1 0x08430000;  //adress gain need sign
+      loopParams.Ki=int32_t(gain/loopParams.scale*loopParams.GainScaleVal);
       loopParams.K1=loopParams.Kp+loopParams.Ki+loopParams.Kd;
       writedata.data=loopParams.K1; //uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??    
     /*
@@ -1346,7 +1349,7 @@ void HARDWARE::set_DACZero()
  set_DACXY(0,0); 
  set_DACXY(1,0); 
  set_DACZ(0); 
- sleep_us(10); //240405
+ sleep_us(10); 
 }
 void HARDWARE::set_DACXY(uint8_t channel, uint16_t value) 
 {
@@ -1362,18 +1365,18 @@ void HARDWARE::set_DACZ(int16_t value)
   {
    case WB:
        dacz->setSpiProps(); 
-       dacz->writeB(int32_t(value)+ShiftDac);//A
-       sleep_us(2);// 240405 
+       dacz->writeB(int32_t(value)+ShiftDac);
+       sleep_us(2);
        break;
    case BB: 
        dacz->setSpiProps(); 
-       dacz->writeA(int32_t(value)+ShiftDac);//A
-       sleep_us(2);// 240405 
+       dacz->writeA(int32_t(value)+ShiftDac);
+       sleep_us(2);
        break;
    case BBFPGA:
         FPGAWriteData writedata;
-        writedata.addr=arrLoopModule.wbOutShift; //?????
-        writedata.data=(int32_t)value;//+ShiftDac);  //250529
+        writedata.addr=arrLoopModule.wbOutShift;
+        writedata.data=(int32_t)value;//+ShiftDac); 
         WriteDataToFPGA(writedata);
         break;
   }
@@ -1416,7 +1419,7 @@ void HARDWARE::retract() //втянуть
      if (flgDebug)  
      {
       afc.clear();
-      afc = code+std::to_string(DEBUG)+"debug retract "+ std::to_string(PID_CONTROL);
+      afc = code+std::to_string(DEBUG)+"debug retract "+std::to_string(PID_CONTROL);
       afc += endln;
       std::cout << afc;
       afc.clear();
@@ -1448,8 +1451,7 @@ void HARDWARE::protract() //вытянуть
    if (flgDebug)  
    {
     afc.clear();
-    afc = code+std::to_string(DEBUG)+"debug protract "
-          +std::to_string(PID_CONTROL);
+    afc = code+std::to_string(DEBUG)+"debug protract "+std::to_string(PID_CONTROL);
     afc += endln;
     std::cout << afc;
     afc.clear();
@@ -1478,7 +1480,7 @@ void HARDWARE::freezeLOOP(uint16_t delay) // заморозить ПИД
    if (flgDebug)  
    {
     afc.clear();
-    afc = code+std::to_string(DEBUG)+"debug freeze "+ std::to_string(PID_CONTROL);
+    afc = code+std::to_string(DEBUG)+"debug freeze "+std::to_string(PID_CONTROL);
     afc += endln;
     std::cout << afc;
     afc.clear();
@@ -1507,7 +1509,7 @@ if (HARDWAREVERSION!=BBFPGA)
    if (flgDebug)  
    {
     afc.clear();
-    afc = code+std::to_string(DEBUG)+"debug unfreeze "+ std::to_string(PID_CONTROL);
+    afc = code+std::to_string(DEBUG)+"debug unfreeze "+std::to_string(PID_CONTROL);
     afc += endln;
     std::cout << afc;
     afc.clear();

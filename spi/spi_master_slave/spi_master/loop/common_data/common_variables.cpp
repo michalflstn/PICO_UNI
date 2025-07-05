@@ -5,7 +5,7 @@
 //int8_t       HARDWAREVERSION=WB;
 //int8_t       HARDWAREVERSION=BB;  
 int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SOFTVERSION="25.07.04.04 "+std::to_string(HARDWAREVERSION);
+std::string  SOFTVERSION="25.07.04.05 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
@@ -44,7 +44,8 @@ bool ADC_ENABLE_DISABLE = false;
 bool ADC_READ_FOREVER = false;
 bool    ADC_GET_VALUE = false;
 //************************************************
-
+bool    flgDebugSynchronize=false;
+bool    flgDebugGetOk=false;
 bool    flgUseTUD=false;
 bool    flgParamsUpdated=false;
 bool    flgСritical_section=true;
@@ -70,3 +71,13 @@ uint8_t IPin    = 2; // ток
 bool Z_STATE = false; //???
 
 critical_section_t criticalSection;
+
+
+void SendDataSynchro(bool flg,bool flgOk, std::string str)
+{
+  if (flg)
+  {
+    while( !flgOk) {sleep_ms(20);};
+  }
+  std::cout << str;
+}

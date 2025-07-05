@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <atomic>
+#include <iostream> 
 
 #define SFM                      0  // методики
 #define STM                      1
@@ -75,8 +76,8 @@
 #define SPECTROSOPY_IV           65
 #define SPECTROSOPY_AIZ          66
 
-#define STOPCmd                  70 //остановка алгоритма
-#define DRAWDONECmd              71 //окончание отрисовки данных алгоритма
+#define STOPCmd                  70 // остановка алгоритма
+#define DRAWDONECmd              71 // окончание отрисовки данных алгоритма
 
 #define APPROACH                 75
 #define TESTMOVER                76
@@ -86,6 +87,8 @@
 #define LID_MOVE_TOZ0            84 // отвестись в безопасную начальную точку по Z
 
 #define TEST                     85 // for testing
+#define ScaleGianInput           86 // scale for testing gain input
+#define DebugSynchronize         87 // синхронизация посылки debug инфо на ПК  
 
 extern const std::string  code;  
 extern const std::string  endln;
@@ -125,6 +128,8 @@ extern std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
 extern std::atomic<uint16_t> delayHope;  
 extern std::atomic<uint16_t> ZJump;  
 
+extern bool flgDebugSynchronize;
+extern bool flgDebugGetOk;
 extern bool flgUseTUD;
 extern bool flgParamsUpdated;
 extern bool flgСritical_section;
@@ -133,4 +138,7 @@ extern bool flgUseFPGA;       //Использовать ПЛИСС
 extern bool flgLocalDebug;  
 extern bool flgTiming; 
 extern critical_section_t criticalSection;
+
+void SendDataSynchro(bool flg, bool flgok, std::string str);//add 250705
+
 #endif //PICO_EXAMPLES_COMMON_VARIABLES_HPP

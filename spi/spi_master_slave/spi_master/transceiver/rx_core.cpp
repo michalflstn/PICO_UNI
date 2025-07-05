@@ -50,9 +50,12 @@ void RX_core::launchOnCore1()
         sleep_ms(100); 
         break;
      */   
-      case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
-        flgDebugLevel=Vector[1];
-        break;    
+    case DebugSynchronize:
+         flgDebugSynchronize=(bool)Vector[1];
+         break; 
+    case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
+         flgDebugLevel=Vector[1];
+         break;    
       case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
         flgDebug=(bool)(Vector[1]);
         afc.clear();

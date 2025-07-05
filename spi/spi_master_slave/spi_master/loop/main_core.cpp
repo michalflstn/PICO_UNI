@@ -26,7 +26,6 @@ void MainCore::launchOnCore1()
         ADC_RESET = true;
         break;
      */  
-
   case VirtualCmd : //флаг симуляции работы микроконтроллера      
           ALGCODE=ALGNONE;
           flgVirtual=(bool)Vector[1];
@@ -63,7 +62,11 @@ void MainCore::launchOnCore1()
   case SET_PID_GAIN:
         ALGCODE=ALGNONE;
         scanner->hardware->set_GainPID((int32_t)Vector[1]); 
-        break;  
+        break;      
+  case ScaleGianInput:
+        ALGCODE=ALGNONE;
+        loopParams.scale=(float)Vector[1]; 
+        break;         
   case ChangeSpeed:
         ALGCODE=ALGNONE;
         delayFW=(uint16_t)Vector[1];
