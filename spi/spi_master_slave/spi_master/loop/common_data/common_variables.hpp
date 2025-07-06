@@ -118,8 +118,8 @@ extern bool Z_STATE;
 extern std::atomic<int16_t>  ALGCODE;
 extern std::atomic<bool>     CONFIG_UPDATE;
 extern std::atomic<bool>     STOP;
-extern std::atomic<bool>     TheadDone;   //need dor synchronization with PC 
-extern std::atomic<bool>     DrawDone;    //need dor synchronization with PC 
+extern std::atomic<bool>     TheadDone;   //need for synchronization with PC 
+extern std::atomic<bool>     DrawDone;    //need for synchronization with PC 
 extern std::atomic<bool>     ADC_IS_READY_TO_READ;
 extern std::atomic<bool>     flgVirtual; 
 extern std::atomic<bool>     flgDebug;
@@ -127,9 +127,9 @@ extern std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
 extern std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
 extern std::atomic<uint16_t> delayHope;  
 extern std::atomic<uint16_t> ZJump;  
+extern std::atomic<bool>     flgDebugGetOk;//need for synchronize debug with PC 
 
 extern bool flgDebugSynchronize;
-extern bool flgDebugGetOk;
 extern bool flgUseTUD;
 extern bool flgParamsUpdated;
 extern bool flgСritical_section;
@@ -139,6 +139,6 @@ extern bool flgLocalDebug;
 extern bool flgTiming; 
 extern critical_section_t criticalSection;
 
-void SendDataSynchro(bool flg, bool flgok, std::string str);//add 250705
+void SendDataSynchro(bool flg, std::string str);//add 250705
 
 #endif //PICO_EXAMPLES_COMMON_VARIABLES_HPP

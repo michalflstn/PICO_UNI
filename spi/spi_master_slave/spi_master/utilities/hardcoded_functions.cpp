@@ -1085,6 +1085,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd)+ "gainprev="+std::to_string(LOOPGain);
        afc += endln;
+    //   SendDataSynchro(flgDebugSynchronize,afc);//250705
        std::cout << afc;
        afc.clear();
        sleep_ms(100); 
@@ -1131,8 +1132,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain WB "+ std::to_string(255-gain)+ "gainprev="+std::to_string(LOOPGain); //?????
        afc += endln;
-       SendDataSynchro(flgDebugSynchronize,flgDebugGetOk,afc);
-     //  std::cout << afc;
+       SendDataSynchro(flgDebugSynchronize,afc); //250705
        afc.clear();
        sleep_ms(100); 
      } 

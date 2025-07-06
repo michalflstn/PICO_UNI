@@ -3,8 +3,8 @@
 //////////////////////////////////////////////
 // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИСC;
 //int8_t       HARDWAREVERSION=WB;
-//int8_t       HARDWAREVERSION=BB;  
-int8_t       HARDWAREVERSION=BBFPGA;
+ int8_t       HARDWAREVERSION=BB;  
+//int8_t       HARDWAREVERSION=BBFPGA;
 std::string  SOFTVERSION="25.07.04.05 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
@@ -16,17 +16,18 @@ std::string afc;  //dataout string
 std::vector<int32_t>  Vector;
 std::vector<int32_t>  Vupdateparams;
 std::atomic<int16_t>  ALGCODE;
+std::atomic<bool>     flgDebugGetOk=false;// need for synchronize debug with PC 
 std::atomic<bool>     CONFIG_UPDATE;
 std::atomic<bool>     STOP;
-std::atomic<bool>     TheadDone;   //need dor synchronization with PC 
-std::atomic<bool>     DrawDone=true;    //need dor synchronization with PC 
+std::atomic<bool>     TheadDone;          // need for synchronization with PC 
+std::atomic<bool>     DrawDone=true;      // need for synchronization with PC 
 std::atomic<bool>     ADC_IS_READY_TO_READ = true;
 std::atomic<bool>     flgVirtual = false; // start value!!! setPIDGain
-std::atomic<bool>     flgDebug   = false; // strat value!!!
-std::atomic<uint16_t> delayFW;      //delay in the point FW scanning,..
-std::atomic<uint16_t> delayBW;      //delay in the point BW scanning,..
-std::atomic<uint16_t> delayHope;    //hopping
-std::atomic<uint16_t> ZJump;        //hopping   
+std::atomic<bool>     flgDebug   = false; // start value!!!
+std::atomic<uint16_t> delayFW;            // delay in the point FW scanning,..
+std::atomic<uint16_t> delayBW;            // delay in the point BW scanning,..
+std::atomic<uint16_t> delayHope;          // hopping
+std::atomic<uint16_t> ZJump;              // hopping   
 
 const std::string  code="code";  
 const std::string  endln="\n";
@@ -44,8 +45,8 @@ bool ADC_ENABLE_DISABLE = false;
 bool ADC_READ_FOREVER = false;
 bool    ADC_GET_VALUE = false;
 //************************************************
-bool    flgDebugSynchronize=false;
-bool    flgDebugGetOk=false;
+bool    flgDebugSynchronize=true;//false;
+
 bool    flgUseTUD=false;
 bool    flgParamsUpdated=false;
 bool    flgСritical_section=true;
@@ -73,11 +74,12 @@ bool Z_STATE = false; //???
 critical_section_t criticalSection;
 
 
-void SendDataSynchro(bool flg,bool flgOk, std::string str)
+void SendDataSynchro(bool flg, std::string str)
 {
   if (flg)
   {
-    while( !flgOk) {sleep_ms(20);};
+    while( !flgDebugGetOk) {sleep_ms(20);};
   }
   std::cout << str;
+  flgDebugGetOk=false;
 }

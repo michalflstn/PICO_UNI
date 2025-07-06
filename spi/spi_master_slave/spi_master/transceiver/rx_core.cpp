@@ -51,12 +51,12 @@ void RX_core::launchOnCore1()
         break;
      */   
     case DebugSynchronize:
-         flgDebugSynchronize=(bool)Vector[1];
-         break; 
+          flgDebugSynchronize=true;
+          break; 
     case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
-         flgDebugLevel=Vector[1];
-         break;    
-      case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
+          flgDebugLevel=Vector[1];
+          break;    
+    case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
         flgDebug=(bool)(Vector[1]);
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(Vector[1]);
