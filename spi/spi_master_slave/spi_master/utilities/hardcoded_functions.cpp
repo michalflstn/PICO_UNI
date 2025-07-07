@@ -146,9 +146,9 @@ void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
   loopParams.Ki=ki;
   loopParams.Kp=kp;
   loopParams.Kd=kd;
-  loopParams.K1=loopParams.Kp+(loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
-  loopParams.K2=(-loopParams.Kp-2*loopParams.Kd);//*loopParams.GainScaleVal;
-  loopParams.K3=loopParams.Kd;//*loopParams.GainScaleVal;
+  loopParams.K1=loopParams.Kp;//+(loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
+  loopParams.K2=loopParams.Ki*loopParams.GainScaleVal;//(-loopParams.Kp-2*loopParams.Kd);
+  loopParams.K3=loopParams.Kd*loopParams.GainScaleVal;
 }
 void HARDWARE::init_LOOP(uint8_t device)
 {
@@ -199,7 +199,7 @@ case BBFPGA:
       writedata.data=loopParams.GainScale;           
       WriteDataToFPGA(writedata);
       sleep_ms(10);
-      writedata.data=loopParams.K1;// 1;//uint32_t(1*(2<<GainScale));
+      writedata.data=loopParams.K1;//uint32_t(1*(2<<GainScale));
       writedata.addr=arrLoopModule.wbKx[0]; //tp
       WriteDataToFPGA(writedata);
       sleep_ms(30);
@@ -1142,7 +1142,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];// 1 0x08430000;  //adress gain need sign
       loopParams.Ki=int32_t(gain/loopParams.scale*loopParams.GainScaleVal);
-      loopParams.K1=loopParams.Kp+loopParams.Ki+loopParams.Kd;
+      loopParams.K1=loopParams.Ki;//loopParams.Kp++loopParams.Kd;
       writedata.data=loopParams.K1; //uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??    
     /*
       afc.clear();
