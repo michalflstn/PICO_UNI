@@ -3,9 +3,9 @@
 //////////////////////////////////////////////
 // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИСC;
 //int8_t       HARDWAREVERSION=WB;
- int8_t       HARDWAREVERSION=BB;  
-//int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SOFTVERSION="25.07.04.05 "+std::to_string(HARDWAREVERSION);
+// int8_t       HARDWAREVERSION=BB;  
+int8_t       HARDWAREVERSION=BBFPGA;
+std::string  SOFTVERSION="25.07.07.01 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 std::string  SoftHARDWAREVERSION="0.1";
@@ -45,7 +45,7 @@ bool ADC_ENABLE_DISABLE = false;
 bool ADC_READ_FOREVER = false;
 bool    ADC_GET_VALUE = false;
 //************************************************
-bool    flgDebugSynchronize=true;//false;
+bool    flgDebugSynchronize=false;//true;//false;
 
 bool    flgUseTUD=false;
 bool    flgParamsUpdated=false;

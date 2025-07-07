@@ -135,7 +135,7 @@ public:
 
  void setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue);
 
- void setLoopSign(int8_t value);  // 0->+ ; 1-> -1
+ void setLoopSign(int32_t value);  // 0->+ ; 1-> -1
 
  void set_SetPoint(int32_t SetPoint);//установка заданной опроры для ПИД
 

@@ -473,7 +473,7 @@ case    WB:
   sleep_ms(100);
  }
 }
-void HARDWARE::setLoopSign(int8_t value) //??????
+void HARDWARE::setLoopSign(int32_t value) //??????
 {
    switch  (HARDWAREVERSION) 
   {
@@ -484,7 +484,7 @@ case BBFPGA:
    //   if (value==1) PID_CONTROL=PID_CONTROL|(1<<7);  // *(-1)
    //                 PID_CONTROL=PID_CONTROL&(~(1<<7)) ;
       if (value==1) PID_CONTROL=PID_CONTROL|0x00000080;  // *(-1)
-                    PID_CONTROL=PID_CONTROL&0xFFFFFF7F;
+      else          PID_CONTROL=PID_CONTROL&0xFFFFFF7F;
       writedata.data=PID_CONTROL;
       WriteDataToFPGA(writedata);
       sleep_ms(10);
