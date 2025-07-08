@@ -146,8 +146,8 @@ void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
   loopParams.Ki=ki;
   loopParams.Kp=kp;
   loopParams.Kd=kd;
-  loopParams.K1=loopParams.Kp;//+(loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
-  loopParams.K2=loopParams.Ki*loopParams.GainScaleVal;//(-loopParams.Kp-2*loopParams.Kd);
+  loopParams.K1=(loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
+  loopParams.K2=(-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal;
   loopParams.K3=loopParams.Kd*loopParams.GainScaleVal;
 }
 void HARDWARE::init_LOOP(uint8_t device)
@@ -741,7 +741,8 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arr
        if (flgDebug)  
        {
        // afcc +=separator + std::to_string(float(arrayout[j]));
-        afcc +=separator + std::to_string((arrayout[j]));
+        if (j<=1) afcc +=separator + std::to_string(float(arrayout[j]));
+            else  afcc +=separator + std::to_string(arrayout[j]);
        }
      } 
      if (flgDebug)  
@@ -1141,8 +1142,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];// 1 0x08430000;  //adress gain need sign
-      loopParams.Ki=int32_t(gain/loopParams.scale*loopParams.GainScaleVal);
-      loopParams.K1=loopParams.Ki;//loopParams.Kp++loopParams.Kd;
+      loopParams.Ki=int32_t(gain/loopParams.scale);//*loopParams.GainScaleVal);
+      loopParams.K1=(loopParams.Ki+loopParams.Kp+loopParams.Kd)*loopParams.GainScaleVal;
       writedata.data=loopParams.K1; //uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??    
     /*
       afc.clear();
@@ -1402,7 +1403,6 @@ uint16_t *HARDWARE::repeatTwoTimes()
   {
     sleep_us(100); //241215 decrease!!
   }
-  return spiBuf;
 }
 
 void HARDWARE::retract() //втянуть
