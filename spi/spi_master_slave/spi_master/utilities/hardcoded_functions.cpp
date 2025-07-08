@@ -697,7 +697,7 @@ void HARDWARE::move_scannerY(int y)
  dacxy->writeB(y);
 }
 
-uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arrayout)
+uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arrayout) //read LOOP params
 {
  if (!flgVirtual) 
  {
@@ -759,7 +759,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arr
    else return 0;// error 
 
 }
-uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) 
+uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //read data
 {
  uint8_t   res=0;
  if (!flgVirtual) 

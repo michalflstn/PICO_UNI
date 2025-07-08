@@ -190,8 +190,8 @@ void Scanner::readADC()
                 } 
        case STM://STM=1
                 {
-                  SignalValue = (int16_t) spiBuf[IPin];
-                  break;  
+                 SignalValue = (int16_t) spiBuf[IPin];
+                 break;  
                 } 
      case SICMDC://SICMDC=3  
                 {
