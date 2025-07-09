@@ -137,7 +137,7 @@ FPGALOOPCTRAdress    arrLoopModule_0(
                        0x08430010,//wbInSetup
                        0x08430014,//wbOutMulKoef
                        0x08430018,//wbOutShift //DACZ
-                       0x0843001C,//wbSetpoint
+                       0x0843001C,//wbSetpoint                       
                        0x08430020 //pidControl // protract /retract
                        });
  FPGALOOPCTRAdress    arrLoopModule_1(
@@ -166,6 +166,7 @@ FPGA_ADCAdress    arrADCadress(
      0x08430018,
      0x0841001C,
      0x08430020, 
+     0x08430024,  //reserve                      
      0x08410028   //filter
      });
  uint32_t         inSwitchadress=0x08420000;

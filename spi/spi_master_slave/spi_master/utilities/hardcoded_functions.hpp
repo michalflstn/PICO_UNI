@@ -54,7 +54,7 @@ private:
  int32_t PID_STOP;
  int32_t PID_SIGN;
 
- void SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale);  
+ void SetLOOPParams(float kp,float ki, float kd,int32_t gainscale);  
 
  void get_result_from_adc();       // чтение АЦП
 
@@ -135,15 +135,15 @@ public:
 
  void setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue);
 
- void setLoopSign(int32_t value);  // 0->+ ; 1-> -1
+ void setLoopSign(int32_t value);        // 0->+ ; 1-> -1
 
- void set_SetPoint(int32_t SetPoint);//установка заданной опроры для ПИД
+ void set_SetPoint(int32_t SetPoint);    //установка заданной опроры для ПИД
 
- void set_GainApmlMod(uint8_t gain); //установить усиления модуляции амплитуды
+ void set_GainApmlMod(uint8_t gain);     //установить усиления модуляции амплитуды
 
- //void set_GainPID(uint16_t gain);    //установить усиления ПИД  не используется
+ //void set_GainPID(uint16_t gain);      //установить усиления ПИД  не используется
 
- void set_GainPID(uint32_t gain);    //установить усиления ПИД
+ void set_GainPID(uint32_t gain);        //установить усиления ПИД
 
  void set_GainPIDFPGA(uint32_t gain);    //установить усиления ПИД не используется
  
@@ -165,9 +165,9 @@ public:
 
  int32_t ReadDataFromFPGA(uint32_t adress);
  
- uint8_t ReadDataFromFPGAArray(uint8_t count, uint32_t adr, int32_t *arrayout);
+ uint8_t ReadDataArrayFromFPGA(uint8_t count, uint32_t adr, int32_t *arrayout);
 
- uint8_t ReadDataFromFPGAArrayALL(uint16_t *arrayout);
+ uint8_t ReadADCDataArrayFromFPGA(uint16_t *arrayout);
 
  void retract();       // втянуть сканер
 

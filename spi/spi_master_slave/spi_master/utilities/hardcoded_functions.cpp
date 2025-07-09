@@ -138,7 +138,7 @@ void HARDWARE::reset_ADCPort()
   sleep_us(10);
   resetport->disable();
 }
-void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
+void HARDWARE::SetLOOPParams(float kp,float ki,float kd,int32_t gainscale)
 {
 //  loopParams.scale=scale;
   loopParams.GainScale=gainscale;
@@ -146,9 +146,9 @@ void HARDWARE::SetLOOPParams(int32_t kp,int32_t ki,int32_t kd,int32_t gainscale)
   loopParams.Ki=ki;
   loopParams.Kp=kp;
   loopParams.Kd=kd;
-  loopParams.K1=(loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal;
-  loopParams.K2=(-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal;
-  loopParams.K3=loopParams.Kd*loopParams.GainScaleVal;
+  loopParams.K1=(int32_t)((loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal);
+  loopParams.K2=(int32_t)((-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal);
+  loopParams.K3=(int32_t)(loopParams.Kd*loopParams.GainScaleVal);
 }
 void HARDWARE::init_LOOP(uint8_t device)
 {
@@ -171,7 +171,7 @@ case BBFPGA:
      }  
      scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop);    // channel, nloop
      
-      SetLOOPParams(1,1,0,8);//int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
+      SetLOOPParams(1.0,1.0,0.0,8);//int32_t kp,int32_t ki,int32_t kd,int32_t gainscale
       loopParams.scale=1.0;
     /*
       ПИД в дискретном виде
@@ -697,7 +697,7 @@ void HARDWARE::move_scannerY(int y)
  dacxy->writeB(y);
 }
 
-uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arrayout) //read LOOP params
+uint8_t HARDWARE::ReadDataArrayFromFPGA(uint8_t count,uint32_t adr, int32_t *arrayout) //read LOOP params
 {
  if (!flgVirtual) 
  {
@@ -759,7 +759,7 @@ uint8_t HARDWARE::ReadDataFromFPGAArray(uint8_t count,uint32_t adr, int32_t *arr
    else return 0;// error 
 
 }
-uint8_t HARDWARE::ReadDataFromFPGAArrayALL(uint16_t *arrayout) //read data
+uint8_t HARDWARE::ReadADCDataArrayFromFPGA(uint16_t *arrayout) //read data SPI
 {
  uint8_t   res=0;
  if (!flgVirtual) 
@@ -1142,8 +1142,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
      {
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbKx[0];// 1 0x08430000;  //adress gain need sign
-      loopParams.Ki=int32_t(gain/loopParams.scale);//*loopParams.GainScaleVal);
-      loopParams.K1=(loopParams.Ki+loopParams.Kp+loopParams.Kd)*loopParams.GainScaleVal;
+      loopParams.Ki=gain/loopParams.scale;//*loopParams.GainScaleVal);
+      loopParams.K1=(int32_t)((loopParams.Ki+loopParams.Kp+loopParams.Kd)*loopParams.GainScaleVal);
       writedata.data=loopParams.K1; //uint32_t(gain*0.00001*GainScaleVal);    //(uint32_t)gain; // gain need sign??    
     /*
       afc.clear();
@@ -1158,8 +1158,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
       sleep_ms(10);
       if (flgDebug&&(!flgVirtual))  
        {
-        int32_t arrayout[9];
-        ReadDataFromFPGAArray(9,arrLoopModule.wbKx[0],arrayout); 
+        int32_t arrayout[9]; // read LOOP parameters
+        ReadDataArrayFromFPGA(9,arrLoopModule.wbKx[0],arrayout); 
        }  
      /*
       if (abs(LOOPGain)<=abs(gain))
@@ -1391,7 +1391,7 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
   }
   else
   {
-    ReadDataFromFPGAArrayALL(spiBuf);         
+    ReadADCDataArrayFromFPGA(spiBuf);         
   }
 }
 

@@ -18,7 +18,7 @@
 #define FPGAUART_RX_PIN 9 //!
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
-#define NmbADCSignals   12 // 8 // ADC + control было 8 до FPGA
+#define NmbADCSignals   11 //кроме timestamp_us // 250709  12 // 8 // ADC + control было 8 до FPGA
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
@@ -170,11 +170,12 @@ struct FPGA_ADCAdress
   uint32_t Z;
   uint32_t Apml;
   uint32_t I;
+  uint32_t Signal3;
   uint32_t Signal4;
   uint32_t Signal5;
   uint32_t Signal6;
   uint32_t Signal7;
-  uint32_t Signal8;
+  uint32_t Reserve;
   uint32_t FilterADC;
 };
 /*
@@ -184,9 +185,9 @@ Fields: [ DELIM ] [ CMD ] [ ADDR ] [<DATA>] [CRC/PAR] [ DELIM ]
 */
  struct FPGALOOPPARAMS
  {
-  int32_t Kp;
-  int32_t Ki;
-  int32_t Kd;
+    float Kp;
+    float Ki;
+    float Kd;
   int32_t K1;
   int32_t K2;
   int32_t K3;

@@ -175,27 +175,26 @@ void Scanner::readADC()
      }
      case BBFPGA:
      {
-       hardware->ReadDataFromFPGAArrayALL(spiBuf);
+       hardware->ReadADCDataArrayFromFPGA(spiBuf);
        break;
      }
     }
-   //hardware->ReadDataFromFPGAArray(3,spiBuf);
-   ZValue = (int16_t)spiBuf[ZPin];
+    ZValue = (int16_t)spiBuf[ZPin];
       switch (Vector[1]) //прибор
    {
         case SFM: //SFM=0
                 {
-                 SignalValue = (int16_t) spiBuf[AmplPin];
+                 SignalValue = (int16_t)spiBuf[AmplPin];
                  break;  
                 } 
        case STM://STM=1
                 {
-                 SignalValue = (int16_t) spiBuf[IPin];
+                 SignalValue = (int16_t)spiBuf[IPin];
                  break;  
                 } 
      case SICMDC://SICMDC=3  
                 {
-                 SignalValue = (int16_t) spiBuf[IPin];
+                 SignalValue = (int16_t)spiBuf[IPin];
                  break;  
                 } 
    }         
