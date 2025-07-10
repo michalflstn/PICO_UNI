@@ -18,7 +18,7 @@
 #define FPGAUART_RX_PIN 9 //!
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
-#define NmbADCSignals   11 //кроме timestamp_us // 250709  12 // 8 // ADC + control было 8 до FPGA
+#define NmbADCSignals   3// 250710 Z,Ampl,I  11 //кроме timestamp_us // 250709  12 // 8 // ADC + control было 8 до FPGA
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us

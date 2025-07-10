@@ -775,7 +775,6 @@ uint8_t HARDWARE::ReadADCDataArrayFromFPGA(uint16_t *arrayout) //read data SPI
   uint8_t szasc=2+4+count*4+2;  //=56 bytes//40;  //get array adc 0A 80 adress dataarray BB 0A
   uint8_t outbuffer[szread];
   uint8_t inbuffer[szasc];
-  uint8_t res;
   FPGAReadDataArrayALL readdata;
   readdata.addr=arrADCadress.Z;
   outbuffer[0]=readdata.delimbegin;
@@ -806,6 +805,7 @@ uint8_t HARDWARE::ReadADCDataArrayFromFPGA(uint16_t *arrayout) //read data SPI
        arrayout[j]=(uint16_t)val;
        k+=4;
       }
+      arrayout[ZPin]=ReadDataDACFromFPGA();
     }   
   }
    return res; 
