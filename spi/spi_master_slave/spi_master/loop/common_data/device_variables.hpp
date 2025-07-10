@@ -178,6 +178,11 @@ struct FPGA_ADCAdress
   uint32_t Reserve;
   uint32_t FilterADC;
 };
+struct FPGA_DACAdress 
+{
+ uint32_t DAC0;
+ uint32_t DAC1; 
+};
 /*
 Rx Frame format big-endian Offs:
   Size:      1       1       4        4         1         1
@@ -266,6 +271,7 @@ extern FPGALOOPCTRAdress    arrLoopModule_0;
 extern FPGALOOPCTRAdress    arrLoopModule_1;
 extern FPGALOOPCTRAdress    arrLoopModule;
 extern FPGA_ADCAdress       arrADCadress;
+extern FPGA_DACAdress       arrDACadress;
 extern FPGALOOPPARAMS       loopParams;
 extern uint32_t             inSwitchadress;
 extern uint8_t              channelampl; 

@@ -169,4 +169,11 @@ FPGA_ADCAdress    arrADCadress(
      0x08430024,  //reserve                      
      0x08410028   //filter
      });
+
+ FPGA_DACAdress  arrDACadress(
+ {
+    0x08400000,
+    0x08400004
+ });
+
  uint32_t         inSwitchadress=0x08420000;

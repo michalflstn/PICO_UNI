@@ -146,8 +146,13 @@ void HARDWARE::SetLOOPParams(float kp,float ki,float kd,int32_t gainscale)
   loopParams.Ki=ki;
   loopParams.Kp=kp;
   loopParams.Kd=kd;
+/*
   loopParams.K1=(int32_t)((loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal);
   loopParams.K2=(int32_t)((-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal);
+  loopParams.K3=(int32_t)(loopParams.Kd*loopParams.GainScaleVal);
+*/  
+  loopParams.K1=(int32_t)(loopParams.Kp+(loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal);
+  loopParams.K2=(int32_t)((-loopParams.Kp-2*loopParams.Kd));//*loopParams.GainScaleVal);
   loopParams.K3=(int32_t)(loopParams.Kd*loopParams.GainScaleVal);
 }
 void HARDWARE::init_LOOP(uint8_t device)
@@ -192,8 +197,7 @@ case BBFPGA:
       Регистр wbKx[2]
       K3=KD
       KP,KI,KD−непосредственно сами коэффициенты регулятора
-    */
-    
+    */ 
       FPGAWriteData writedata;
       writedata.addr=arrLoopModule.wbInSetup;// 250623
       writedata.data=loopParams.GainScale;           
@@ -804,6 +808,71 @@ uint8_t HARDWARE::ReadADCDataArrayFromFPGA(uint16_t *arrayout) //read data SPI
   }
    return res; 
  }
+int32_t  HARDWARE::ReadDataDACFromFPGA()
+{
+ int32_t flgOk;
+   int32_t res; 
+ FPGAReadData readdata;
+ flgOk=1;
+ if (!flgVirtual) 
+ {
+  uint8_t szread=8;
+  uint8_t szasc=12; //get array adc 0A 80 adress data BB 0A
+  uint8_t outbuffer[szread];
+  uint8_t inbuffer[szasc];
+  readdata.addr=arrDACadress.DAC0;
+  outbuffer[0]=readdata.delimbegin;
+  outbuffer[1]=readdata.cmd;  // 0x00
+  outbuffer[2]=(uint8_t)((readdata.addr&0xFF000000)>>24);
+  outbuffer[3]=(uint8_t)((readdata.addr&0x00FF0000)>>16);  
+  outbuffer[4]=(uint8_t)((readdata.addr&0x0000FF00)>>8);
+  outbuffer[5]=(uint8_t)(readdata.addr&0x000000FF);
+  outbuffer[6]=readdata.crcpar;
+  outbuffer[7]=readdata.delimend;
+ /*
+  if (flgDebug)  
+  {
+    std::string afcc;
+    afcc.clear();
+    afcc=code+std::to_string(DEBUG)+" to read "; 
+    for (size_t j = 0; j < szread; ++j)
+    {
+      afcc +=separator + std::to_string(outbuffer[j]);
+    }
+    afcc +=endln;
+    std::cout << afcc;
+    sleep_ms(200);
+    afcc.clear();
+  }
+ */
+ while (uart_is_readable(FPGA_UART_ID)) //clean buffer //250402
+ { 
+  tight_loop_contents();
+  uart_get_hw(FPGA_UART_ID)->dr;
+ }
+  uart_write_blocking(FPGA_UART_ID, outbuffer,szread);
+  uart_read_blocking(FPGA_UART_ID, inbuffer,szasc);   
+ //get array adc 0A 80 adress data BB 0A
+  if(inbuffer[1]==FPGAREADOK) { flgOk=0;}
+                         else { flgOk=1;} 
+
+  res=int32_t((inbuffer[6]<<24)+(inbuffer[7]<<16)+(inbuffer[8]<<8)+inbuffer[9]);
+  /*                        
+  if (flgDebug)  
+    {
+      std::string afcc;
+      afcc.clear();
+      afcc=code+std::to_string(DEBUG)+" read="+ std::to_string(flgOk) ;  
+       afcc +=" val=" + std::to_string(res); 
+      afcc +=endln;
+      std::cout << afcc;
+      sleep_ms(200);
+      afcc.clear();
+    }
+      */
+ } 
+  return res;
+}
 
 int32_t HARDWARE::ReadDataFromFPGA(uint32_t adress)
 {

@@ -164,6 +164,8 @@ public:
  void getValuesFromAdc();  // чтение АЦП
 
  int32_t ReadDataFromFPGA(uint32_t adress);
+
+ int32_t ReadDataDACFromFPGA();
  
  uint8_t ReadDataArrayFromFPGA(uint8_t count, uint32_t adr, int32_t *arrayout);
 

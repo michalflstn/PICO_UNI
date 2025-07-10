@@ -176,6 +176,7 @@ void Scanner::readADC()
      case BBFPGA:
      {
        hardware->ReadADCDataArrayFromFPGA(spiBuf);
+       spiBuf[ZPin]=hardware->ReadDataDACFromFPGA();
        break;
      }
     }
@@ -200,10 +201,10 @@ void Scanner::readADC()
    }         
         debugdata.emplace_back(ZValue);
         debugdata.emplace_back(SignalValue);
-      //  debugdata.emplace_back(setpoint-ShiftDac);
-     //   debugdata.emplace_back(Vector[1]);
-     //   debugdata.emplace_back(SignLoop);
-    //    debugdata.emplace_back(sensor);
+    //  debugdata.emplace_back(setpoint-ShiftDac);
+    //  debugdata.emplace_back(Vector[1]);
+    //  debugdata.emplace_back(SignLoop);
+    //  debugdata.emplace_back(sensor);
         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);
   } 
   else
