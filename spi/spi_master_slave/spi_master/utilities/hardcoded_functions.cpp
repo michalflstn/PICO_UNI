@@ -146,14 +146,16 @@ void HARDWARE::SetLOOPParams(float kp,float ki,float kd,int32_t gainscale)
   loopParams.Ki=ki;
   loopParams.Kp=kp;
   loopParams.Kd=kd;
-/*
+
   loopParams.K1=(int32_t)((loopParams.Kp+loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal);
   loopParams.K2=(int32_t)((-loopParams.Kp-2*loopParams.Kd)*loopParams.GainScaleVal);
   loopParams.K3=(int32_t)(loopParams.Kd*loopParams.GainScaleVal);
-*/  
+  
+ /*
   loopParams.K1=(int32_t)(loopParams.Kp+(loopParams.Ki+loopParams.Kd)*loopParams.GainScaleVal);
   loopParams.K2=(int32_t)((-loopParams.Kp-2*loopParams.Kd));//*loopParams.GainScaleVal);
   loopParams.K3=(int32_t)(loopParams.Kd*loopParams.GainScaleVal);
+  */
 }
 void HARDWARE::init_LOOP(uint8_t device)
 {
