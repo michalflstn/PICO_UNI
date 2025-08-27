@@ -176,7 +176,7 @@ void Scanner::readADC()
      case BBFPGA:
      {
        hardware->ReadADCDataArrayFromFPGA(spiBuf);
-       spiBuf[ZPin]=hardware->ReadDataDACFromFPGA();
+     //  spiBuf[ZPin]=hardware->ReadDataDACFromFPGA();
        break;
      }
     }
