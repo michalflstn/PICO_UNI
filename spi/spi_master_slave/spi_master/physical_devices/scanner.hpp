@@ -3,6 +3,7 @@
 
 #include <string>
 #include <Vector>
+#include "hardware/uart.h"
 //#include <random>
 #include "../physical_devices/LinearDriver.hpp" //24/05/06
 #include "../utilities/base_types/Point.hpp"
@@ -59,7 +60,6 @@ private:
   void sendStrData(std::string const& header,const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header);
   void sendStrData(std::string const& header,std::string  data,const uint16_t delay,const bool flg);
-
   void sendData(uint8_t algcode, std::vector<int16_t>  &data, const uint16_t delay,const bool flg);
 
 public:

@@ -34,9 +34,6 @@ void Scanner::sendStrData(std::string const& header)
   afcc.clear();
  // sleep_ms(100);
 }
- void Scanner::sendData(uint8_t algcode,std::vector<int16_t>  &data, const uint16_t delay,const bool flg)//TUD
- {
- }
 
 void Scanner::sendStrData(std::string const& header, std::vector<int32_t> &data, const uint16_t delay,const bool flg)
 {
@@ -55,6 +52,25 @@ void Scanner::sendStrData(std::string const& header, std::vector<int32_t> &data,
   sleep_ms(delay);
 }
 
+
+void Scanner::sendData(uint8_t algcode, std::vector<int16_t> &data, const uint16_t delay, const bool flg)
+{
+    // Prepare a buffer: first byte is algcode, then data as bytes (little-endian)
+    std::vector<uint8_t> buf;
+    buf.push_back(algcode);
+    for (auto val : data) {
+        buf.push_back(static_cast<uint8_t>(val & 0xFF));         // low byte
+        buf.push_back(static_cast<uint8_t>((val >> 8) & 0xFF));  // high byte
+    }
+
+    // Send the buffer over UART (replace uart0 with your UART instance if needed)
+    for (auto b : buf) {
+        uart_putc_raw(uart0, b);
+    }
+
+    if (flg) data.clear();
+    sleep_ms(delay);
+}
 void Scanner::sendStrData(std::string const& header,std::vector<int16_t> &data, const uint16_t delay, const bool flg)
 {
   std::string afcc;
