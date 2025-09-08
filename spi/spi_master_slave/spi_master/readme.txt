@@ -1,3 +1,40 @@
+//250710
+чтение Z на выходе ПИД  -> DAC0
+сигнал Z выводится правильно , но коэфф ПИд неправильные
+
+//250704
+ошибка втягивается сканера!!
+//250529
+in sfm need to use  filter
+//250522
+ исправлена ошибка для BBFPGA val int32 смещение не нужно
+для не FPGA shiftDAC дожен быть не 0
+решить вопрос со знаком BIASV И I 
+//250321
+работа с uart в cmakelist.txt добалено pico_sdk_init()
+и  в target_link_libraries hardware_uart?
+BBFPGA - управление  gain  один ползунок нет addgain
+//250221
+error set freq>65568 -corrected!
+//250116
+gain -> unit32_t
+uint16_t error
+freq -unint8_t-> unit32_t
+edited scan, scanlin, hope,hopelin
+//250110
+fast scan синхронизация с ПК
+// 241214
+optimize!
+getValuesFromAdc() 
+repeatTwoTimes()
+SetDacXY
+//241210
+сделать плавное управление усилением ПИДом
+//241028
+исправлена ошибка при изменении скорости подвода при позиционировании
+для WB инверсия BiasV
+initcommutation при смене прибора
+
 //241006
 управление направлением движения пьезодивижителей
 
@@ -31,7 +68,7 @@ error забыл про busyport +
  ввести параметр задержка в начале линии для хоппинга +
  проверить работу ПИД - есть изменения !!!!!?
 //240131
-MicroController read data from PC to  vector<int32_t>
+MicroController read data from PC to  Vector<int32_t>
 loop() if -> switch
 some bool flags -> constants
 

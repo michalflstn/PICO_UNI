@@ -21,7 +21,6 @@ void DAC8563::outPutValue(uint8_t cmd_byte, uint16_t input)
 {
   uint8_t inputMid = ((input << 8) >> 8);
   uint8_t inputLast = (input >> 8);
-//  unsigned int t = (input >> 8) & 0xFF;
   writeValue(cmd_byte, (inputLast), (inputMid));
 }
 

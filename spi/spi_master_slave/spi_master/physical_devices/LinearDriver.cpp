@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include "LinearDriver.hpp"
+
 LinearDriverBase::LinearDriverBase()
 {
 }
@@ -9,7 +10,7 @@ LinearDriverBase::~LinearDriverBase()
 {
 }
 
-LinearDriverPico2040::~LinearDriverPico2040()
+LinearDriverBB::~LinearDriverBB()
 {
    delete(x_a);
    delete(x_b);
@@ -19,7 +20,7 @@ LinearDriverPico2040::~LinearDriverPico2040()
    delete(z_b);  
 }
 
-LinearDriverPico2040::LinearDriverPico2040(bool flgOnlyZ, ConfigLinearDrive configlineardrive)
+LinearDriverBB::LinearDriverBB(bool flgOnlyZ, ConfigLinearDriveBB configlineardrive)
 {
   _configlineardrive=configlineardrive;
   _flgOnlyZ=flgOnlyZ;
@@ -27,7 +28,7 @@ LinearDriverPico2040::LinearDriverPico2040(bool flgOnlyZ, ConfigLinearDrive conf
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ "Pico2040 ";
-   afc += endln;//"\n";
+   afc += endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 
@@ -45,7 +46,7 @@ LinearDriverPico2040::LinearDriverPico2040(bool flgOnlyZ, ConfigLinearDrive conf
    z_a->disable();
    z_b->disable();
 }
-LinearDriverMotherBoard::~LinearDriverMotherBoard()
+LinearDriverWB::~LinearDriverWB()
 {
    delete(z_a);
    delete(z_b); 
@@ -53,13 +54,13 @@ LinearDriverMotherBoard::~LinearDriverMotherBoard()
    delete(turnon_y);  
    delete(turnon_z);  
 }
- LinearDriverMotherBoard::LinearDriverMotherBoard(ConfigLinearDriveNew configlineardrive)
+ LinearDriverWB::LinearDriverWB(ConfigLinearDriveWB configlineardrive)
  {
   if  (flgDebug)
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ " MB Pico2040 ";
-   afc += endln;//"\n";
+   afc += endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 
@@ -77,22 +78,23 @@ LinearDriverMotherBoard::~LinearDriverMotherBoard()
    turnon_z->disable();
  }
 
-void LinearDriverPico2040::activate(int command, int freq, int duty, int n, bool dir)  const ///
+void LinearDriverBB::move(int command, int freq, int duty, int nsteps, bool dir)  const ///
 {
   OutputPort *ptrA = z_a;
   OutputPort *ptrB = z_b;
-  if (command == 90)
+  if (command==AxisX)
   {
     ptrA = x_a;
     ptrB = x_b;
   }
   else
-  if (command == 95)
+  if (command==AxisY)
   {
     ptrA = y_a;
     ptrB = y_b;
   } 
-  else if (command == 99)
+  else
+  if (command==AxisZ)
   {
     ptrA = z_a;
     ptrB = z_b;
@@ -109,7 +111,7 @@ void LinearDriverPico2040::activate(int command, int freq, int duty, int n, bool
   ptrA->enable();
   ptrB->enable(); 
   sleep_ms(2);
-  for (int i = 0; i < n; ++i)
+  for (int i = 0; i < nsteps; ++i)
   {
     ptrB->disable();
     sleep_us(t_low);
@@ -125,14 +127,14 @@ void LinearDriverPico2040::activate(int command, int freq, int duty, int n, bool
   }
 }
 
-void LinearDriverMotherBoard::activate(int command, int freq, int p, int n, bool dir) const ///
+void LinearDriverWB::move(int command, int freq, int duty, int nsteps, bool dir) const ///
 {
  /*
   if  (flgDebug)
   {
    afc.clear();
    afc =code+std::to_string(DEBUG)+ " MB Pico2040 active ";
-   afc += +endln;//"\n";
+   afc += +endln;
    std::cout << afc;
    afc.clear();
    sleep_ms(100); 
@@ -140,27 +142,27 @@ void LinearDriverMotherBoard::activate(int command, int freq, int p, int n, bool
   */
   OutputPort *ptrA = z_a; 
   OutputPort *ptrB = z_b;
-  if (command == 90)//x
+  if (command==AxisX)//x
   {
    turnon_x->enable();
    turnon_y->disable();
    turnon_z->disable();
   }
-  if (command == 95)//y
+  if (command==AxisY)//y
   {
    turnon_y->enable();
    turnon_x->disable();
    turnon_z->disable();
   }
   else
-  if (command == 99)//z
+  if (command==AxisZ)//z
   {
    turnon_z->enable();
    turnon_x->disable();
    turnon_y->disable(); 
   }
   double t_abs =(double)(1000000 / freq);        // 2000                     // mf 23108
-  double t_low =(double)(p * t_abs / 1000);  //  750 * 2000 / 1000000 = 1.5 // mf 23108
+  double t_low =(double)(duty * t_abs / 1000);  //  750 * 2000 / 1000000 = 1.5 // mf 23108
   double t_high = t_abs - t_low;    // 2 - 1.5 = 0.5
 
   if (dir)
@@ -171,7 +173,7 @@ void LinearDriverMotherBoard::activate(int command, int freq, int p, int n, bool
   ptrA->enable();
   ptrB->enable(); 
   sleep_ms(2); 
-  for (int i = 0; i < n; ++i)
+  for (int i = 0; i < nsteps; ++i)
   {
     ptrB->disable();
     sleep_us(t_low);

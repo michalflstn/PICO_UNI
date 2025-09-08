@@ -2,7 +2,7 @@
 #define PICO_EXAMPLES_SCANNER_HPP
 
 #include <string>
-#include <vector>
+#include <Vector>
 //#include <random>
 #include "../physical_devices/LinearDriver.hpp" //24/05/06
 #include "../utilities/base_types/Point.hpp"
@@ -36,6 +36,7 @@ struct Config
   uint16_t KoeffCorrectISat;    // опора  %  от тока насыщения                            22
   int16_t  SetPoint;            // опора  ток                                             23
   uint16_t HopeDelayFP;         // Задержка  в первой точке линии                         24  //add 24/05/02
+
 };
 
 struct ConfigCurrent
@@ -51,52 +52,60 @@ private:
 //  ConfigHardWare  _confighardware;
   void stop_scan();         // возвращение сканера в  начальную точку скана
   void move_to(const Point &point, uint16_t delay);  // переместиться в начальную точку скана текущего скана
+  
   void sendStrData(std::string const& header,std::vector<int32_t>  &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<uint16_t> &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<int16_t>  &data, const uint16_t delay,const bool flg); //flg clear data
+  void sendStrData(std::string const& header,const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header);
+  void sendStrData(std::string const& header,std::string  data,const uint16_t delay,const bool flg);
+
   void sendData(uint8_t algcode, std::vector<int16_t>  &data, const uint16_t delay,const bool flg);
 
 public:
 
    HARDWARE *hardware;
 
-   Scanner(ConfigHardWare confighardware);
+   Scanner(ConfigHardWareBB confighardware);
 
-   Scanner(ConfigHardWareNew confighardware);
+   Scanner(ConfigHardWareWB confighardware);
+
+   Scanner(ConfigHardWareBBFPGA confighardware);
 
   ~Scanner();
-
-  void start_scan(std::vector<int32_t> &vector);
+  //void scan_update(const Config &config);             // обновить параметры скaнирования
+  void scanparams_update(const  std::vector<int32_t> &Vector);// обновить параметры скaнирования
   
-  void start_scanlin(std::vector<int32_t> &vector);
-
-  void start_hopingscan(std::vector<int32_t> &vector); //сканирование прыжками
+  void start_scan();
   
-  void start_hopingscanlin(std::vector<int32_t> &vector); //сканирование прыжками
+  void start_scanlin();
 
-  void start_fastscan(std::vector<int32_t> &vector);  // быстрое сканирование и вывод скана целиком, а не по линиям
+  void start_hopingscan(); //сканирование прыжками
+  
+  void start_hopingscanlin(); //сканирование прыжками
 
-  void approacphm(std::vector<int32_t> &vector);      // захват взаимодействия с контролем ворот
+  void start_fastscan();  // быстрое сканирование и вывод скана целиком, а не по линиям
 
-  void positioningXYZ(std::vector<int32_t> &vector);  // abs(n) перемещение по  X,Y и Z (с контролем ворот)
+  void approacphm(std::vector<int32_t> &Vector);      // захват взаимодействия с контролем ворот
+
+  void positioningXYZ(std::vector<int32_t> &Vector);  // abs(n) перемещение по  X,Y и Z (с контролем ворот)
 
   void start_frqscan();                               //поиск резонанса датчика
   
-  void testpiezomover(std::vector<int32_t> &vector);  //тестирование шагов пьезомувера
+  void testpiezomover(std::vector<int32_t> &Vector);  //тестирование шагов пьезомувера
 
-  void spectroscopyIV(std::vector<int32_t> &vector);  // спектроскопия I-V
+  void spectroscopyIV(std::vector<int32_t> &Vector);  // спектроскопия I-V
 
   int16_t DACZMove( int16_t Z0, int16_t dZ, int16_t stepsize, uint16_t delay );   // stepsize=+-1  sign  -> dir 
 
-  void spectroscopyAIZ(std::vector<int32_t> &vector); // спектроскопия Ampl-Z актуальный вариант
+  void spectroscopyAIZ(std::vector<int32_t> &Vector); // спектроскопия Ampl-Z актуальный вариант
 
-  void scan_update(const Config &config);             // обновить параметры скaнирования
-  
  //переместиться в начальную точку скана из начальной точке предыдущего скана flg=1 Hopping?
   void move_toX0Y0(uint16_t x, uint16_t y, uint16_t delay, int8_t flg); 
   
   void LID_move_toZ0(int lid_name, int freq, int duty, int n, int dir);// отвестись в безопасную начальную точку по Z при старте и выходе из программы
+
+  void LID_move_toNextGridScan(int StepsNmbX,int StepsNmbY,int  StepsNmbZ,int TiApproach, int TiScan);
 
   void readADC();
 

@@ -1,6 +1,5 @@
-#include "rx_core.hpp"
-
 #include <iostream>
+#include "rx_core.hpp"
 #include <iomanip>
 #include <pico/bootrom.h>
 #include "pico/mutex.h"
@@ -22,7 +21,7 @@ void RX_core::comReceiveISR(uint a, uint32_t b)
   }
   decoder.activePort(0);
   Spi::setProperties(16, 1, 0);
-  spi_read16_blocking(spi_default, 0, spiBuf, 8);
+  spi_read16_blocking(spi_default, 0, spiBuf, 8); //8????  
 /*  if (Z_STATE) 
   {
     Z_STATE = false;
@@ -36,40 +35,49 @@ void RX_core::launchOnCore1()
 { 
    while (true)
   {
-    parse(vector,vupdateparams); //wait for data ! парсинг входящих данных из ПК 
-    if (vector.size()!=0)
+    parse(Vector,Vupdateparams); //wait for data ! парсинг входящих данных из ПК 
+    if (Vector.size()!=0)
    {
-    switch (vector[0])
+    switch (Vector[0])
     { 
      /* case VirtualCmd : //флаг симуляции работы микроконтроллера      
-        flgVirtual=(bool)vector[1];
+        flgVirtual=(bool)Vector[1];
         afc.clear();
-        afc = code+std::to_string(DEBUG)+" virtual "+ std::to_string(vector[1]);
-        afc +=endln;//"\n";
+        afc = code+std::to_string(DEBUG)+" virtual "+ std::to_string(Vector[1]);
+        afc +=endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
         break;
      */   
-      case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
-        flgDebugLevel=vector[1];
-        break;    
-      case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
-        flgDebug=(bool)(vector[1]);
+    case DebugSynchronize:
+          flgDebugSynchronize=true;
+          break; 
+    case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
+          flgDebugLevel=Vector[1];
+          break;    
+    case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
+        flgDebug=(bool)(Vector[1]);
         afc.clear();
-        afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(vector[1]);
-        afc +=endln;//"\n";
+        afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(Vector[1]);
+        afc +=endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
         break;
       case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
-        flgСritical_section=(bool)vector[1]; 
+        flgСritical_section=(bool)Vector[1]; 
         break;
   //***************************************  
       case USEPLDCmd:
       // flgUseFPGA=true;    
-       break;       
+       break;  
+      case SET_PID_GAIN:
+           // ALGCODE=ALGNONE;
+            //if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint32_t)Vector[1]);
+            //else                      
+            scanner->hardware->set_GainPID((uint32_t)Vector[1]); 
+            break;      
       case ADC_GET_VALUECmd:            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
         break;
@@ -84,16 +92,16 @@ void RX_core::launchOnCore1()
         break; 
       default: 
       {
-         if (vector[0]>=0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0]; }
-                                       else ALGCODE=0;
+         if (Vector[0]>0 && Vector[0]<100)  {ALGCODE=(int16_t)Vector[0];}
+                                       else {ALGCODE=ALGNONE;}
         break;
       }  
      }   
      continue;
    } 
-   if (vupdateparams.size()!=0)  
+   if (Vupdateparams.size()!=0)  
    {
-    if (vupdateparams[0]==CONFIG_UPDATECmd)
+    if (Vupdateparams[0]==CONFIG_UPDATECmd)
     {
       CONFIG_UPDATE = true;
     } 

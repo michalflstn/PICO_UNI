@@ -41,12 +41,12 @@ int main() {
   */   
 #define FPGAUART_TX_PIN 8 //!
 #define FPGAUART_RX_PIN 9 //!
-#define FPGA_UART_ID    uart1
+#define FPGA_UART_ID    uart1 //uart1
 #define FPGA_BAUD_RATE  115200//400000 // 57600
    
   int main()
   {
-      size_t sz=12;  
+      size_t sz=12;//12; //256;  //12
       uint8_t inbuffer[sz];        
       stdio_init_all();  
       uart_init(FPGA_UART_ID, FPGA_BAUD_RATE); //add  240627
@@ -59,8 +59,8 @@ int main() {
   while (true)         
   { 
     //  for (size_t i = 0; i < sz; i++)
-   while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}// if(uart_is_readable(FPGA_UART_ID ))      
-   {     
+  // while (!uart_is_readable(FPGA_UART_ID)) {sleep_ms(100);}// if(uart_is_readable(FPGA_UART_ID ))      
+      
      uart_read_blocking(FPGA_UART_ID, inbuffer,sz);
     // sleep_ms(20);
          //uart_write_blocking(uart_inst_t *uart, const uint8_t *src, size_t len)
@@ -77,16 +77,16 @@ int main() {
        //     uart_write_blocking(FPGA_UART_ID, (const uint8_t*)message, len);
       uart_write_blocking(FPGA_UART_ID,inbuffer,sz);
     
-      std::string afc ;
+   /*   std::string afc ;
       afc.clear();
       afc ="debug"; 
       for (size_t i = 0; i < sz; i++)
       { afc+=','+std::to_string(inbuffer[i]);}
-        afc += "\n";
+        afc += endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100);
-   }
+        */
   }
    sleep_ms(100);
  }     

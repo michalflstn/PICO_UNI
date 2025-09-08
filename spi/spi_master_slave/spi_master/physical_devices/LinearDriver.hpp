@@ -2,8 +2,13 @@
 #define PICO_EXAMPLES_LINEARDRIVER_HPP
 #include <cstring>
 #include "../utilities/base_types/Decoder.hpp"
-#include "../loop/common_data/device_variables.hpp"
-#include "../loop/common_data/common_variables.hpp"   
+#include "../loop/common_data/device_variables.hpp"  
+#include "../loop/common_data/common_variables.hpp"
+// const //move from common_var 250409
+#define AxisX                    90 //коды осей
+#define AxisY                    95
+#define AxisZ                    99
+
 
 class LinearDriverBase
 {
@@ -13,34 +18,34 @@ class LinearDriverBase
  public:
    LinearDriverBase();
    virtual ~LinearDriverBase();
-   virtual void activate(int command, int freq, int p, int n, bool dir) const;
+   virtual void move(int command, int freq, int duty, int nsteps, bool dir) const;
 };
 
-class LinearDriverPico2040: public LinearDriverBase
+class LinearDriverBB: public LinearDriverBase
 {protected: 
   bool    _flgOnlyZ; 
-  ConfigLinearDrive _configlineardrive;
+  ConfigLinearDriveBB _configlineardrive;
   OutputPort *y_a;
   OutputPort *y_b;
   OutputPort *x_a;
   OutputPort *x_b;
  public:
-   LinearDriverPico2040(bool flgOnlyZ,ConfigLinearDrive configlineardrive);  
-  ~LinearDriverPico2040();
-   void activate(int command, int freq, int duty, int n, bool dir) const override;
+   LinearDriverBB(bool flgOnlyZ,ConfigLinearDriveBB configlineardrive);  
+  ~LinearDriverBB();
+   void move(int command, int freq, int duty, int nsteps, bool dir) const override;
 };
 
-class LinearDriverMotherBoard: public LinearDriverBase
+class LinearDriverWB: public LinearDriverBase
 {
  private:
     OutputPort *turnon_x;
     OutputPort *turnon_y;
     OutputPort *turnon_z ;
  protected:
-  ConfigLinearDriveNew _configlineardrive;
+  ConfigLinearDriveWB _configlineardrive;
  public:
-   LinearDriverMotherBoard(ConfigLinearDriveNew configlineardrive);
-   ~LinearDriverMotherBoard();
-   void activate(int command, int freq, int p, int n, bool dir) const override;
+   LinearDriverWB(ConfigLinearDriveWB configlineardrive);
+   ~LinearDriverWB();
+   void move(int command, int freq, int duty, int nsteps, bool dir) const override;
 };
 #endif

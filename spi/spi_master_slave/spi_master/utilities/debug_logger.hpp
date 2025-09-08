@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <string>
 #include <iostream>
+#include "hardware/uart.h"
+#include "../loop/common_data/common_variables.hpp"
 
 template<class T>
 

@@ -35,7 +35,6 @@ private:
   int port_;
 public:
   DAC8563(int mode);
-  void begin();
   void initialize(int port);
   void writeA(int input);
   void writeB(int input);

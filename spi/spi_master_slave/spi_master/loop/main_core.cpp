@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../utilities/hardcoded_functions.hpp"
 #include "common_data/common_variables.hpp"
+#include "common_data/device_variables.hpp" 
 #include "../physical_devices/scanner.hpp"
 #include "../utilities/debug_logger.hpp"
 #include <cmath>
@@ -16,65 +17,99 @@ void MainCore::launchOnCore1()
 { 
   while (true)
   {
-    parse(vector,vupdateparams); //wait for data ! парсинг входящих данных из ПК 
-    if (vector.size()!=0)
+    parse(Vector,Vupdateparams); //wait for data ! парсинг входящих данных из ПК 
+    if (Vector.size()!=0)
     {
-     switch (vector[0])
+     switch (Vector[0])
      {
      /* case  ADC_RESET: 
         ADC_RESET = true;
         break;
-     */   
+     */  
   case VirtualCmd : //флаг симуляции работы микроконтроллера      
-    //    flgVirtual=(bool)vector[1];
-          flgVirtual=(bool)vector[1];
+          ALGCODE=ALGNONE;
+          flgVirtual=(bool)Vector[1];
           afc.clear();
-          afc = code+std::to_string(DEBUG)+"set virtual "+ std::to_string(vector[1]);
-          afc +=endln;//"\n";
+          afc = code+std::to_string(DEBUG)+"set virtual "+ std::to_string(Vector[1]);
+          afc +=endln;
           std::cout << afc;
           afc.clear();
-          sleep_ms(100);               
+          sleep_ms(100);              
           break;
   case DebugLevelCmd: // флаг вывода отладочной информации debug level =2;  =3 запрет вывода!
-         flgDebugLevel=vector[1];
-         break;    
+         flgDebugLevel=Vector[1];
+         break; 
+  case CHRONOMETRIA:
+         ALGCODE=ALGNONE; 
+         flgTiming=(bool)Vector[1];
+         break;         
   case DebugCmd: // флаг вывода отладочной информации  =1, нет =0
-        flgDebug=(bool)vector[1];
+        ALGCODE=ALGNONE;
+        flgDebug=(bool)Vector[1];
+       /* 
         afc.clear();
         afc = code+std::to_string(DEBUG)+"debug Set Debug "+ std::to_string(flgDebug);
-        afc += endln;//"\n";
+        afc += endln;
         std::cout << afc;
         afc.clear();
         sleep_ms(100); 
+        */
         break;
   case SetUseCritialSectAlgCode: // флаг использовать Сritical_section
-        flgСritical_section=(bool)vector[1]; 
+        flgСritical_section=(bool)Vector[1]; 
         break;
-  //***************************************     
-  case ADC_GET_VALUECmd:            
+  //***************************************  
+  case SET_PID_GAIN:
+        ALGCODE=ALGNONE;
+        scanner->hardware->set_GainPID((int32_t)Vector[1]); 
+        break;      
+  case ScaleGianInput:
+        ALGCODE=ALGNONE;
+        loopParams.scale=(float)Vector[1]; 
+        break;         
+  case ChangeSpeed:
+        ALGCODE=ALGNONE;
+        delayFW=(uint16_t)Vector[1];
+        delayBW=(uint16_t)Vector[2];
+        break;  
+  case ChangeHopeParams:
+        ALGCODE=ALGNONE;              
+        delayHope=(uint16_t)Vector[1];
+        ZJump    =(uint16_t)Vector[2];
+        break;
+  case USELOWPASSFILTER_ADC:
+        ALGCODE=ALGNONE;              
+        scanner->hardware->use_LowPassFilterADC((uint8_t)Vector[1],(uint8_t)Vector[2]); // turnon=1, nchannel=[0..7]
+        break;
+  case ADC_GET_VALUECmd:
+        ALGCODE=ALGNONE;            
         ADC_GET_VALUE = true;// прочитатать сигналы АЦП      
         break;
   case TheadDoneCmd:
+        ALGCODE=ALGNONE;
         TheadDone = true;
         break;
-  case DRAWDONECmd: 
+  case DRAWDONECmd:
+        ALGCODE=ALGNONE;  
         DrawDone = true;
         break;  
   case STOPCmd:
+        ALGCODE=ALGNONE;
         STOP=true; // stop the active algorithm 
         break; 
+         
   default: 
       {
-         if (vector[0]>=0 && vector[0]<100)  {ALGCODE=(int16_t)vector[0]; }
-                                         else ALGCODE=0;
+        if (Vector[0]>=0 && Vector[0]<100)  {ALGCODE=(int16_t)Vector[0];}
+                                       else {ALGCODE=ALGNONE;           }  
         break;
       }  
      }   
     continue;
    } 
-   if (vupdateparams.size()!=0)  
+   if (Vupdateparams.size()!=0)  
    {
-    if (vupdateparams[0]==CONFIG_UPDATECmd)
+    if (Vupdateparams[0]==CONFIG_UPDATECmd)
     {
        CONFIG_UPDATE = true;
     } 
@@ -84,68 +119,93 @@ void MainCore::launchOnCore1()
 
 void MainCore::loop()
 {
- 
   uint64_t time = 0;
   while (time++ < UINT64_MAX - 1000)
   {
     switch (ALGCODE)
     {
 case   ALGNONE:{break;}
+case TEST: //add 250727 for testing algorithms
+{
+  ALGCODE=ALGNONE;
+  scanner->hardware->test();  
+  break;
+}
 case VersionCmd:
-              {
-                ALGCODE=ALGNONE;
-                afc.clear();
-                afc = code+std::to_string(DEBUG)+" get version ";
-                afc +=endln;//"\n";
-                std::cout << afc;
-                afc.clear();
-                sleep_ms(100);
-                scanner->hardware->GetSOFTHARDWAREVersion();
-                break;
-              } 
-/*
- case  VirtualCmd:
-              {
-                ALGCODE=ALGNONE;
-                flgVirtual=(bool)vector[1];
-                afc.clear();
-                afc = code+std::to_string(DEBUG)+" virtual "+ std::to_string(vector[1]);
-                afc +=endln;//"\n";
-                std::cout << afc;
-                afc.clear();
-              //  sleep_ms(100);               
-                break;
-              }
-*/              
+{
+  ALGCODE=ALGNONE; 
+  sensor=PROBE;
+   device=(uint8_t)Vector[1];
+  flgVirtual=(bool)Vector[2]; 
+    flgDebug=(bool)Vector[3];
+  if(!flgVirtual)
+  {
+    scanner->hardware->init_LOOP(device); 
+   // channel is default ampl!!! need change  when changed dev
+    uint32_t gain=7;
+    scanner->hardware->set_GainPID(gain);   
+ //  retract();          // 250522   втянуть    
+    scanner->hardware->set_DACZ(0); 
+  } 
+/*  
+  afc.clear();
+  afc = code+std::to_string(DEBUG)+" get version "+ " dev="+std::to_string(device)+" sensor="+std::to_string(sensor);
+  afc +=endln;
+  std::cout << afc;
+  afc.clear();
+  sleep_ms(200);
+  */
+  switch (HARDWAREVERSION) 
+ {
+   case BBFPGA: 
+    {
+     if(!flgVirtual) scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop); //250701
+     break;
+    }
+ case WB:
+    {
+     scanner->hardware->init_Commutation(sensor,device);     
+     break;
+    }  
+  }              
+  scanner->hardware->SetDev_GetSOFTHARDWAREVersion(device);
+  break;
+}               
 case ChangeHardWare:
               {
                 ALGCODE=ALGNONE;
                 afc.clear();
-                afc =code+std::to_string(ChangeHardWare)+ " hardware "+ std::to_string(vector[1]);
-                afc += endln;//"\n";
+                afc =code+std::to_string(ChangeHardWare)+ " hardware "+ std::to_string(Vector[1]);
+                afc += endln;
                 std::cout << afc;
                 afc.clear();
                 sleep_ms(300);       
-                if (HARDWAREVERSION!= (int8_t)vector[1])                                  
+                if (HARDWAREVERSION!= (int8_t)Vector[1])                                  
                 { 
-                  HARDWAREVERSION= (int8_t)vector[1];   
+                  HARDWAREVERSION= (int8_t)Vector[1];   
                   switch (HARDWAREVERSION)
                   {       
-                    case 0:{
-                             scanner=new  Scanner(confighardwarev0); 
-                             scanner->hardware->setDefaultSettings(confighardwarev0);                 
+                   case BB:{
+                             scanner=new  Scanner(confighardwareBB); 
+                             scanner->hardware->setDefaultSettings(confighardwareBB);                 
                              break; 
                            }
-                    case 1:{
-                             scanner=new  Scanner(confighardwarev1);
-                             scanner->hardware->setDefaultSettings(confighardwarev1);
+               case BBFPGA:{
+                             scanner=new  Scanner(confighardwareBBFPGA); 
+                             scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
+                             break; 
+                            }                           
+                    case WB:{
+                             scanner=new  Scanner(confighardwareWB);
+                             scanner->hardware->setDefaultSettings(confighardwareWB);
                              break;
-                           }
+                            }
                   } 
                   if (scanner==nullptr) 
                   {
                    afc.clear();
                    afc =code+std::to_string(ChangeHardWare)+ "error new scanner create "+std::to_string(HARDWAREVERSION);
+                   afc += endln;
                    std::cout << afc;
                    afc.clear();
                    sleep_ms(100); 
@@ -154,7 +214,7 @@ case ChangeHardWare:
                 else
                 {
                  /* if (scanner!=nullptr) delete(scanner);
-                  HARDWAREVERSION_I= (uint8_t)vector[1];   
+                  HARDWAREVERSION_I= (uint8_t)Vector[1];   
                   switch (HARDWAREVERSION_I)
                   {       
                     case 0:   { scanner=new  Scanner(confighardwarev0); break; }
@@ -165,10 +225,41 @@ case ChangeHardWare:
                 }
                break;
               } 
-case ADC_RESET:
+case SETDEVICE:{
+                ALGCODE=ALGNONE; 
+                device=(uint8_t)Vector[1];
+                sensor=(uint8_t)Vector[2];
+                switch (HARDWAREVERSION)
+               {
+             case BBFPGA: 
+                 {
+                  scanner->hardware->ChooseLoopChannelInputFPGA(device,nloop); // device, nloop
+                  break;
+                 } 
+             case WB:
+                 {
+                  scanner->hardware->init_Commutation(sensor,device);    
+                  break;
+                 }  
+                }        
+               afc.clear();
+               afc =code+std::to_string(DEBUG)+"set device="+std::to_string(device)+" sensor=" +std::to_string(sensor);
+               afc += endln;
+               std::cout << afc;
+               afc.clear();
+               sleep_ms(100); 
+               break;
+              }             
+case INITCOMMMUTATION:
               {
-             
-                
+                ALGCODE=ALGNONE;
+                device=(uint8_t)Vector[1];
+                sensor=(uint8_t)Vector[2];
+                scanner->hardware->init_Commutation(sensor,device);
+                break;
+              }              
+case ADC_RESET:
+              {          
               //  scanner->hardware->ADC_reset();
                 break;
               }               
@@ -181,92 +272,79 @@ case RESONANCE:
 case APPROACH:{
                 ALGCODE=ALGNONE;
                 scanner->hardware->blue();
-                scanner->approacphm(vector);
+                scanner->approacphm(Vector);
                 scanner->hardware->green();
               //  dark();
                 break;
               }
 case TESTMOVER:{
                  ALGCODE=ALGNONE;
-                 scanner->testpiezomover(vector);
+                 scanner->testpiezomover(Vector);
                  break;
                }
 case FREQ_SET:{
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_Freq((uint16_t) vector[1]);              
+                scanner->hardware->set_Freq((uint32_t) Vector[1]);              
                 break;
               }
 case LID_MOVE_UNTIL_STOP:
               {
                 ALGCODE=ALGNONE;
-                scanner->positioningXYZ(vector);               
+                scanner->positioningXYZ(Vector);               
                 break;
               }
 case MOVE_TOX0Y0:
               {
                 ALGCODE=ALGNONE;
-                scanner->move_toX0Y0(vector[1], vector[2], vector[3],vector[4]);
+                scanner->move_toX0Y0(Vector[1], Vector[2], Vector[3],Vector[4]);
                 break; 
               }     
 case LID_MOVE_TOZ0:
               {
                 ALGCODE=ALGNONE;
-                scanner->LID_move_toZ0(vector[1], vector[2], vector[3], vector[4], vector[5]);
+                scanner->LID_move_toZ0(Vector[1], Vector[2], Vector[3], Vector[4], Vector[5]);
                break; 
-              }            
-case SCANNING:
+              }    
+case GridMovetoNextScan:                      
               {
-                if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-                 ALGCODE=ALGNONE;
-                 DrawDone=true;
-                 scanner->scan_update
-                          ({
-                             static_cast<uint16_t>(vector[1]), static_cast<uint16_t>(vector[2]),
-                             static_cast<uint8_t>(vector[3]),  static_cast<uint8_t>(vector[4]),
-                             static_cast<uint16_t>(vector[5]), static_cast<uint16_t>(vector[6]),
-                             static_cast<uint16_t>(vector[7]), static_cast<uint16_t>(vector[8]),
-                             static_cast<uint8_t>(vector[9]),  static_cast<uint16_t>(vector[10]),
-                             static_cast<uint16_t>(vector[11]),static_cast<uint16_t>(vector[12]),
-                             static_cast<uint8_t>(vector[13]), static_cast<int16_t>(vector[14]),  
-                             static_cast<uint8_t>(vector[15]), static_cast<uint8_t>(vector[16]),
-                             static_cast<uint16_t>(vector[17]),static_cast<uint16_t>(vector[18]),
-                             static_cast<uint8_t>(vector[19]), static_cast<uint8_t>(vector[20]),
-                             static_cast<uint16_t>(vector[21]),static_cast<uint16_t>(vector[22]),
-                             static_cast<int16_t>(vector[23])
-                            }
-                           );  
-
-
-                if (flgСritical_section) critical_section_exit(&criticalSection);
+                ALGCODE=ALGNONE;
+                scanner->LID_move_toNextGridScan(Vector[1], Vector[2], Vector[3], Vector[4], Vector[5]);
+                //GridParams.StepsCurNmbX,GridParams.StepsCurNmbY,GridParams.StepsCurNmbZ,PidParams.TiApproach, PidParams.TiScan;
+                break;
+              }
+case SCANNING:
+              {  
+                ALGCODE=ALGNONE;
+                DrawDone=true;
+                scanner->scanparams_update(Vector);
                 if (!scanner->getHoppingFlg()){
-                                              if (!scanner->getLinearFlg()) {scanner->start_scan(vector);   }
-                                              else                          {scanner->start_scanlin(vector);}    
+                                              if (!scanner->getLinearFlg()) {scanner->start_scan();   }
+                                              else                          {scanner->start_scanlin();}    
                                              }
                 else                         {
-                                              if (!scanner->getLinearFlg()) {scanner->start_hopingscan(vector);   }
-                                              else                          {scanner->start_hopingscanlin(vector);}
+                                              if (!scanner->getLinearFlg()) {scanner->start_hopingscan();   }
+                                              else                          {scanner->start_hopingscanlin();}
                                              }
-                if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-                 DrawDone=true;
-                if (flgСritical_section)critical_section_exit(&criticalSection); 
+                DrawDone=true;
                 break; 
               }
 case FASTSCANNING:
               {
                 ALGCODE=ALGNONE;
-                scanner->start_fastscan(vector);  
+                scanner->scanparams_update(Vector);
+                scanner->start_fastscan();  
                 break; 
               }  
 case SPECTROSOPY_IV:
               {
                 ALGCODE=ALGNONE;
-                scanner->spectroscopyIV(vector);
+                scanner->spectroscopyIV(Vector);
                 break;
               }  
 case SPECTROSOPY_AIZ:
               {
                 ALGCODE=ALGNONE;
-                scanner->spectroscopyAIZ(vector);
+                scanner->spectroscopyAIZ(Vector);
                 break;
               }                
 case SENDDATALIN:
@@ -274,24 +352,11 @@ case SENDDATALIN:
                 ALGCODE=ALGNONE;
                 scanner->readDATALin();
                 break;
-              }              
-case SET_PID_GAIN:
-              {
-                ALGCODE=ALGNONE;
-                if (HARDWAREVERSION!=BBFPGA) scanner->hardware->set_GainPID((uint16_t)vector[1]);
-                else                         scanner->hardware->set_GainPID((uint32_t)vector[1]); 
-                break; 
-              }  
-case SET_PID_GAINFPGA:
-              {
-                ALGCODE=ALGNONE;
-                scanner->hardware->set_GainPIDFPGA((uint32_t)vector[1]); 
-                break; 
-              }   
+              }                          
 case SET_AMPLMOD_GAIN: // усиление раскачка зонда 
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_GainApmlMod((uint8_t)vector[1]);
+                scanner->hardware->set_GainApmlMod((uint8_t)Vector[1]);
                 break;
               }  
 case SetDACZeroCmd:
@@ -303,48 +368,73 @@ case SetDACZeroCmd:
 case SET_BIAS:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_BiasV(vector[1]);
+                scanner->hardware->set_BiasV(Vector[1]);
                 break;
               }               
 case SET_SETPOINT:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_SetPoint(vector[1]);
+                scanner->hardware->set_SetPoint(Vector[1]);
                 break; 
               }   
 case SET_SIGN_LOOP:
-               {
-                scanner->hardware->setLoopSign(vector[1]);
-                break;
-               }
-case SET_Z: { 
+              {
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_DACZ(vector[1]);
+                scanner->hardware->setLoopSign(Vector[1]);
+                break;
+              }
+case Set_SIGN_LOOP_BIASV:              
+              {
+                ALGCODE=ALGNONE;
+                scanner->hardware->setLoopSign_BiasV(Vector[1],Vector[2],Vector[3],Vector[4]);
+                break;
+              }
+  case SET_Z: { 
+                ALGCODE=ALGNONE;
+                scanner->hardware->set_DACZ(Vector[1]);
                 break;
               }     
  case SET_XY: {
                 ALGCODE=ALGNONE;
-                scanner->hardware->init_SPI(vector[1],vector[2],vector[3],vector[4]);//29, 3, 8, 0, 1, 1, value	
-                if (vector[5] == 0)
+                scanner->hardware->init_SPI(Vector[1],Vector[2],Vector[3],Vector[4]);//29, 3, 8, 0, 1, 1, value	
+                if (Vector[5] == 0)
                 {
-                 scanner->hardware->move_scannerX(vector[6]);
+                 scanner->hardware->move_scannerX(Vector[6]);
                 } 
                 else 
-                if (vector[5] == 1)
+                if (Vector[5] == 1)
                 {
-                 scanner->hardware->move_scannerY(vector[6]);
+                 scanner->hardware->move_scannerY(Vector[6]);
                 }
                 break;
               }   
 case ADC_READCmd: //TIMER
               {
                 ALGCODE=ALGNONE;
-                if (ADC_IS_READY_TO_READ)
-                {
-                 scanner->readADC();
-                }
-                break;
-              }    
+                switch (HARDWAREVERSION)
+                {       
+               case BBFPGA:
+                 {
+                  scanner->readADC();
+                  break;  
+                  }
+                case BB:
+                case WB:
+                  { 
+                   if (ADC_IS_READY_TO_READ)
+                   {
+                    scanner->readADC();
+                   }
+                   break;
+                  }
+                 }  
+                 break;  
+              }
+case ReadFPGA:{ //?????? read setpoint
+                 ALGCODE=ALGNONE;
+                 scanner->hardware->ReadDataFromFPGA(arrLoopModule.wbSetpoint);
+                 break;
+              }            
 case GET_CURRENTX0Y0:
               {
                 ALGCODE=ALGNONE;
@@ -366,13 +456,13 @@ case RetractAlgCode:
 case FreezePIDAlgCode:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->freezeLOOP(vector[1]);
+                scanner->hardware->freezeLOOP(Vector[1]);
                 break;
               }
 case UnFreezePIDAlgCode:
               {
                 ALGCODE=ALGNONE;
-                scanner->hardware->unfreezeLOOP(vector[1]);
+                scanner->hardware->unfreezeLOOP(Vector[1]);
                 break;
               }                           
 default:      {/*activateError();*/  break;}                                                                                                                                            
@@ -380,34 +470,37 @@ default:      {/*activateError();*/  break;}
   }
 }
 
-MainCore::MainCore()
+MainCore::
+MainCore()
 {
    multicore_launch_core1(launchOnCore1);
    switch (HARDWAREVERSION)
    {       
     case BB:
            {
-            scanner=new  Scanner(confighardwarev0); 
-            scanner->hardware->setDefaultSettings(confighardwarev0);                 
+            scanner=new  Scanner(confighardwareBB); //bb=v0
+            scanner->hardware->setDefaultSettings(confighardwareBB);                 
             break; 
            }
     case WB:
-          {
-            scanner=new  Scanner(confighardwarev1);
-            scanner->hardware->setDefaultSettings(confighardwarev1);
+           {
+            scanner=new  Scanner(confighardwareWB);
+            scanner->hardware->setDefaultSettings(confighardwareWB);
             break; 
-          }
+           }
     case BBFPGA:
-          { //BB+ WBFPGA
-            scanner=new  Scanner(confighardwarev0); 
-            scanner->hardware->setDefaultSettings(confighardwarev0);                 
+           { 
+            flgVirtual=true;
+            scanner=new  Scanner(confighardwareBBFPGA); 
+            scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
             break; 
-          }
+           }
    } 
    if (scanner==nullptr) 
    {
      afc.clear();
      afc =code+std::to_string(ChangeHardWare)+ "error new scanner create "+std::to_string(HARDWAREVERSION);
+     afc += endln;
      std::cout << afc;
      afc.clear();
      sleep_ms(100); 
@@ -418,13 +511,13 @@ void MainCore::parse(std::vector<int32_t> &vec)
 {
   std::string s;
   getline(std::cin, s);
-  Parser parser(s.data(),separator);//','); //240715
+  Parser parser(s.data(),separator);
   vectorSize = parser.parseInts(vec);
 }
 void MainCore::parse(std::vector<int32_t> &vec,std::vector<int32_t> &vparams)
 {
   std::string s;
   getline(std::cin, s);
-  Parser parser(s.data(),separator); //','); 240715
+  Parser parser(s.data(),separator); 
   vectorSize = parser.parseInts(vec,vparams);
 }
