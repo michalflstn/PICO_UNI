@@ -3,8 +3,8 @@
 //////////////////////////////////////////////
 // PICO(BB)=0 ; MotherBoard(WhiteBoard=WB)=1; BlueBoard+FPGA(BBFPGA)=2 ПЛИСC;
 //int8_t       HARDWAREVERSION=WB;
-//int8_t       HARDWAREVERSION=BB;  
-int8_t       HARDWAREVERSION=BBFPGA;
+int8_t       HARDWAREVERSION=BB;  
+//int8_t       HARDWAREVERSION=BBFPGA;
 std::string  SOFTVERSION="25.09.08.01 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";

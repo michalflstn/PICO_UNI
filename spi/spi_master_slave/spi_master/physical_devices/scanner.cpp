@@ -62,10 +62,13 @@ void Scanner::sendData(uint8_t algcode, std::vector<int16_t> &data, const uint16
         buf.push_back(static_cast<uint8_t>(val & 0xFF));         // low byte
         buf.push_back(static_cast<uint8_t>((val >> 8) & 0xFF));  // high byte
     }
-
+ buf.push_back(static_cast<uint8_t>(0x0A)); // add 
     // Send the buffer over UART (replace uart0 with your UART instance if needed)
-    for (auto b : buf) {
-        uart_putc_raw(uart0, b);
+  //  for (auto b : buf)
+  for (size_t i = 0; i < sizeof(data); ++i) 
+   { 
+      uart_putc_raw(uart0, data[i]); 
+    //  uart_putc_raw(uart0, b);
     }
 
     if (flg) data.clear();
@@ -3325,7 +3328,8 @@ void Scanner::start_frqscan()
    }
    sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
   }
-  std::vector<int32_t> data;
+ // std::vector<int32_t> data;
+  std::vector<int16_t> data;
   freq=freqstart;
   while ((scan_index++ < npoint))
   {
@@ -3342,14 +3346,16 @@ void Scanner::start_frqscan()
     {
       current_freq =freq;
       sleep_ms(delay);
-      SignalValue = (int32_t) std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
+      //??????? int32_t
+      SignalValue = (int16_t) std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
       data.emplace_back(current_freq);
       data.emplace_back(SignalValue);
     }
     sleep_ms(10);
     freq += freqstep;
   }
-  sendStrData(code+std::to_string(RESONANCE),data,100,true);
+ // sendStrData(code+std::to_string(RESONANCE),data,100,true);
+   sendData(40,data,100,true); //250908
    int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {
