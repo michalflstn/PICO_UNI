@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <chrono>
+#include "hardware/uart.h"
+#include "pico/stdlib.h"
 //#include <time.h>
 #include "../loop/common_data/common_variables.hpp"
 #include "scanner.hpp"
@@ -58,16 +60,29 @@ void Scanner::sendData(uint8_t algcode, std::vector<int16_t> &data, const uint16
     // Prepare a buffer: first byte is algcode, then data as bytes (little-endian)
     std::vector<uint8_t> buf;
     buf.push_back(algcode);
-    for (auto val : data) {
-        buf.push_back(static_cast<uint8_t>(val & 0xFF));         // low byte
-        buf.push_back(static_cast<uint8_t>((val >> 8) & 0xFF));  // high byte
+    for (size_t i = 0; i < data.size(); ++i)  {
+        buf.push_back(static_cast<uint8_t>(data[i] & 0x00FF));         // low byte
+        buf.push_back(static_cast<uint8_t>((data[i] >> 8) & 0x00FF));  // high byte
     }
  buf.push_back(static_cast<uint8_t>(0x0A)); // add 
+/*  std::string afcc;
+  afcc.clear();
+  afcc=code+std::to_string(DEBUG); 
+   //for (auto & element :data) 
+  for (size_t j = 0; j < buf.size(); ++j)
+  {
+   afcc +=separator + std::to_string(buf[j]);
+  }
+  afcc +=endln;
+  std::cout << afcc;
+ afcc.clear();
+ */
     // Send the buffer over UART (replace uart0 with your UART instance if needed)
   //  for (auto b : buf)
-  for (size_t i = 0; i < sizeof(data); ++i) 
+
+  for (size_t i = 0; i < buf.size(); ++i) 
    { 
-      uart_putc_raw(uart0, data[i]); 
+      uart_putc_raw(uart0, buf[i]); 
     //  uart_putc_raw(uart0, b);
     }
 
@@ -3354,8 +3369,8 @@ void Scanner::start_frqscan()
     sleep_ms(10);
     freq += freqstep;
   }
- // sendStrData(code+std::to_string(RESONANCE),data,100,true);
-   sendData(40,data,100,true); //250908
+  sendStrData(code+std::to_string(RESONANCE),data,100,true);
+ //  sendData(40,data,100,true); //250908
    int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {

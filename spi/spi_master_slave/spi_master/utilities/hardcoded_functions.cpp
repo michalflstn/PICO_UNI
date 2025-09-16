@@ -297,12 +297,19 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 {
-   gpio_pull_down(resetport->getPort());
+  // 250910
+/*  stdio_init_all();
+   uart_init(uart0, 115200); // or your desired baud rate
+   gpio_set_function(0, GPIO_FUNC_UART); // TX
+   gpio_set_function(1, GPIO_FUNC_UART);
+ */
+   //
+  gpio_pull_down(resetport->getPort());
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
    gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
- // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
+// multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
    dec->enable();
    conv->enable();
    resetport->disable();

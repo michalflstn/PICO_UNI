@@ -470,8 +470,7 @@ default:      {/*activateError();*/  break;}
   }
 }
 
-MainCore::
-MainCore()
+MainCore::MainCore()
 {
    multicore_launch_core1(launchOnCore1);
    switch (HARDWAREVERSION)
