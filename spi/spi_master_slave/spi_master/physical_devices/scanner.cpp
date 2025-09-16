@@ -54,39 +54,29 @@ void Scanner::sendStrData(std::string const& header, std::vector<int32_t> &data,
   sleep_ms(delay);
 }
 
-
 void Scanner::sendData(uint8_t algcode, std::vector<int16_t> &data, const uint16_t delay, const bool flg)
 {
     // Prepare a buffer: first byte is algcode, then data as bytes (little-endian)
     std::vector<uint8_t> buf;
     buf.push_back(algcode);
-    for (size_t i = 0; i < data.size(); ++i)  {
-        buf.push_back(static_cast<uint8_t>(data[i] & 0x00FF));         // low byte
-        buf.push_back(static_cast<uint8_t>((data[i] >> 8) & 0x00FF));  // high byte
-    }
- buf.push_back(static_cast<uint8_t>(0x0A)); // add 
-/*  std::string afcc;
-  afcc.clear();
-  afcc=code+std::to_string(DEBUG); 
-   //for (auto & element :data) 
-  for (size_t j = 0; j < buf.size(); ++j)
-  {
-   afcc +=separator + std::to_string(buf[j]);
-  }
-  afcc +=endln;
-  std::cout << afcc;
- afcc.clear();
- */
-    // Send the buffer over UART (replace uart0 with your UART instance if needed)
-  //  for (auto b : buf)
+    buf.push_back(0);   
+    buf.push_back(static_cast<uint8_t>(data.size() & 0x00FF));         // low byte 
+    buf.push_back(static_cast<uint8_t>((data.size() >> 8) & 0x00FF));  // high byte
 
-  for (size_t i = 0; i < buf.size(); ++i) 
-   { 
-    putchar (buf[i]);
-   // uart_putc_raw(uart0, buf[i]); 
-    //  uart_putc_raw(uart0, b);
-    }
+    for (size_t i = 0; i < data.size(); ++i) 
+    { 
+      buf.push_back(static_cast<uint8_t>(data[i] & 0x00FF));         // low byte 
+      buf.push_back(static_cast<uint8_t>((data[i] >> 8) & 0x00FF));  // high byte
 
+    }
+    buf.push_back(static_cast<uint8_t>(0x0A)); // add  
+    buf.push_back(static_cast<uint8_t>(0x00));   
+   
+    for (size_t i = 0; i < buf.size(); ++i) 
+    { 
+     putchar(buf[i]);
+    }
+    buf.clear();       
     if (flg) data.clear();
     sleep_ms(delay);
 }
