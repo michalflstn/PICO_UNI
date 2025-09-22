@@ -17,6 +17,9 @@
 #define portx                    0 //порты сканнера! пьезодвижетеля ?
 #define porty                    1
 
+#define MY_STDOUT_BUF_SIZE 1024
+static char my_stdout_buf[MY_STDOUT_BUF_SIZE];
+
 class HARDWARE
 {
 // WARNING HARDCODED FUNCTIONS

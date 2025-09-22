@@ -53,11 +53,19 @@ void Scanner::sendStrData(std::string const& header, std::vector<int32_t> &data,
   if (flg) data.clear();
   sleep_ms(delay);
 }
-
-void Scanner::sendData(uint8_t algcode, std::vector<int16_t> &data, const uint16_t delay, const bool flg)
+void  Scanner::sendInt32VectorAsBytes(const std::vector<int32_t>& data) 
+{
+    // Cast the data pointer to uint8_t* and calculate the total byte size
+    const uint8_t* bytes = reinterpret_cast<const uint8_t*>(data.data());
+    size_t sz; 
+    size_t byteCount = data.size() * sizeof(int32_t);
+    sz=fwrite(bytes, 1, byteCount, stdout);
+    fflush(stdout); // Ensure immediate transmission
+}
+void Scanner::sendData(uint32_t algcode, std::vector<int32_t> &data, const uint16_t delay, const bool flg)
 {
     // Prepare a buffer: first byte is algcode, then data as bytes (little-endian)
-    std::vector<uint8_t> buf;
+ /*   std::vector<uint8_t> buf;
      buf.push_back(algcode); 
      buf.push_back(0);   
    
@@ -72,15 +80,14 @@ void Scanner::sendData(uint8_t algcode, std::vector<int16_t> &data, const uint16
     }
     buf.push_back(static_cast<uint8_t>(0x0A)); // add  
     buf.push_back(static_cast<uint8_t>(0x00));   
-   // buf.push_back(static_cast<uint8_t>(0x0A)); // add  
-  /*  for (size_t i = 0; i < buf.size(); ++i) 
-    { 
-     putchaexampler(buf[i]);
-    }
-     */
-    fwrite(buf, 1, buf.size(), stdout);
+*/
+   data.insert(data.begin(), (int32_t)data.size());
+   data.insert(data.begin(), algcode);
+   sendInt32VectorAsBytes(data) ;
+  /* fwrite (buf.data(), 1, buf.size(), stdout);
     fflush(stdout);
     buf.clear();       
+    */
     if (flg) data.clear();
     sleep_ms(delay);
 }
@@ -3316,7 +3323,7 @@ void Scanner::testpiezomover(std::vector<int32_t> &Vector)
 
 void Scanner::start_frqscan()
 {
-  int16_t  SignalValue;
+  int32_t  SignalValue;
   int32_t  res_freq = 10000;
   double_t a = 10000;
   int16_t  scan_index = 0;
@@ -3336,10 +3343,10 @@ void Scanner::start_frqscan()
    {
     debugdata.emplace_back(Vector[j]);
    }
-   sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
+// 250918   sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
   }
  // std::vector<int32_t> data;
-  std::vector<int16_t> data;
+  std::vector<int32_t> data;
   freq=freqstart;
   while ((scan_index++ < npoint))
   {
@@ -3348,7 +3355,7 @@ void Scanner::start_frqscan()
       hardware->set_Freq(freq);
       sleep_ms(delay);
       hardware->getValuesFromAdc();
-      SignalValue = (int16_t)spiBuf[AmplPin]; //int32  25/09/17
+      SignalValue = (int32_t)spiBuf[AmplPin]; //int32  25/09/17
       data.emplace_back(freq);
       data.emplace_back(SignalValue); 
     }
@@ -3357,7 +3364,7 @@ void Scanner::start_frqscan()
       current_freq =freq;
       sleep_ms(delay);
       //??????? int32_t
-      SignalValue = (int16_t) std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
+      SignalValue =(int32_t)current_freq; //!!!!!  int32_t (int16_t)std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
       data.emplace_back(current_freq);
       data.emplace_back(SignalValue);
     }

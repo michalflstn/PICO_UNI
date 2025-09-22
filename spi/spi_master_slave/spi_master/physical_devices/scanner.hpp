@@ -11,6 +11,7 @@
 #include "../loop/common_data/device_variables.hpp"
 #include "../utilities/hardcoded_functions.hpp"
 
+
 struct Config
 {
   uint16_t nPoints_x;        // точек по оси  X                                            1
@@ -53,13 +54,14 @@ private:
 //  ConfigHardWare  _confighardware;
   void stop_scan();         // возвращение сканера в  начальную точку скана
   void move_to(const Point &point, uint16_t delay);  // переместиться в начальную точку скана текущего скана
-  
+  void sendInt32VectorAsBytes(const std::vector<int32_t>& data);
   void sendStrData(std::string const& header,std::vector<int32_t>  &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<uint16_t> &data, const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header,std::vector<int16_t>  &data, const uint16_t delay,const bool flg); //flg clear data
   void sendStrData(std::string const& header,const uint16_t delay,const bool flg);
   void sendStrData(std::string const& header);
   void sendStrData(std::string const& header,std::string  data,const uint16_t delay,const bool flg);
+  void sendData(uint32_t algcode, std::vector<int32_t>  &data, const uint16_t delay,const bool flg);
   void sendData(uint8_t algcode, std::vector<int16_t>  &data, const uint16_t delay,const bool flg);
 
 public:
