@@ -137,6 +137,7 @@ extern bool flgUseUART;
 extern bool flgUseFPGA;       //Использовать ПЛИСС
 extern bool flgLocalDebug;  
 extern bool flgTiming; 
+extern bool flgSendString;
 extern critical_section_t criticalSection;
 
 void SendDataSynchro(bool flg, std::string str);//add 250705

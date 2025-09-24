@@ -54,7 +54,8 @@ uint8_t flgDebugLevel = 3;      // уровень отладки
 bool    flgUseUART = false;     // использовать UART для передачи данных
 bool    flgLocalDebug=false;    // локальная отладка
 bool    flgTiming=false;        // рассчет времени выполнения блока
-//данные для симуляции 
+bool    flgSendString=true;          //send data string to PC
+ //данные для симуляции 
 /* 250409 перенос to dev var
 uint8_t SignLoop;
 int16_t ZValue         = maxint16_t;
