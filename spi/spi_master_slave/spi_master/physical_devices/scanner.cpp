@@ -3371,8 +3371,8 @@ void Scanner::start_frqscan()
     sleep_ms(10);
     freq += freqstep;
   }
-  //sendStrData(code+std::to_string(RESONANCE),data,100,true);
-  sendData(40,data,100,true); //250908
+  sendStrData(code+std::to_string(RESONANCE),data,100,true);
+  //sendData(40,data,100,true); //250908
    int16_t count = 0;
   while ((!TheadDone) || (count<20) )//ожидание ответа ПК для синхронизации
   {
