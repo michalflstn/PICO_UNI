@@ -1483,6 +1483,7 @@ uint16_t *HARDWARE::repeatTwoTimes()
     sleep_us(100); //241215 decrease!!
     count++;
   }
+    return spiBuf;
 }
 
 void HARDWARE::retract() //втянуть
