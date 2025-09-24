@@ -3364,7 +3364,7 @@ void Scanner::start_frqscan()
       current_freq =freq;
       sleep_ms(delay);
       //??????? int32_t
-      SignalValue =(int32_t)current_freq; //!!!!!  int32_t (int16_t)std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
+      SignalValue = (int32_t)std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
       data.emplace_back(current_freq);
       data.emplace_back(SignalValue);
     }

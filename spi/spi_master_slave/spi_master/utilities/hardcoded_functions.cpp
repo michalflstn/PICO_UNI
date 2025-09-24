@@ -1477,9 +1477,11 @@ uint16_t *HARDWARE::repeatTwoTimes()
 {
   get_result_from_adc();
   int j = 0;
-  while (!ADC_IS_READY_TO_READ && j++ < 3)
+  int16_t count=0;
+  while (!ADC_IS_READY_TO_READ && j++ < 3) //) && count<20)
   {
     sleep_us(100); //241215 decrease!!
+    count++;
   }
 }
 
