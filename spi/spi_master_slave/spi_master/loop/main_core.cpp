@@ -489,7 +489,7 @@ MainCore::MainCore()
            }
     case BBFPGA:
            { 
-            flgVirtual=true;
+           // flgVirtual=true;
             scanner=new  Scanner(confighardwareBBFPGA); 
             scanner->hardware->setDefaultSettings(confighardwareBBFPGA);                 
             break; 
