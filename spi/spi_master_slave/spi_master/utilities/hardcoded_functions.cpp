@@ -1044,7 +1044,7 @@ if(!flgVirtual)
 void HARDWARE::set_SetPoint( int32_t SetPoint)
 {//  code  22, 2, 8, 0, 1, 0, value
   int32_t readsetpointok;
-  setpoint=(uint16_t)(SetPoint+ShiftDac);
+  setpoint=(uint16_t)(SetPoint+ShiftDac); //??????  250924
   if (!flgVirtual)
   {
       switch (HARDWAREVERSION)

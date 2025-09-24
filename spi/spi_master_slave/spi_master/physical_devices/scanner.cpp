@@ -3343,7 +3343,8 @@ void Scanner::start_frqscan()
    {
     debugdata.emplace_back(Vector[j]);
    }
-// 250918   sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
+// 250918  
+   sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
   }
  // std::vector<int32_t> data;
   std::vector<int32_t> data;
