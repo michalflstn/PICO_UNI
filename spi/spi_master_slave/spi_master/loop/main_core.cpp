@@ -424,13 +424,6 @@ case ADC_READCmd: //TIMER
                    if (ADC_IS_READY_TO_READ)
                    {
                     scanner->readADC();
-         /*           
-                    afc.clear();
-                    afc =code+std::to_string(DEBUG)+" read adc ";
-                    std::cout << afc;
-                    afc.clear();
-                    sleep_ms(100); 
-    */ 
                    }
                    break;
                   }

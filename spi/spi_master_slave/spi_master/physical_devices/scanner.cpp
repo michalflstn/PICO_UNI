@@ -3034,7 +3034,7 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
       hardware->protract(); //вытянуть
     }
   } //while
-  sendStrData( code+std::to_string(APPROACH),buf_status,100,false);
+  //sendStrData( code+std::to_string(APPROACH),buf_status,100,false);
   if (!flgVirtual)
   {
     hardware->protract();//вытянуть
