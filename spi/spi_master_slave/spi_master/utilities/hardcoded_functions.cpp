@@ -423,10 +423,10 @@ void HARDWARE::set_BiasV(int32_t BiasV)
    switch (HARDWAREVERSION)
       {
       case WB:
-              dacbv->writeB(-BiasV+ShiftDac);
+              dacbv->writeB(BiasV+ShiftDac);//- ->+  250925
               break;
       case BB:
-              dacbv->writeB(-BiasV+ShiftDac); //+
+              dacbv->writeB(BiasV+ShiftDac); //- ->+  250925
               break;    
   case BBFPGA:
               dacbv->writeB(BiasV+ShiftDac); //+
