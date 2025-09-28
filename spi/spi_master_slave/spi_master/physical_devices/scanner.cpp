@@ -2274,14 +2274,14 @@ void Scanner::LID_move_toNextGridScan(int StepsNmbX,int StepsNmbY,int  StepsNmbZ
 
 void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
 {
+  const int8_t none = 30; //250928 int->int8_t
+  const int8_t ok = 3;
+  const int8_t touch = 2;
   uint8_t  lid_name;
   uint16_t flgSICMPrePos;
   uint16_t GATE_Z_MAX, GATE_Z_MIN;
-  int8_t status;
-  const int none = 30;
-  const int ok = 3;
-  const int touch = 2;
-  int16_t lnsteps;  
+    int8_t status;
+   int16_t lnsteps;  
   bool ldir;
   bool APPROACHDIR;
   int16_t freq, duty;
@@ -2336,7 +2336,7 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
               ldir = Vupdateparams[2]; 
         GATE_Z_MAX = (uint16_t)Vupdateparams[3];
         GATE_Z_MIN = (uint16_t)Vupdateparams[4];
-        lnsteps = abs(lnsteps);
+           lnsteps = abs(lnsteps);
         sleep_ms(100);
         if (flgDebug)
         {  
@@ -2837,10 +2837,10 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &Vector)
 
 void Scanner::approacphm(std::vector<int32_t> &Vector) 
 {
-  const int none = 30;
-  const int ok = 3;
-  const int touch = 2;
-  const int stopdone = 1;
+  const int16_t none = 30;
+  const int16_t ok = 3;
+  const int16_t touch = 2;
+  const int16_t stopdone = 1;
  // uint16_t ZMaxValue = 32767;
  // uint16_t SignalMaxValue =32767;
   int16_t  SET_POINT;
@@ -2859,7 +2859,7 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
   GATE_Z_MIN     =(int16_t) Vector[3]; // min
   NSTEPS         =(int16_t) Vector[4]; // steps 
   DIR            =(bool)    Vector[5]; //  int dir
-  APPROACHDIR    =(bool)    Vector[6]; //  APPRoach dir read from ini file
+  APPROACHDIR    =(bool)    Vector[6]; // Approach dir read from ini file  depend of motor
   INTDELAY       =(uint16_t)Vector[7]; // initdelay
   GAIN           =(uint32_t)Vector[8]; // gain  //240320
   SCANNERDECAY   =(uint16_t)Vector[9]; // scannerDelay 
@@ -3016,7 +3016,7 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
             buf_status[0] = ok;
             buf_status[1] = ZValue;
             buf_status[2] = SignalValue;
-            if (flgDebugLevel <= DEBUG_LEVEL);// log("success\n",flgDebugLevel);
+           // if (flgDebugLevel <= DEBUG_LEVEL);// log("success\n",flgDebugLevel);
             break;
           }
           sleep_ms(10);
@@ -3034,6 +3034,7 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
       hardware->protract(); //вытянуть
     }
   } //while
+  sleep_ms(100);//add 250926
   sendStrData( code+std::to_string(APPROACH),buf_status,100,false); //comment ? 250925
   if (!flgVirtual)
   {
@@ -3328,10 +3329,10 @@ void Scanner::start_frqscan()
   double_t a = 10000;
   int16_t  scan_index = 0;
   int32_t  current_freq = 0;
-  int32_t freq;
+  int32_t  freq;
   uint32_t freqstep;
   int16_t  delay;
-  int32_t freqstart;
+  int32_t  freqstart;
   int16_t  npoint;
     npoint=Vector[1];
  freqstart=(int32_t)Vector[2];
@@ -3346,7 +3347,6 @@ void Scanner::start_frqscan()
 // 250918  
    sendStrData(code+std::to_string(DEBUG)+" frq scan parameters ",debugdata,100,true);
   }
- // std::vector<int32_t> data;
   std::vector<int32_t> data;
   freq=freqstart;
   while ((scan_index++ < npoint))
@@ -3364,7 +3364,6 @@ void Scanner::start_frqscan()
     {
       current_freq =freq;
       sleep_ms(delay);
-      //??????? int32_t
       SignalValue = (int32_t)std::round(a*(pow(M_E,-pow((current_freq - res_freq),2)/1000000))); 
       data.emplace_back(current_freq);
       data.emplace_back(SignalValue);
