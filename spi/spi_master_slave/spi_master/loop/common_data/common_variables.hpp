@@ -90,6 +90,7 @@
 #define ScaleGianInput           86 // scale for testing gain input
 #define DebugSynchronize         87 // синхронизация посылки debug инфо на ПК  
 
+
 extern const std::string  code;  
 extern const std::string  endln;
 extern const char   separator;
