@@ -1092,6 +1092,7 @@ struct Config
       sleep_us(50);
       for (uint32_t k = 0; k < stepsfastline; ++k) //move to the next point
       {
+        flgMaxJump=(ZJump==0); //add 250930
         if (!flgVirtual)
         {
           hardware->set_DACXY(portfast, pos_fast);
