@@ -369,7 +369,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
 void HARDWARE::SetDev_GetSOFTHARDWAREVersion(uint8_t device)
 {
   afc.clear();
-  afc = code+std::to_string(VersionCmd)+",soft ver "+ SOFTVERSION+",softhardware ver "+SoftHARDWAREVERSION
+  afc = code+std::to_string(VersionCmd)+",soft ver "+ SoftVERSION+",softhardware ver "+SoftHARDWAREVERSION
         +",hardware "+std::to_string(HARDWAREVERSION) + ",device "+std::to_string(device)
         +",sensor "+std::to_string(sensor);
   afc +=endln;

@@ -94,7 +94,7 @@
 extern const std::string  code;  
 extern const std::string  endln;
 extern const char   separator;
-extern std::string  SOFTVERSION;
+extern std::string  SoftVERSION;
 extern std::string  SoftHARDWAREVERSION;  //  {0,1,....} or {0.1, 1.1...} 
 extern int8_t       HARDWAREVERSION;      //PICO=0; MotherBoard=1
 extern uint32_t     DEBUG_LEVEL;

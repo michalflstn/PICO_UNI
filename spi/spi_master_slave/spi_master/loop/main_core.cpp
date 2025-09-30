@@ -75,7 +75,7 @@ void MainCore::launchOnCore1()
   case ChangeHopeParams:
         ALGCODE=ALGNONE;              
         delayHope=(uint16_t)Vector[1];
-        ZJump    =(uint16_t)Vector[2];
+        ZJump    =(uint16_t)Vector[2]; //  uint16_t ???
         break;
   case USELOWPASSFILTER_ADC:
         ALGCODE=ALGNONE;              
