@@ -290,8 +290,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
     gain=7; //?????
     LOOPGain=gain;
     set_GainPID(gain);  // 250522             // not virtual; not debug!
- //  retract();          // 250522             // втянуть    
-    set_DACZ(0);        //250522
+ //  retract();         // 250522             // втянуть    
+    set_DACZ(0);        // 250522
    } 
 }
 
@@ -1135,9 +1135,42 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
    sleep_ms(100); 
   } 
 }
+void HARDWARE::set_GainPIDCorrection(uint32_t gain)
+{    
+  uint8_t ti; 
+  uint8_t tiadd;
+      ti=(uint8_t)(gain>>8);
+      tiadd=(uint8_t)(gain&0x00FF);
+      if (!flgVirtual) 
+      {  
+       std::string binary = std::bitset<3>(ti).to_string();
+       binary[2] == '1' ? gainPID0->enable() : gainPID0->disable();
+       binary[1] == '1' ? gainPID1->enable() : gainPID1->disable();
+       binary[0] == '1' ? gainPID2->enable() : gainPID2->disable();
+       uint8_t intBuf[1]; 
+       decoder.activePort(6);
+       Spi::setProperties(8, 0, 0);
+       intBuf[0] = 0;
+       spi_write_blocking(spi_default, intBuf, 1); 
+       intBuf[0] = tiadd;
+       spi_write_blocking(spi_default, intBuf, 1); 
+       decoder.activePort(7);
+      }
+      if (flgDebug)  
+      {
+       afc.clear();
+       afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd)+ "gainprev="+std::to_string(LOOPGain);
+       afc += endln;
+    //   SendDataSynchro(flgDebugSynchronize,afc);//250705
+       std::cout << afc;
+       afc.clear();
+       sleep_ms(100);
+      } 
+}
 void HARDWARE::set_GainPID(uint32_t gain)
 { 
     uint8_t ti; 
+    gainPID=gain; //add 251001
    switch (HARDWAREVERSION)  
   {
   case BB:
@@ -1459,11 +1492,20 @@ void HARDWARE::set_DACZ(int16_t value)
         WriteDataToFPGA(writedata);
         break;
   }
+    if (flgDebug)  
+     {
+      afc.clear();
+      afc = code+std::to_string(DEBUG)+"dacz "+std::to_string(value);
+      afc += endln;
+      std::cout << afc;
+      afc.clear();
+      sleep_ms(100);
+     }  
 }
 void HARDWARE::getValuesFromAdc()  // чтение АЦП
 {
   if (HARDWAREVERSION!=BBFPGA)
-  { 
+  {  
    repeatTwoTimes();
    repeatTwoTimes(); //241215 delete!!
   }
@@ -1491,7 +1533,11 @@ void HARDWARE::retract() //втянуть
  if (HARDWAREVERSION!=BBFPGA)
  {
   protractport->enable();  //  port 6   элемент массива портов 
- }
+ //add 251001
+  int32_t gain=255+1792;//(int32_t)(7<<8);
+//  set_GainPIDCorrection(gain);
+ //
+}
  else
  {
      PID_ENA=1;
@@ -1523,6 +1569,9 @@ void HARDWARE::protract() //вытянуть
  if (HARDWAREVERSION!=BBFPGA)
  {
   protractport->disable();  //port 6
+  //add 251001
+//   set_GainPID(gainPID);
+  //
  } 
  else
  {

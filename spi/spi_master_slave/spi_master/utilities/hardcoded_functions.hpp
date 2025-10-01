@@ -29,7 +29,7 @@ private:
  DAC8563    *dacxy;   // DAC X,Y
  DAC8563    *dacz;    // DAC Z
  InputPort  *busyport;     // FIXME TEMP!!!
- OutputPort *conv;
+ OutputPort *conv;    // 
  OutputPort *dec;
  OutputPort *resetport; // FIXME TEMP
  OutputPort *ledPort;
@@ -50,7 +50,7 @@ private:
 
  uint16_t   *repeatTwoTimes(); 
 
- uint16_t gainPID;
+ uint32_t gainPID; //uint16_t
  int32_t PID_CONTROL;
  int32_t PID_FBABS;
  int32_t PID_ENA;
@@ -144,7 +144,7 @@ public:
 
  void set_GainApmlMod(uint8_t gain);     //установить усиления модуляции амплитуды
 
- //void set_GainPID(uint16_t gain);      //установить усиления ПИД  не используется
+ void set_GainPIDCorrection(uint32_t gain);      //установить усиления ПИД  не используется
 
  void set_GainPID(uint32_t gain);        //установить усиления ПИД
 

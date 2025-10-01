@@ -391,7 +391,7 @@ case Set_SIGN_LOOP_BIASV:
               }
   case SET_Z: { 
                 ALGCODE=ALGNONE;
-                scanner->hardware->set_DACZ(Vector[1]);
+                scanner->hardware->set_DACZ((int16_t)Vector[1]);
                 break;
               }     
  case SET_XY: {

@@ -1079,6 +1079,7 @@ struct Config
     }  
     for (uint32_t j = 0; j < nfastline; ++j)
     {
+      flgMaxJump=(ZJump==0); //add 250930
       if (!flgVirtual)
       {
         if (flgMaxJump)  hardware->retract(); //втянуться на max
@@ -1487,7 +1488,7 @@ void Scanner::start_hopingscanlin()
   { 
    for (uint32_t j = 0; j < nfastline; ++j)
     {
-
+      flgMaxJump=(ZJump==0); //add 250930 
       switch (conf_.path)
      {
       case 0://X+
@@ -2780,6 +2781,8 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &Vector)
     hardware->getValuesFromAdc();
     Z0=(int16_t) spiBuf[ZPin];
     hardware->retract();
+
+    
     sleep_ms(50);
     DACZMove(0,Z0,-10,delay);
   }
@@ -2866,7 +2869,7 @@ void Scanner::spectroscopyIV(std::vector<int32_t> &Vector)
   {
     hardware->protract();
     sleep_ms(400);
-    DACZMove(-Z0,abs(Z0),10,delay);
+    DACZMove(-Z0,abs(Z0),10,delay); //  iz DACZMove(deltaZ,abs(deltaZ),10,delay);
   }
 /////////////////////////////////////////////  
    int16_t count = 0;
