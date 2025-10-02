@@ -13,7 +13,7 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
-         conv=new OutputPort(confighardware.CONV);
+         conv=new OutputPort(confighardware.CONV);  //conversation port
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -1104,7 +1104,8 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = 255-(uint8_t)gain;               
              spi_write_blocking(spi_default, intBuf, 1);
-             decoder.activePort(7); intBuf[0] = (uint8_t)gain;
+             decoder.activePort(7); 
+             intBuf[0] = (uint8_t)gain;
              break;
       case BB:
              decoder.activePort(5);
@@ -1170,7 +1171,7 @@ void HARDWARE::set_GainPIDCorrection(uint32_t gain)
 void HARDWARE::set_GainPID(uint32_t gain)
 { 
     uint8_t ti; 
-    gainPID=gain; //add 251001
+   // gainPID=gain; //add 251001
    switch (HARDWAREVERSION)  
   {
   case BB:
@@ -1492,7 +1493,7 @@ void HARDWARE::set_DACZ(int16_t value)
         WriteDataToFPGA(writedata);
         break;
   }
-    if (flgDebug)  
+  /*  if (flgDebug)  
      {
       afc.clear();
       afc = code+std::to_string(DEBUG)+"dacz "+std::to_string(value);
@@ -1501,6 +1502,7 @@ void HARDWARE::set_DACZ(int16_t value)
       afc.clear();
       sleep_ms(100);
      }  
+   */   
 }
 void HARDWARE::getValuesFromAdc()  // чтение АЦП
 {
@@ -1535,7 +1537,7 @@ void HARDWARE::retract() //втянуть
   protractport->enable();  //  port 6   элемент массива портов 
  //add 251001
   int32_t gain=255+1792;//(int32_t)(7<<8);
-//  set_GainPIDCorrection(gain);
+  set_GainPIDCorrection(gain);
  //
 }
  else
@@ -1570,7 +1572,8 @@ void HARDWARE::protract() //вытянуть
  {
   protractport->disable();  //port 6
   //add 251001
-//   set_GainPID(gainPID);
+   //set_GainPID(gainPID);
+   set_GainPID(LOOPGain); //251002
   //
  } 
  else

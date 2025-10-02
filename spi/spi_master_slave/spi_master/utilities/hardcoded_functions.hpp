@@ -28,7 +28,7 @@ private:
  DAC8563    *dacbv;   // DAC BIAS
  DAC8563    *dacxy;   // DAC X,Y
  DAC8563    *dacz;    // DAC Z
- InputPort  *busyport;     // FIXME TEMP!!!
+ InputPort  *busyport;// FIXME TEMP!!!
  OutputPort *conv;    // 
  OutputPort *dec;
  OutputPort *resetport; // FIXME TEMP
@@ -50,7 +50,7 @@ private:
 
  uint16_t   *repeatTwoTimes(); 
 
- uint32_t gainPID; //uint16_t
+// uint32_t gainPID; //uint16_t
  int32_t PID_CONTROL;
  int32_t PID_FBABS;
  int32_t PID_ENA;

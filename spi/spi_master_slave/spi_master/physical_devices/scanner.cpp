@@ -84,12 +84,8 @@ void Scanner::sendData(uint32_t algcode, std::vector<int32_t> &data, const uint1
    data.insert(data.begin(), (int32_t)data.size());
    data.insert(data.begin(), algcode);
    sendInt32VectorAsBytes(data) ;
-  /* fwrite (buf.data(), 1, buf.size(), stdout);
-    fflush(stdout);
-    buf.clear();       
-    */
-    if (flg) data.clear();
-    sleep_ms(delay);
+   if (flg) data.clear();
+   sleep_ms(delay);
 }
 void Scanner::sendStrData(std::string const& header,std::vector<int16_t> &data, const uint16_t delay, const bool flg)
 {
@@ -212,7 +208,6 @@ void Scanner::readADC()
      case BBFPGA:
      {
        hardware->ReadADCDataArrayFromFPGA(spiBuf);
-     //  spiBuf[ZPin]=hardware->ReadDataDACFromFPGA();
        break;
      }
     }
@@ -251,7 +246,7 @@ void Scanner::readADC()
        // debugdata.emplace_back(Vector[1]);
        // debugdata.emplace_back(SignLoop);
        // debugdata.emplace_back(sensor);
-         sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
+        sendStrData(code+std::to_string(ADC_READCmd),debugdata,100,true);     
   }
 }
 bool Scanner::getHoppingFlg() //получить флаг- установлен ли флаг сканирования прыжками
@@ -494,7 +489,7 @@ struct Config
         hardware->set_DACXY(portfast, pos_fast);
       }
       else  { pos_fast -= reststepfast; }
-      sleep_us(delayBW);//241111
+      sleep_us(delayBW);
     }
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
@@ -735,7 +730,6 @@ void Scanner::start_scanlin() //сканирование
           hardware->set_DACXY(portfast, pos_fast);
         } else
         { pos_fast += reststepfast; }
-        //sleep_us(conf_.delayF); 
         sleep_us(delayFW);
       }
       //******************************************************************************
@@ -815,7 +809,6 @@ void Scanner::start_scanlin() //сканирование
         hardware->set_DACXY(portfast, pos_fast);
       }
       else { pos_fast -= conf_.diskretinstep; }
-//      sleep_us(conf_.delayB);
       sleep_us(delayBW);
     }
     if (reststepfast != 0)// добирание остатка
@@ -826,7 +819,6 @@ void Scanner::start_scanlin() //сканирование
         hardware->set_DACXY(portfast, pos_fast);
       }
       else { pos_fast -= reststepfast; }
-//      sleep_us(conf_.delayB);
       sleep_us(delayBW);
      }
     int16_t count0 = 0;
@@ -899,7 +891,6 @@ void Scanner::start_scanlin() //сканирование
             hardware->set_DACXY(portslow, pos_slow);
           } 
           else { pos_slow += conf_.diskretinstep; }
-        //  sleep_us(conf_.delayF);
           sleep_us(delayFW);
         }
         if (reststepslow != 0)
@@ -910,7 +901,6 @@ void Scanner::start_scanlin() //сканирование
             hardware->set_DACXY(portslow, pos_slow);
           }
           else { pos_slow += reststepslow; }
-          //sleep_us(conf_.delayF);
           sleep_us(delayFW);
         }
       }
@@ -1210,10 +1200,10 @@ struct Config
         {
           if (!flgVirtual) 
           {
-            pos_slow += reststepslow; // - 240404!!!!!
+            pos_slow += reststepslow; 
             hardware->set_DACXY(portslow, pos_slow);
           }
-          else { pos_slow += reststepslow; }  // -240404
+          else { pos_slow += reststepslow; }  
           sleep_us(delayFW);
         }
       }
@@ -1289,8 +1279,8 @@ struct Config
       delayFW                    =(uint16_t)conf_.delayF;
       delayBW                    =(uint16_t)conf_.delayB;
       conf_.diskretinstep        =(uint16_t)Vupdateparams[3];
-      sleep_ms(100);             //240314
-      hardware->set_GainPID((uint32_t)Vupdateparams[4]); //240320
+      sleep_ms(100);            
+      hardware->set_GainPID((uint32_t)Vupdateparams[4]); 
       conf_.HopeDelay            =(uint16_t)Vupdateparams[5];
       delayHope                  =(uint16_t)conf_.HopeDelay;   
       conf_.HopeZ                =(uint16_t)Vupdateparams[6];
@@ -1377,7 +1367,7 @@ struct Config
   sleep_ms(200);
   if (!flgVirtual)
   {
-   hardware->protract();// protract(30,DACZ0,DACZ0); 
+   hardware->protract();
    DACZMove(DACZ0,DACZ0,-20, 30);//вытянуть            !!!!!!!!!!!!!!!!!!!!!!!!!!
   }
   sleep_ms(1000);
@@ -1510,11 +1500,11 @@ void Scanner::start_hopingscanlin()
      }
       if (!flgVirtual)
       {
-        if (flgMaxJump)  hardware->retract();           //втянуться на max
+        if (flgMaxJump)  hardware->retract();  //втянуться на max
         else       
         {
          DACZ0= ZCur-ZJump;    
-         if (ZCur<ZJump) DACZ0=0;  //240220
+         if (ZCur<ZJump) DACZ0=0;  
          hardware->retract(DACZ0); //втянуться на ZJump
         }        
       }   
@@ -1543,8 +1533,8 @@ void Scanner::start_hopingscanlin()
   //******************************************************************************
       if (!flgVirtual)
       {
-        if (flgMaxJump) hardware->protract();  //вытянуться
-        else            hardware->protract();//  protract(0, ZJump);// ;//вытянуться на ZJump
+        if (flgMaxJump) hardware->protract(); // вытянуться
+        else            hardware->protract(); // protract(0, ZJump);// ;//вытянуться на ZJump
       }
       sleep_ms(delayHope);   
       sleep_us(conf_.pause);    // CONST 50ms wait for start get data
@@ -1633,7 +1623,7 @@ void Scanner::start_hopingscanlin()
       else { pos_fast -= reststepfast; }
        sleep_us(delayBW);
      }
-      sleep_ms(conf_.HopeDelayFP);// 240503
+      sleep_ms(conf_.HopeDelayFP);
       sleep_us(conf_.pause);  
 
      if (!flgVirtual)  //read  Saturation Current
@@ -2004,7 +1994,7 @@ start_fastscan()
      sendStrData(code+std::to_string(FASTSCANNING),string_dataout,200,true);
 //*************************************************************************
      
-   switch (conf_.path) //add 241217
+   switch (conf_.path) 
    {
     case 0:
     {
@@ -2020,7 +2010,7 @@ start_fastscan()
     }
    }
     stop_scan();  //возврат в начальную точку скана
-    pos_slow=pos_slow_start; //add 241217
+    pos_slow=pos_slow_start; 
     pos_fast=pos_fast_start;
     if (conf_.flgOneFrame == 1) 
     { 
@@ -2094,31 +2084,31 @@ void Scanner::scanparams_update(const std::vector<int32_t> &Vector)
 {
 //  conf_ = config;
  if (flgСritical_section) critical_section_enter_blocking(&criticalSection);
-  conf_.nPoints_x=(uint16_t)Vector[1]; //uint16_t nPoints_x;        // точек по оси  X                                            1
-  conf_.nPoints_y=(uint16_t)Vector[2];        // точек по оси  Y                                            2 
-  conf_.path=(uint16_t)Vector[3];             // сканирование  0 - по оси X, 1 - по оси Y                   3
-  conf_.method=(uint16_t)Vector[4];           // что измерять Topo=0,Phase=1, Ampl=2...                     4
-  conf_.delayF=(uint16_t)Vector[5];           // задержка при сканировании вперёд                           5
-  conf_.delayB=(uint16_t)Vector[6];           // задержка при сканировании назад                            6
-  conf_.betweenPoints_x=(uint16_t)Vector[7];  // расстояние между точками по X в дискретах                  7 
-  conf_.betweenPoints_y=(uint16_t)Vector[8];  // расстояние между точками по Y в дискретах                  8 
-  conf_.size=(uint16_t)Vector[9];             // size=1  -Z; size=2 - Z,Амплитуда                           9
+  conf_.nPoints_x=(uint16_t)Vector[1];         // точек по оси  X                                            1
+  conf_.nPoints_y=(uint16_t)Vector[2];         // точек по оси  Y                                            2 
+  conf_.path=(uint16_t)Vector[3];              // сканирование  0 - по оси X, 1 - по оси Y                   3
+  conf_.method=(uint16_t)Vector[4];            // что измерять Topo=0,Phase=1, Ampl=2...                     4
+  conf_.delayF=(uint16_t)Vector[5];            // задержка при сканировании вперёд                           5
+  conf_.delayB=(uint16_t)Vector[6];            // задержка при сканировании назад                            6
+  conf_.betweenPoints_x=(uint16_t)Vector[7];   // расстояние между точками по X в дискретах                  7 
+  conf_.betweenPoints_y=(uint16_t)Vector[8];   // расстояние между точками по Y в дискретах                  8 
+  conf_.size=(uint16_t)Vector[9];              // size=1  -Z; size=2 - Z,Амплитуда                           9
   conf_.Ti=(uint16_t)Vector[10];               // усиление ПИД                                              10
   conf_.diskretinstep=(uint16_t)Vector[11];    // размер шага в дискретах                                   11
   conf_.pause=(uint16_t)Vector[12];            // время ожидания в точке измерения  мксек                   12  
-  conf_.flgLin=(uint8_t)Vector[13];           // флаг линеализации                                          13   
-  conf_.lineshift=(uint16_t)Vector[14];        //сдвиг линии -учет неортогональности сканнера               14
-  conf_.flgOneFrame=(uint8_t)Vector[15];      // быстрое сканирование один кадр=1                           15
-  conf_.flgHoping=(uint8_t)Vector[16];        // сканирование прыжками                                      16
+  conf_.flgLin=(uint8_t)Vector[13];            // флаг линеализации                                          13   
+  conf_.lineshift=(uint16_t)Vector[14];        // сдвиг линии -учет неортогональности сканнера               14
+  conf_.flgOneFrame=(uint8_t)Vector[15];       // быстрое сканирование один кадр=1                           15
+  conf_.flgHoping=(uint8_t)Vector[16];         // сканирование прыжками                                      16
  //hoping
   conf_.HopeDelay=(uint16_t)Vector[17];        // задержка в точке измерения при прыжках                    17
 // add hoping params  
  if (sizeof(Vector)>18) 
  {
-  conf_.HopeZ=(uint16_t)Vector[18];             // прыжок по Z,если=0,то прыжок по максимуму                18
-  conf_.flgAutoUpdateSP=(uint8_t)Vector[19];     // автообновление опоры на каждой линии                    19
+  conf_.HopeZ=(uint16_t)Vector[18];               // прыжок по Z,если=0,то прыжок по максимуму                18
+  conf_.flgAutoUpdateSP=(uint8_t)Vector[19];      // автообновление опоры на каждой линии                    19
   conf_.flgAutoUpdateSPDelta=(uint8_t)Vector[20]; // обновление опоры , если изменение тока превысило порог 20
-  conf_.ThresholdAutoUpdate=(uint8_t)Vector[21];  //изменения опоры, если изменение тока превысило порог    21
+  conf_.ThresholdAutoUpdate=(uint8_t)Vector[21];  // изменения опоры, если изменение тока превысило порог    21
   conf_.KoeffCorrectISat=(uint16_t)Vector[22];    // опора  %  от тока насыщения                            22
   conf_.SetPoint=(uint16_t)Vector[23];            // опора  ток                                             23
   conf_.HopeDelayFP=(uint16_t)Vector[24];         // Задержка  в первой точке линии                         24  //add 24/05/02
@@ -2138,7 +2128,7 @@ void Scanner::scanparams_update(const std::vector<int32_t> &Vector)
                              static_cast<uint16_t>(Vector[21]),static_cast<uint16_t>(Vector[22]),
                              static_cast<int16_t>(Vector[23])
      */       
-  delayFW=conf_.delayF; //241111
+  delayFW=conf_.delayF;  
   delayBW=conf_.delayB; 
   delayHope=conf_.HopeDelay; 
   ZJump=conf_.HopeZ;        
@@ -2200,7 +2190,7 @@ void Scanner::move_to(const Point &point, uint16_t delay)
   {
     while (pos_.x < point.x)
     {
-      hardware->set_DACXY(portx, ++pos_.x);// 1
+      hardware->set_DACXY(portx, ++pos_.x); 
       sleep_us(delay);
     }
     while (pos_.x > point.x)
@@ -2215,7 +2205,7 @@ void Scanner::move_to(const Point &point, uint16_t delay)
     }
     while (pos_.y > point.y)
     {
-      hardware->set_DACXY(porty, --pos_.y); //2
+      hardware->set_DACXY(porty, --pos_.y);  
       sleep_us(delay);
     }
   }
@@ -2254,8 +2244,6 @@ void Scanner::LID_move_toNextGridScan(int StepsNmbX,int StepsNmbY,int  StepsNmbZ
  }
  else
  {
-
-
  } 
   sendStrData(code+std::to_string(GridMovetoNextScan));
 }
@@ -2279,8 +2267,8 @@ void Scanner::positioningXYZ(std::vector<int32_t> &Vector)
               freq=Vector[2]; 
               duty=Vector[3]; 
            lnsteps=abs((int16_t)Vector[4]); //  int nsteps
-              ldir=(bool)Vector[5]; //  int dir
-       APPROACHDIR=(bool)Vector[6]; // approach direction set in ini files main delphi program  
+              ldir=(bool)Vector[5];     //  int dir
+       APPROACHDIR=(bool)Vector[6];     //  approach direction set in ini files main delphi program  
         GATE_Z_MAX=(uint16_t)Vector[7]; //  int Z gate max
         GATE_Z_MIN=(uint16_t)Vector[8]; //  int Z gate min
             flgDev=(uint16_t)Vector[9]; //  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
@@ -2905,14 +2893,14 @@ void Scanner::approacphm(std::vector<int32_t> &Vector)
   GATE_Z_MAX     =(int16_t) Vector[2]; // max
   GATE_Z_MIN     =(int16_t) Vector[3]; // min
   NSTEPS         =(int16_t) Vector[4]; // steps 
-  DIR            =(bool)    Vector[5]; //  int dir
+  DIR            =(bool)    Vector[5]; // int dir
   APPROACHDIR    =(bool)    Vector[6]; // Approach dir read from ini file  depend of motor
   INTDELAY       =(uint16_t)Vector[7]; // initdelay
   GAIN           =(uint32_t)Vector[8]; // gain  //240320
   SCANNERDECAY   =(uint16_t)Vector[9]; // scannerDelay 
-  freq           =(int16_t) Vector[10]; // freq
-  duty           =(int16_t) Vector[11]; // scv
-  flgDev         =(int16_t) Vector[12];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
+  freq           =(int16_t) Vector[10];// freq
+  duty           =(int16_t) Vector[11];// scv
+  flgDev         =(int16_t) Vector[12];// 0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
   BiasV          =(int16_t) Vector[13];// Voltage need for STM,SICM
  //need to add channel Bias ????
  //need to add channel SetPoint ????
@@ -3116,7 +3104,7 @@ void Scanner::testpiezomover(std::vector<int32_t> &Vector)
          SCANNERDECAY   =(uint16_t)Vector[6]; // scannerDelay 
          freq           =(int16_t) Vector[7]; // freq
          scv            =(int16_t) Vector[8]; // scv  
-    //     flgDev         =(int16_t) Vector[9];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
+    //   flgDev         =(int16_t) Vector[9];//  0= SFM, 1=STM ;SICMAC-2; SICMDC-3;  device type
  if (flgDebug)
  {
    for (size_t j = 0; j < 9; j++)     // send info
