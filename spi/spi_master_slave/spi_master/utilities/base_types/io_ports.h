@@ -7,20 +7,20 @@
 class InputPort
 {
 public:
-  explicit InputPort(int port);
+  explicit InputPort(uint8_t port);
 
   bool getLevel() const;
 
-  int getPort();
+  uint8_t getPort();
 
 private:
-  int port_;
+  uint8_t port_;
 };
 
 class OutputPort
 {
 public:
-  explicit OutputPort(int port);
+  explicit OutputPort(uint8_t port);
 
   void enable();
 
@@ -28,10 +28,10 @@ public:
 
   void blink();
 
-  int getPort() const;
+  uint8_t getPort() const;
 
 private:
-  int port_;
+  uint8_t port_;
 };
 
 

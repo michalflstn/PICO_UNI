@@ -1,6 +1,6 @@
 #include "io_ports.h"
 
-InputPort::InputPort(int port) : port_(port)
+InputPort::InputPort(uint8_t port) : port_(port)
 {
   gpio_init(port);
   gpio_set_dir(port, GPIO_IN);
@@ -11,13 +11,13 @@ bool InputPort::getLevel() const
   return gpio_get(port_);
 }
 
-int InputPort::getPort()
+uint8_t InputPort::getPort()
 {
   return port_;
 }
 
 
-OutputPort::OutputPort(int port) : port_(port)
+OutputPort::OutputPort(uint8_t port) : port_(port)
 {
   gpio_init(port);
   gpio_set_dir(port, GPIO_OUT);
@@ -40,7 +40,7 @@ void OutputPort::blink()
   gpio_put(port_, false);
 }
 
-int OutputPort::getPort() const
+uint8_t OutputPort::getPort() const
 {
   return port_;
 }

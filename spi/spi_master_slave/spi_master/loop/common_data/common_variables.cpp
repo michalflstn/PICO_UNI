@@ -5,11 +5,10 @@
 //int8_t       HARDWAREVERSION=WB;
 int8_t       HARDWAREVERSION=BB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
+std::string  SoftHARDWAREVERSION="25.10.03.01 ";
 std::string  SoftVERSION="25.10.02.01 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
-std::string  SoftHARDWAREVERSION="25.10.01.02 ";
-
 //int8_t       HARDWAREVERSION_I=-1;
 int32_t  vectorSize;
 std::string afc;  //dataout string

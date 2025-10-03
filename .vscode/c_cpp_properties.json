@@ -4,7 +4,8 @@
       "name": "Pico",
       "includePath": [
         "${workspaceFolder}/**",
-        "${env:PICO_SDK_PATH}/**"
+        "${env:PICO_SDK_PATH}/**",
+        "${env:PICO_INSTALL_PATH}/**"
       ],
       "defines": [],
       "compilerPath": "${env:PICO_INSTALL_PATH}/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe",
