@@ -980,6 +980,7 @@ struct Config
    }
    debugdata.emplace_back(pos_.x);
    debugdata.emplace_back(pos_.y);
+   debugdata.emplace_back(conf_.SetPoint); //251006
    sendStrData(code+std::to_string(DEBUG)+" hoping scan parameters",debugdata,100,true);
   } 
   uint16_t stepsx;
@@ -1034,7 +1035,7 @@ struct Config
   }
   else
   {
-    ISatCurPrev=(int16_t)round(conf_.SetPoint);
+    ISatCurPrev=(int16_t)conf_.SetPoint; //251006
     ISatCur=ISatCurPrev;
   }
 //****************************************************************
@@ -1114,7 +1115,7 @@ struct Config
       if (!flgVirtual)
       {
         hardware->getValuesFromAdc(); 
-        ZCur=(int16_t) spiBuf[ZPin];
+        ZCur=(int16_t) spiBuf[ZPin]; 
         int32_t ZValue=ZMaxValue-ZCur;
         int32_t SignalValue;
         string_dataout+=separator+std::to_string(ZValue);
@@ -1124,17 +1125,17 @@ struct Config
         {
           case 3://phase !!!!
           {
-           string_dataout+=separator+std::to_string((int16_t) spiBuf[1]);
+           string_dataout+=separator+std::to_string((int16_t)spiBuf[ZPin]);
            break;
           }
           case 4://ampl
           {
-            string_dataout+=separator+std::to_string((int16_t)AmplPin);
+            string_dataout+=separator+std::to_string((int16_t)spiBuf[AmplPin]);
             break;
           }
           case 7://current
           {
-            string_dataout+=separator+std::to_string((int16_t)IPin);
+            string_dataout+=separator+std::to_string((int16_t)spiBuf[IPin]);
             break;
           }
         }
@@ -1243,7 +1244,7 @@ struct Config
         sleep_ms(delayHope);   
        }
      }
-     string_dataout+=separator+std::to_string(round(conf_.SetPoint));
+     string_dataout+=separator+std::to_string(conf_.SetPoint);
      auto end = std::chrono::high_resolution_clock::now();  
      auto dur = end - begin;
      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
@@ -2103,14 +2104,14 @@ void Scanner::scanparams_update(const std::vector<int32_t> &Vector)
  //hoping
   conf_.HopeDelay=(uint16_t)Vector[17];        // задержка в точке измерения при прыжках                    17
 // add hoping params  
- if (sizeof(Vector)>18) 
+ if (conf_.flgHoping) 
  {
   conf_.HopeZ=(uint16_t)Vector[18];               // прыжок по Z,если=0,то прыжок по максимуму                18
   conf_.flgAutoUpdateSP=(uint8_t)Vector[19];      // автообновление опоры на каждой линии                    19
   conf_.flgAutoUpdateSPDelta=(uint8_t)Vector[20]; // обновление опоры , если изменение тока превысило порог 20
-  conf_.ThresholdAutoUpdate=(uint8_t)Vector[21];  // изменения опоры, если изменение тока превысило порог    21
+  conf_.ThresholdAutoUpdate=(uint16_t)Vector[21];  // изменения опоры, если изменение тока превысило порог    21
   conf_.KoeffCorrectISat=(uint16_t)Vector[22];    // опора  %  от тока насыщения                            22
-  conf_.SetPoint=(uint16_t)Vector[23];            // опора  ток                                             23
+  conf_.SetPoint=(int16_t)Vector[23];  // Uint16_t 251006          // опора  ток                                             23
   conf_.HopeDelayFP=(uint16_t)Vector[24];         // Задержка  в первой точке линии                         24  //add 24/05/02
  } 
  if (flgСritical_section) critical_section_exit(&criticalSection);

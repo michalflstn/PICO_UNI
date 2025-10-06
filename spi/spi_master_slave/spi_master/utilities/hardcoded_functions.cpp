@@ -1157,7 +1157,7 @@ void HARDWARE::set_GainPIDCorrection(uint32_t gain)
        spi_write_blocking(spi_default, intBuf, 1); 
        decoder.activePort(7);
       }
-      if (flgDebug)  
+   /*   if (flgDebug)  
       {
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd)+ "gainprev="+std::to_string(LOOPGain);
@@ -1167,6 +1167,7 @@ void HARDWARE::set_GainPIDCorrection(uint32_t gain)
        afc.clear();
        sleep_ms(100);
       } 
+       */
 }
 void HARDWARE::set_GainPID(uint32_t gain)
 { 
@@ -1193,7 +1194,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
        spi_write_blocking(spi_default, intBuf, 1); 
        decoder.activePort(7);
       }
-      if (flgDebug)  
+   /*   if (flgDebug)  
       {
        afc.clear();
        afc = code+std::to_string(DEBUG)+"debug PID Gain ti="+ std::to_string(ti)+"ti add="+ std::to_string(tiadd)+ "gainprev="+std::to_string(LOOPGain);
@@ -1203,6 +1204,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
        afc.clear();
        sleep_ms(100); 
       }  
+     */  
       break;
   case WB:  
      if (!flgVirtual) 
