@@ -327,6 +327,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
 */
+    gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI_SCK_PIN,GPIO_FUNC_SPI);
+    gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
+
     dma_chan = dma_claim_unused_channel(true);
     dma_channel_config c = dma_channel_get_default_config(dma_chan);
     channel_config_set_transfer_data_size(&c, DMA_SIZE_16); // 16-bit transfers

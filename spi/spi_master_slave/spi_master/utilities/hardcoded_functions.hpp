@@ -17,6 +17,11 @@
 #define portx                    0 //порты сканнера! пьезодвижетеля ?
 #define porty                    1
 
+#define SPI_RX_PIN  0
+#define SPI_TX_PIN  3
+#define SPI_SCK_PIN 2
+#define SPI_CS_PIN  1
+
 #define MY_STDOUT_BUF_SIZE 1024
 static char my_stdout_buf[MY_STDOUT_BUF_SIZE];
 
