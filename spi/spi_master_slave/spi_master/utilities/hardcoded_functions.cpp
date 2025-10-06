@@ -6,6 +6,14 @@
 #include "../utilities/debug_logger.hpp"
 #include "hardcoded_functions.hpp"
 
+volatile bool spi_dma_done = false;
+
+void dma_handler()
+{
+  dma_hw->ints0 = 1u << 0; // Clear interrupt for channel 0
+  spi_dma_done = true;
+}
+
 HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
 {
        dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
@@ -308,8 +316,38 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
-   gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
-// multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
+//   gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
+
+// multicore_launch_core1(RX_core::launchOnCore1); // 251006 
+//  IRQ for DNA
+ /*
+    spi_init(SPI_PORT, 1000 * 1000); // 1 MHz
+    gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
+*/
+    dma_chan = dma_claim_unused_channel(true);
+    dma_channel_config c = dma_channel_get_default_config(dma_chan);
+    channel_config_set_transfer_data_size(&c, DMA_SIZE_16); // 16-bit transfers
+    channel_config_set_read_increment(&c, true);
+    channel_config_set_write_increment(&c, false);
+    channel_config_set_dreq(&c, spi_get_dreq(spi_default, false));
+
+    dma_channel_configure(
+        dma_chan,
+        &c,
+        spiBuf,                // destination
+        &spi_get_hw(spi_default)->dr, // source (SPI data register)
+        8,                         // number of transfers
+        false                      // don't start yet
+    );
+
+    dma_channel_set_irq0_enabled(dma_chan, true);
+    irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
+    irq_set_enabled(DMA_IRQ_0, true);
+///
+
    dec->enable();
    conv->enable();
    resetport->disable();
@@ -1508,8 +1546,20 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
 {
   if (HARDWAREVERSION!=BBFPGA)
   {  
-   repeatTwoTimes();
-   repeatTwoTimes(); //241215 delete!!
+ //  repeatTwoTimes();  // 251006 comments
+ //  repeatTwoTimes(); //
+   // Start SPI read (dummy write to generate clock)
+    uint16_t dummy_tx[NmbADCSignals] = {0};
+    spi_write16_blocking(spi_default, dummy_tx,NmbADCSignals);
+
+    // Start DMA transfer
+    dma_channel_start(dma_chan);
+
+    while (!spi_dma_done) 
+    {
+     tight_loop_contents();
+    }
+    spi_dma_done=false;
   }
   else
   {

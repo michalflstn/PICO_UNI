@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <iostream> 
 #include <hardware/clocks.h>
-
+#include <hardware/dma.h>  //add 251006
 #include "../utilities/base_types/io_ports.h"
 #include "../devices/ad5664.hpp"
 #include "../devices/DAC8563.hpp"
@@ -56,7 +56,8 @@ private:
  int32_t PID_ENA;
  int32_t PID_STOP;
  int32_t PID_SIGN;
-
+ int dma_chan;// add 251006 
+ 
  void SetLOOPParams(float kp,float ki, float kd,int32_t gainscale);  
 
  void get_result_from_adc();       // чтение АЦП
