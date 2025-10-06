@@ -1537,7 +1537,7 @@ void HARDWARE::retract() //втянуть
   protractport->enable();  //  port 6   элемент массива портов 
  //add 251001
   int32_t gain=255+1792;//(int32_t)(7<<8);
-  set_GainPIDCorrection(gain);
+ if (HARDWAREVERSION==BB) set_GainPIDCorrection(gain);
  //
 }
  else
@@ -1573,7 +1573,7 @@ void HARDWARE::protract() //вытянуть
   protractport->disable();  //port 6
   //add 251001
    //set_GainPID(gainPID);
-   set_GainPID(LOOPGain); //251002
+  if (HARDWAREVERSION==BB) set_GainPID(LOOPGain); //251002
   //
  } 
  else
