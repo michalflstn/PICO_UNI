@@ -326,12 +326,12 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
-*/
+    spi_init(spi_default, 1000 * 1000); // 1 MHz
     gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_SCK_PIN,GPIO_FUNC_SPI);
     gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
-
+*/
     dma_chan = dma_claim_unused_channel(true);
     dma_channel_config c = dma_channel_get_default_config(dma_chan);
     channel_config_set_transfer_data_size(&c, DMA_SIZE_16); // 16-bit transfers
@@ -342,12 +342,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
     dma_channel_configure(
         dma_chan,
         &c,
-        spiBuf,                // destination
+        spiBuf,                       // destination
         &spi_get_hw(spi_default)->dr, // source (SPI data register)
-        8,                         // number of transfers
-        false                      // don't start yet
+        NmbADCSignals,              // number of transfers
+        false                         // don't start yet
     );
-
     dma_channel_set_irq0_enabled(dma_chan, true);
     irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
     irq_set_enabled(DMA_IRQ_0, true);
@@ -1554,12 +1553,12 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
  //  repeatTwoTimes();  // 251006 comments
  //  repeatTwoTimes(); //
    // Start SPI read (dummy write to generate clock)
-    uint16_t dummy_tx[NmbADCSignals] = {0};
-    spi_write16_blocking(spi_default, dummy_tx,NmbADCSignals);
-
+   // uint16_t dummy_tx[NmbADCSignals] = {0};
+   // uint8_t dummy_tx[2*NmbADCSignals] = {0};
+   // spi_write16_blocking(spi_default, dummy_tx,NmbADCSignals);
+   // spi_write_blocking(spi_default, dummy_tx,2*NmbADCSignals);
     // Start DMA transfer
     dma_channel_start(dma_chan);
-
     while (!spi_dma_done) 
     {
      tight_loop_contents();

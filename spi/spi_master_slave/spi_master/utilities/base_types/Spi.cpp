@@ -9,8 +9,7 @@ Spi::Spi()
 #if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
 #warning spi/spi_master example requires a board with SPI pins
   puts("Default SPI pins were not defined");
-#else 
-  printf("SPI master example\n");
+#else   printf("SPI master example\n");
   spi_init(spi_default, 1000 * 1000);
   gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
