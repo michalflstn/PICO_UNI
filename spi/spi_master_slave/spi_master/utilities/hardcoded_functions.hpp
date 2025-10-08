@@ -61,7 +61,8 @@ private:
  int32_t PID_ENA;
  int32_t PID_STOP;
  int32_t PID_SIGN;
- int dma_chan;// add 251006 
+
+ int32_t dma_chan;// add 251006 
  
  void SetLOOPParams(float kp,float ki, float kd,int32_t gainscale);  
 

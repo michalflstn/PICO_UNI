@@ -347,9 +347,10 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
         NmbADCSignals,              // number of transfers
         false                         // don't start yet
     );
-    dma_channel_set_irq0_enabled(dma_chan, true);
-    irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
-    irq_set_enabled(DMA_IRQ_0, true);
+//    dma_channel_set_irq0_enabled(dma_chan, true);
+//    irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
+//    irq_set_enabled(DMA_IRQ_0, true);
+
 ///
 
    dec->enable();
@@ -1558,13 +1559,21 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
    // spi_write16_blocking(spi_default, dummy_tx,NmbADCSignals);
    // spi_write_blocking(spi_default, dummy_tx,2*NmbADCSignals);
     // Start DMA transfer
-    dma_channel_start(dma_chan);
+  /*  dma_channel_start(dma_chan);
     while (!spi_dma_done) 
     {
      tight_loop_contents();
     }
     spi_dma_done=false;
-  }
+   */ 
+  //  uint dma_chan = dma_claim_unused_channel(true);
+   
+   //uint cs_pin = PICO_DEFAULT_SPI_CSN_PIN; // Example chip select pin
+   uint16_t dummy_bytes[NmbADCSignals] = {0};
+   
+   spi.spi_read_dma(dma_chan, spi_default,1, spiBuf,  dummy_bytes, NmbADCSignals) ;
+
+   }
   else
   {
     ReadADCDataArrayFromFPGA(spiBuf);         

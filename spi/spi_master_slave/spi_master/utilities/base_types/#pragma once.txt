@@ -1,5 +1,6 @@
 #pragma once
 #include "hardware/spi.h"
+#include "hardware/dma.h"
 #include "pico/stdlib.h"
 #include <vector>
 
@@ -38,7 +39,20 @@ public:
         spi_write_read_blocking(spi_port_, tx.data(), rx.data(), tx.size());
         gpio_put(cs_pin_, 1); // Deselect device
     }
-
+// Read SPI using DMA on demand
+void spi_read_dma(uint dma_chan, spi_inst_t* spi, uint cs_pin, uint8_t* rx_buffer, const uint8_t* dummy_bytes, size_t length) {
+    gpio_put(cs_pin, 0); // Select device
+    // Configure DMA transfer for 'length' bytes
+    dma_channel_set_read_addr(dma_chan, &spi_get_hw(spi)->dr, false);
+    dma_channel_set_write_addr(dma_chan, rx_buffer, false);
+    dma_channel_set_transfer_count(dma_chan, length, false);
+    dma_channel_start(dma_chan);
+    // Send dummy bytes to generate SPI clock and read data
+    spi_write_blocking(spi, dummy_bytes, length);
+    dma_channel_wait_for_finish_blocking(dma_chan);
+    gpio_put(cs_pin, 1); // Deselect device
+    // rx_buffer now holds received data
+}
 private:
     spi_inst_t* spi_port_;
     uint cs_pin_;
