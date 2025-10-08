@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AD56X4_h
 #define AD56X4_h
 

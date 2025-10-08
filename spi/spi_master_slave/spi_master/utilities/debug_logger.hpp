@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_DEBUG_LOGGER_HPP
 #define PICO_EXAMPLES_DEBUG_LOGGER_HPP
 

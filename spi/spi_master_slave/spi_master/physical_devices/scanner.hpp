@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_SCANNER_HPP
 #define PICO_EXAMPLES_SCANNER_HPP
 

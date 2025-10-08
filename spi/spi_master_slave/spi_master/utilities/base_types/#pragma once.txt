@@ -1,0 +1,45 @@
+#pragma once
+#include "hardware/spi.h"
+#include "pico/stdlib.h"
+#include <vector>
+
+class SPI {
+public:
+    SPI(spi_inst_t* spi_port, uint baudrate,
+        uint mosi, uint miso, uint sck, uint cs)
+        : spi_port_(spi_port), cs_pin_(cs)
+    {
+        spi_init(spi_port_, baudrate);
+        gpio_set_function(mosi, GPIO_FUNC_SPI);
+        gpio_set_function(miso, GPIO_FUNC_SPI);
+        gpio_set_function(sck, GPIO_FUNC_SPI);
+        gpio_init(cs_pin_);
+        gpio_set_dir(cs_pin_, GPIO_OUT);
+        gpio_put(cs_pin_, 1); // Deselect device
+    }
+
+    // Write data to SPI (blocking)
+    void write(const std::vector<uint8_t>& data) {
+        gpio_put(cs_pin_, 0); // Select device
+        spi_write_blocking(spi_port_, data.data(), data.size());
+        gpio_put(cs_pin_, 1); // Deselect device
+    }
+
+    // Read data from SPI (blocking)
+    void read(std::vector<uint8_t>& buffer) {
+        gpio_put(cs_pin_, 0); // Select device
+        spi_read_blocking(spi_port_, 0, buffer.data(), buffer.size());
+        gpio_put(cs_pin_, 1); // Deselect device
+    }
+
+    // Write and read (full-duplex)
+    void transfer(const std::vector<uint8_t>& tx, std::vector<uint8_t>& rx) {
+        gpio_put(cs_pin_, 0); // Select device
+        spi_write_read_blocking(spi_port_, tx.data(), rx.data(), tx.size());
+        gpio_put(cs_pin_, 1); // Deselect device
+    }
+
+private:
+    spi_inst_t* spi_port_;
+    uint cs_pin_;
+};

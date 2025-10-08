@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_MAIN_CORE_HPP
 #define PICO_EXAMPLES_MAIN_CORE_HPP
 #include <vector>

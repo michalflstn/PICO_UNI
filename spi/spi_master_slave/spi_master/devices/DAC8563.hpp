@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_DAC8563_HPP
 #define PICO_EXAMPLES_DAC8563_HPP
 

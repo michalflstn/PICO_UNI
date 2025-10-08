@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_DEVICE_VARIABLES_HPP
 #define PICO_EXAMPLES_DEVICE_VARIABLES_HPP
 #pragma  pack(push, 1) //  240702 выравнивание структуры на границе byte
