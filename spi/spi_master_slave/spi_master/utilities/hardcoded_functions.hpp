@@ -23,7 +23,10 @@
 #define SPI_CS_PIN  1
 
 #define MY_STDOUT_BUF_SIZE 1024
+
 static char my_stdout_buf[MY_STDOUT_BUF_SIZE];
+
+extern int32_t dma_chan;
 
 class HARDWARE
 {
@@ -62,11 +65,11 @@ private:
  int32_t PID_STOP;
  int32_t PID_SIGN;
 
- int32_t dma_chan;// add 251006 
+ //int32_t dma_chan;// add 251006 
  
  void SetLOOPParams(float kp,float ki, float kd,int32_t gainscale);  
 
- void get_result_from_adc();       // чтение АЦП
+ void get_result_from_adc();  // чтение АЦП
 
  void set_clock_enable();
  
@@ -81,6 +84,7 @@ private:
  void AscResult(FPGAAscData ascdata, uint8_t* dst, size_t len);
 
  void WriteDataToFPGA(FPGAWriteData writedata);
+ 
 
 public:
    int32_t LOOPGain;
@@ -106,7 +110,8 @@ public:
 
 [[noreturn]] void activateError();
  //инициирование ЦАП1  SetPoint,BIAS
- 
+ void spi_read_dma(uint32_t dma_chan, spi_inst_t* spi, uint32_t cs_pin, uint16_t* rx_buffer, const uint16_t* dummy_bytes, size_t length);
+
  void setDefaultSettings( ConfigHardWareBB  confighardware);      //BB
 
  void setDefaultSettings( ConfigHardWareBBFPGA  confighardware);  //FPGA

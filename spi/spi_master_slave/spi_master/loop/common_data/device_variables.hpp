@@ -36,6 +36,13 @@ control registers
     нужно записать 0x0000010x, где x - номер канала (от 0 до 7).
 11  0x0841002C  not use   
 */
+
+#define port_ADC       0     //Analog Device   AD7606
+#define port_None      7   
+#define port_Gain_Ampl 5
+#define port_Gain_LOOP 6
+#define port_Freq      1
+
 //  add 250409
 extern uint8_t device;
 extern uint8_t sensor;

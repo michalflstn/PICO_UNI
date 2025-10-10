@@ -16,7 +16,8 @@ Spi::Spi()
   gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
 //  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
-  spi_set_format(spi_default, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);//8  251008
+//  spi_set_format(spi_default, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);//8  251008
+  spi_set_format(spi_default, 16, SPI_CPOL_1, SPI_CPHA_0, SPI_MSB_FIRST);//8  251008
 #endif
 }
 
@@ -42,6 +43,7 @@ int Spi::read(const uint8_t *inB, uint8_t *buf, size_t length)
 }
 
 // Read SPI using DMA on demand
+/*
 void Spi::spi_read_dma(uint32_t dma_chan, spi_inst_t* spi, uint32_t cs_pin, uint16_t* rx_buffer, const uint16_t* dummy_bytes, size_t length) {
      
  // uint16_t dummy_bytes[length] = {0}; // Dummy bytes to generate clock   gpio_put(cs_pin, 0); // Select device
@@ -52,6 +54,10 @@ void Spi::spi_read_dma(uint32_t dma_chan, spi_inst_t* spi, uint32_t cs_pin, uint
     dma_channel_set_trans_count(dma_chan, length, false);
     dma_channel_start(dma_chan);
     // Send dummy bytes to generate SPI clock and read data
+  hardware->conv->disable();
+  sleep_us(10);
+  conv->enable();
+
     spi_write16_blocking(spi, dummy_bytes, length);
     dma_channel_wait_for_finish_blocking(dma_chan);
     gpio_put(cs_pin, 1); // Deselect device
@@ -64,5 +70,5 @@ void Spi::spi_read_dma(uint32_t dma_chan, spi_inst_t* spi, uint32_t cs_pin, uint
   afc.clear();
   sleep_ms(100);
 }
-
+*/
 
