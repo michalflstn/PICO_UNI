@@ -18,7 +18,6 @@ add_executable(spi_master spi_master.cpp transceiver/rx_utils/parser.hpp utiliti
 # Pull in basic dependencies
 target_link_libraries(spi_master pico_stdlib hardware_spi hardware_gpio pico_multicore pico_mem_ops hardware_pio hardware_dma  hardware_uart)
 #target_link_libraries(spi_master pico_stdlib hardware_spi)
-
 pico_enable_stdio_usb(spi_master  1)
 pico_enable_stdio_uart(spi_master 1) 
 # Initialize the SDK
@@ -27,10 +26,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Werror")
 #add_compile_options(-Werror)
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
-
 # create map/bin/hex file etc.
 pico_add_extra_outputs(spi_master)
 pico_add_uf2_output(spi_master)
-
 # add url via pico_set_program_url
 example_auto_set_url(spi_master)

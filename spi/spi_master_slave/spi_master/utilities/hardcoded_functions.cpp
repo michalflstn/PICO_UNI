@@ -25,15 +25,21 @@ void readADC(uint gpio, uint32_t events)
     if (events & GPIO_IRQ_EDGE_FALL) 
     {
         // Сработал спад
+        /*
+         decoder.activePort(port_ADC);
+         Spi::setProperties(16, 1, 0);
+        */
       spi_read16_blocking(spi_default, 0, spiBuf,NmbADCSignals);
       ADC_IS_READY_TO_READ = true;
       decoder.activePort(port_None);
+      /*
       std::string afc; 
       afc.clear();
       afc = code+std::to_string(DEBUG)+" SPI event";
       afc +="\n";
       std::cout << afc;
       afc.clear();
+      */
      // uint16_t dummy_bytes[NmbADCSignals] = {0};
      // spi_write16_blocking(spi_default, dummy_bytes, NmbADCSignals);
      // scanner->hardware->spi_read_dma(dma_chan, spi_default,dummy_bytes, spiBuf,NmbADCSignals) ;
@@ -45,8 +51,8 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
         dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
-     busyport=new InputPort(confighardware.BUSYPort);
-         conv=new OutputPort(confighardware.CONV);  //conversation port
+     adcbusyport=new InputPort(confighardware.ADCBUSYPort);
+   adcconversation=new OutputPort(confighardware.ADCCONVERSION);  //conversation port
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -66,8 +72,8 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
         dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
-     busyport=new InputPort(confighardware.BUSYPort);
-         conv=new OutputPort(confighardware.CONV);
+  adcbusyport=new InputPort(confighardware.ADCBUSYPort);
+adcconversation=new OutputPort(confighardware.ADCCONVERSION);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -87,8 +93,8 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
         dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
-     busyport=new InputPort(confighardware.BUSYPort);
-         conv=new OutputPort(confighardware.CONV);
+  adcbusyport=new InputPort(confighardware.ADCBUSYPort);
+ adcconversation=new OutputPort(confighardware.ADCCONVERSION);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -115,8 +121,8 @@ HARDWARE::~HARDWARE()
     delete(dacbv);
     delete(dacxy);
     delete(dacz);
-    delete(busyport);
-    delete(conv);
+    delete(adcbusyport);
+    delete(adcconversation);
     delete(dec);
     delete(resetport);
     delete(ledPort);
@@ -331,7 +337,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  
    gpio_pull_down(resetport->getPort()); 
    dec->enable();
-   conv->enable();
+   adcconversation->enable();
    resetport->disable();
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
@@ -378,13 +384,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
     gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
-    spi_init(spi_default, 1000 * 1000); // 1 MHz
-    gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI_SCK_PIN,GPIO_FUNC_SPI);
-    gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
 */
-/*
+/* DMA for SPI read
     dma_chan = dma_claim_unused_channel(true);
     dma_channel_config c = dma_channel_get_default_config(dma_chan);
     channel_config_set_transfer_data_size(&c, DMA_SIZE_16); // 16-bit transfers
@@ -408,15 +409,12 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 
 
    dec->enable();
-   conv->enable();
-
-  gpio_set_irq_enabled_with_callback
-  (
-    busyport->getPort(),     // номер пина
-    GPIO_IRQ_EDGE_FALL,// GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, // тип события
-    true,                 // включить
-    &readADC    // функция-обработчик
-  );
+   adcconversation->enable();
+   gpio_set_irq_enabled_with_callback(adcbusyport->getPort(),   // номер пина
+                                      GPIO_IRQ_EDGE_FALL,
+    // GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, // тип события
+                                      true,                     // включить
+                                      &readADC);                // функция-обработчик  
 
    resetport->disable();
    gpio_pull_down(resetport->getPort());
@@ -440,11 +438,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
-  gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
+  gpio_set_irq_enabled_with_callback(adcbusyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 
   dec->enable();
-  conv->enable();
+  adcconversation->enable();
   resetport->disable();
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
@@ -519,11 +517,10 @@ void HARDWARE::get_result_from_adc()
   decoder.activePort(port_ADC); // ADC_AD7606
   gpio_put(PICO_DEFAULT_SPI_SCK_PIN, true);
   Spi::setProperties(16, 1, 0);
-  // Spi::setProperties(16, 1, 0);
   ADC_IS_READY_TO_READ = false;
-  conv->disable();
+  adcconversation->disable();
   sleep_us(10);
-  conv->enable();
+  adcconversation->enable();
 }
 void HARDWARE::set_BiasV(int32_t BiasV)
 {
@@ -1634,8 +1631,7 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
     spi_dma_done=false;
    */ 
   //  uint dma_chan = dma_claim_unused_channel(true);
-   
-   //uint cs_pin = PICO_DEFAULT_SPI_CSN_PIN; // Example chip select pin
+  //  uint cs_pin = PICO_DEFAULT_SPI_CSN_PIN; // Example chip select pin
   /*
    uint16_t dummy_bytes[NmbADCSignals] = {0};
    spi_read_dma(dma_chan, spi_default,1, spiBuf,  dummy_bytes, NmbADCSignals) ;

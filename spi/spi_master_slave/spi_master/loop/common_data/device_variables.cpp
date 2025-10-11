@@ -54,8 +54,8 @@ ConfigHardWareBB     confighardwareBB
                         2, //DACXYMode
                         4, //DACZport
                         1, //DACZMode
-                        16,//BUSYPort
-                        7, //CONV
+                        16,//ADCBUSYPort
+                        7, //ADCCONVERSATION
                         10,//DEC
                         17,//ResetPort
                         PICO_DEFAULT_LED_PIN,//LEDPort
@@ -81,8 +81,8 @@ ConfigHardWareBBFPGA    confighardwareBBFPGA
                         2, //DACXYMode
                         4, //DACZport
                         1, //DACZMode
-                        16,//BUSYPort
-                        7, //CONV
+                        16,//ADCBUSYPort
+                        7, //ADCCONVERSION
                         10,//DEC
                         17,//ResetPort
                         PICO_DEFAULT_LED_PIN,//LEDPort
@@ -107,8 +107,8 @@ ConfigHardWareWB    confighardwareWB
                         2,//DACXYMode
                         4,//DACZPort
                         1,//DACZMode
-                        16,//BUSYPort
-                        7, //CONV
+                        16,//ADCBUSYPort
+                        7, //ADCCONVERSION
                         10,//DEC
                         17,// ResetPort
                         PICO_DEFAULT_LED_PIN,//LEDPort

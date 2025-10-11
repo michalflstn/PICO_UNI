@@ -38,10 +38,10 @@ control registers
 */
 
 #define port_ADC       0     //Analog Device   AD7606
-#define port_None      7   
+#define port_Freq      1  
 #define port_Gain_Ampl 5
 #define port_Gain_LOOP 6
-#define port_Freq      1
+#define port_None      7 
 
 //  add 250409
 extern uint8_t device;
@@ -61,7 +61,7 @@ extern int32_t ShiftDac;      //=32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V
 extern int8_t  SetPointScale;
 //extern int32_t  GainScale; //val  gain в младших 8 битах указывается количество разрядов после запятой в коэффициентах
 //extern int32_t  GainScaleVal;
-extern uint16_t spiBuf[NmbADCSignals];//???
+extern uint16_t spiBuf[NmbADCSignals];
 extern uint8_t  FPGADELIM;
 extern uint8_t  FPGACRCPAR;
 extern uint8_t  FPGAREAD;
@@ -94,8 +94,8 @@ struct ConfigHardWareBB //BB
   uint8_t DACXYMode;        //2 DAC8563_2  XY
   uint8_t DACZPort;         //4 dac8563_3  Z
   uint8_t DACZMode;     //1 
-  uint8_t BUSYPort;     //16
-  uint8_t CONV;         //7
+  uint8_t ADCBUSYPort;     //16
+  uint8_t ADCCONVERSION;         //7
   uint8_t DEC;          //10
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
@@ -119,8 +119,8 @@ struct ConfigHardWareBBFPGA // BBFPGA
   uint8_t DACXYMode;        //2 DAC8563_2  XY
   uint8_t DACZPort;         //4 dac8563_3  Z
   uint8_t DACZMode;     //1 
-  uint8_t BUSYPort;     //16
-  uint8_t CONV;         //7
+  uint8_t ADCBUSYPort;     //16
+  uint8_t ADCCONVERSION;         //7
   uint8_t DEC;          //10
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
@@ -143,8 +143,8 @@ struct ConfigHardWareWB  //WB
   uint8_t DACXYMode;       //2 DAC8563_2  XY
   uint8_t DACZPort;        //4 dac8563_3  Z
   uint8_t DACZMode;     //1 
-  uint8_t BUSYPort;     //16
-  uint8_t CONV;         //7
+  uint8_t ADCBUSYPort;     //16
+  uint8_t ADCCONVERSION;         //7
   uint8_t DEC;          //10
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN

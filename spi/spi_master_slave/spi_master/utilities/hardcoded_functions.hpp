@@ -36,8 +36,8 @@ private:
  DAC8563    *dacbv;   // DAC BIAS
  DAC8563    *dacxy;   // DAC X,Y
  DAC8563    *dacz;    // DAC Z
- InputPort  *busyport;// FIXME TEMP!!!
- OutputPort *conv;    // 
+ InputPort  *adcbusyport;// FIXME TEMP!!!
+ OutputPort *adcconversation;    // 
  OutputPort *dec;
  OutputPort *resetport; // FIXME TEMP
  OutputPort *ledPort;
