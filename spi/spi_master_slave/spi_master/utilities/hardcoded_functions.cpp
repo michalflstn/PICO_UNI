@@ -51,8 +51,8 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
         dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
-     adcbusyport=new InputPort(confighardware.ADCBUSYPort);
-   adcconversation=new OutputPort(confighardware.ADCCONVERSION);  //conversation port
+     adcSPIbusyport=new InputPort(confighardware.ADCSPIBUSYPort);
+   adcSPI=new OutputPort(confighardware.ADCSPI);  //conversation port
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -72,8 +72,8 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
         dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
-  adcbusyport=new InputPort(confighardware.ADCBUSYPort);
-adcconversation=new OutputPort(confighardware.ADCCONVERSION);
+ adcSPIbusyport=new InputPort(confighardware.ADCSPIBUSYPort);
+adcSPI=new OutputPort(confighardware.ADCSPI);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -93,8 +93,8 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
         dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
         dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
-  adcbusyport=new InputPort(confighardware.ADCBUSYPort);
- adcconversation=new OutputPort(confighardware.ADCCONVERSION);
+  adcSPIbusyport=new InputPort(confighardware.ADCSPIBUSYPort);
+       adcSPI= new OutputPort(confighardware.ADCSPI);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -121,8 +121,8 @@ HARDWARE::~HARDWARE()
     delete(dacbv);
     delete(dacxy);
     delete(dacz);
-    delete(adcbusyport);
-    delete(adcconversation);
+    delete(adcSPIbusyport);
+    delete(adcSPI);
     delete(dec);
     delete(resetport);
     delete(ledPort);
@@ -337,7 +337,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  
    gpio_pull_down(resetport->getPort()); 
    dec->enable();
-   adcconversation->enable();
+   adcSPI->enable();
    resetport->disable();
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
@@ -409,8 +409,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 
 
    dec->enable();
-   adcconversation->enable();
-   gpio_set_irq_enabled_with_callback(adcbusyport->getPort(),   // номер пина
+   adcSPI->enable();
+   gpio_set_irq_enabled_with_callback(adcSPIbusyport->getPort(),   // номер пина
                                       GPIO_IRQ_EDGE_FALL,
     // GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, // тип события
                                       true,                     // включить
@@ -438,11 +438,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
-  gpio_set_irq_enabled_with_callback(adcbusyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
+  gpio_set_irq_enabled_with_callback(adcSPIbusyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 
   dec->enable();
-  adcconversation->enable();
+  adcSPI->enable();
   resetport->disable();
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
@@ -515,12 +515,12 @@ void HARDWARE::set_Freq(uint32_t freq)
 void HARDWARE::get_result_from_adc()
 {
   decoder.activePort(port_ADC); // ADC_AD7606
-  gpio_put(PICO_DEFAULT_SPI_SCK_PIN, true);
+ // gpio_put(PICO_DEFAULT_SPI_SCK_PIN, true);
   Spi::setProperties(16, 1, 0);
   ADC_IS_READY_TO_READ = false;
-  adcconversation->disable();
+  adcSPI->disable();
   sleep_us(10);
-  adcconversation->enable();
+  adcSPI->enable();
 }
 void HARDWARE::set_BiasV(int32_t BiasV)
 {
