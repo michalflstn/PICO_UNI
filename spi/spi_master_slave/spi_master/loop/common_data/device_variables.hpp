@@ -43,8 +43,8 @@ control registers
 #define port_Gain_LOOP 6
 #define port_None      7 
 
-#define spi_cpol  SPI_CPOL_0    
-#define spi_cpha  SPI_CPHA_1   
+#define spi_cpol  SPI_CPOL_1    
+#define spi_cpha  SPI_CPHA_0   
 //  add 250409
 extern uint8_t device;
 extern uint8_t sensor;
