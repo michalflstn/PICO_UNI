@@ -396,7 +396,8 @@ case Set_SIGN_LOOP_BIASV:
               }     
  case SET_XY: {
                 ALGCODE=ALGNONE;
-                scanner->hardware->init_SPI(Vector[1],Vector[2],Vector[3],Vector[4]);//29, 3, 8, 0, 1, 1, value	
+                scanner->hardware->init_SPI(Vector[1],Vector[2],Vector[3],Vector[4]);
+                //29, 3, 8, 0, 1, 1, value	  spi_cpol, spi_cpha
                 if (Vector[5] == 0)
                 {
                  scanner->hardware->move_scannerX(Vector[6]);

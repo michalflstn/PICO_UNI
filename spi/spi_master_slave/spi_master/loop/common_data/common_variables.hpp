@@ -108,7 +108,7 @@ extern int32_t vectorSize;
 extern bool AD9833_SENDER;
 extern bool AD8400_SENDER;
 extern bool AD8400_SET_GAIN;   // AD8400
-extern bool AD5664;            
+        
 
 extern bool ADC_ENABLE_DISABLE;//AD7606 
 extern bool ADC_READ_FOREVER;  //AD7606

@@ -5,7 +5,7 @@
 //int8_t       HARDWAREVERSION=WB;
 int8_t       HARDWAREVERSION=BB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SoftHARDWAREVERSION="25.10.20.01 ";
+std::string  SoftHARDWAREVERSION="25.10.21.01 ";
 std::string  SoftVERSION="25.10.08.01 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
@@ -38,7 +38,6 @@ const char   separator=',';
 bool   AD9833_SENDER = false;
 bool   AD8400_SENDER = false;
 bool AD8400_SET_GAIN = false;
-bool          AD5664 = false;
 bool    SET_IO_VALUE = false;
 bool ADC_ENABLE_DISABLE = false;
 bool ADC_READ_FOREVER = false;

@@ -10,7 +10,7 @@ DAC8563::DAC8563(int modeA1B1)
 
 void DAC8563::DAC_WR_REG(uint8_t cmd_byte, uint16_t data_byte)
 {
-  Spi::setProperties(8, 0, 1);
+  Spi::setProperties(8,spi_cpol, spi_cpha);
   uint8_t array[] = {cmd_byte, (uint8_t) (data_byte >> 8), (uint8_t) ((data_byte << 8) >> 8)};
   decoder.activePort(port_);
   spi_write_blocking(spi_default, array, 3);
@@ -70,5 +70,5 @@ void DAC8563::initialize(int port)  //DAC
 void DAC8563::setSpiProps()
 {
   decoder.activePort(port_);
-  Spi::setProperties(8, 0, 1);
+  Spi::setProperties(8,spi_cpol, spi_cpha); //0,1
 }

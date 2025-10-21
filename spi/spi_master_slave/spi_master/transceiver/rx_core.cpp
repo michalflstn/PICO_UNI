@@ -20,7 +20,7 @@ void RX_core::comReceiveISR(uint a, uint32_t b)
     return;
   }
   decoder.activePort(port_ADC);
-  Spi::setProperties(16, 1, 0);
+  Spi::setProperties(16,spi_cpol, spi_cpha); //1,0
   spi_read16_blocking(spi_default, 0, spiBuf, 8); //8????  
 /*  if (Z_STATE) 
   {
