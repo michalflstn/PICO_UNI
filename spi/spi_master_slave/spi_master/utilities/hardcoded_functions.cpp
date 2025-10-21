@@ -527,6 +527,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
 //   code  22 , 2, 8, 0, 1, 1, value 
   if (!flgVirtual)
   { 
+    dacbv->setSpiProps(); //add 251021
    switch (HARDWAREVERSION)
       {
       case WB:
@@ -1157,9 +1158,11 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       switch (HARDWAREVERSION)
       {
       case WB:
+              dacspt->setSpiProps(); //251021
               dacspt->writeA(SetPoint+ShiftDac); 
               break;
       case BB:
+              dacspt->setSpiProps(); //251021
               dacspt->writeA(SetPoint+ShiftDac);
               break;       
   case BBFPGA:
