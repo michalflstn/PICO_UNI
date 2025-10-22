@@ -45,7 +45,8 @@ public:
   void initialize(int port);
   void writeA(int input);
   void writeB(int input);
-  void setProperties();
+  //void setProperties();
+  void Activate();
   void deActivate();
 private:
   void DAC_WR_REG(uint8_t cmd_byte, uint16_t data_byte );

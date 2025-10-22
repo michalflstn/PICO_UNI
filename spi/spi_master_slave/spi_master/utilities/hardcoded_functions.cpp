@@ -310,6 +310,20 @@ case WB:
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFPGA
 {
+ //add 251022
+  stdio_init_all();
+  stdio_usb_init();
+#if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
+#warning spi/spi_master example requires a board with SPI pins
+  puts("Default SPI pins were not defined");
+#else  // printf("SPI master example\n");
+  spi_init(spi_default, 1000 * 1000);
+  gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
+ #endif
+
  // BASIC SETTINGS
  // uart_init(uart1, 115200); //????
  // uart_init(USB_UART_ID, 115200); //????
@@ -364,6 +378,19 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
 
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 {
+  //add 251022
+  stdio_init_all();
+  stdio_usb_init();
+#if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
+#warning spi/spi_master example requires a board with SPI pins
+  puts("Default SPI pins were not defined");
+#else  // printf("SPI master example\n");
+  spi_init(spi_default, 1000 * 1000);
+  gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
+ #endif
   // 250910
 /*  stdio_init_all();
    uart_init(uart0, 115200); // or your desired baud rate
@@ -379,13 +406,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 
 // multicore_launch_core1(RX_core::launchOnCore1); // 251006 
 //  IRQ for DNA
- /*
-    spi_init(SPI_PORT, 1000 * 1000); // 1 MHz
-    gpio_set_function(SPI_RX_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI_TX_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI_SCK_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI_CS_PIN, GPIO_FUNC_SPI);
-*/
+
 /* DMA for SPI read
     dma_chan = dma_claim_unused_channel(true);
     dma_channel_config c = dma_channel_get_default_config(dma_chan);
@@ -435,6 +456,21 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 }
 void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB  
 {
+//  251022
+  stdio_init_all();
+  stdio_usb_init();
+#if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
+#warning spi/spi_master example requires a board with SPI pins
+  puts("Default SPI pins were not defined");
+#else  // printf("SPI master example\n");
+  spi_init(spi_default, 1000 * 1000);
+  gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
+  #endif
+//
+
   gpio_pull_down(resetport->getPort());
 // #warning should be undeleted
 // RX_core rxCore;
@@ -533,7 +569,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
   if (!flgVirtual)
   { 
    // decoder.activePort(port_SetPointBiasV); //add 251022
-    dacbv->setProperties(); //add 251021
+    dacbv->Activate(); //add 251021
    switch (HARDWAREVERSION)
       {
       case WB:
@@ -806,7 +842,7 @@ void HARDWARE::init_DACBiasV(uint8_t spiport) //  4 для подставки
 void HARDWARE::init_DACXY(uint8_t spiport) //spi port
 {
   dacxy->initialize(spiport); //code 27
-  dacxy->setProperties();
+  dacxy->Activate();
   dacxy->writeA(0);
   dacxy->writeB(0);
 }
@@ -814,7 +850,7 @@ void HARDWARE::init_DACXY(uint8_t spiport) //spi port
 void HARDWARE::init_DACZ(uint8_t spiport)
 {
   dacz->initialize(spiport); //code 27
-  dacz->setProperties();  // 241214
+  dacz->Activate();  // 241214
 }
 void HARDWARE::move_scannerX(int x)
 {
@@ -1165,15 +1201,15 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       switch (HARDWAREVERSION)
       {
       case WB:
-              dacspt->setProperties(); //251021
+              dacspt->Activate(); //251021
               dacspt->writeA(SetPoint+ShiftDac); 
-              sleep_us(2);
+              sleep_us(2);//???
               dacspt->deActivate(); //add 251022
               break;
       case BB:
-              dacspt->setProperties(); //251021
+              dacspt->Activate(); //251021
               dacspt->writeA(SetPoint+ShiftDac);
-              sleep_us(2);
+              sleep_us(2);//???
               dacspt->deActivate(); //add 251022
               break;       
   case BBFPGA:
@@ -1221,30 +1257,38 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
       case WB:
              decoder.activePort(port_Gain_Ampl);
            //  Spi::setProperties(8, spi_cpol, spi_cpha);//0,0
-             
+             spi.setProperties(8,spi_cpol, spi_cpha,spi_order); 
              intBuf[0] = 0;
-             spi_write_blocking(spi_default, intBuf, 1); 
-             intBuf[0] = 255-(uint8_t)gain;               
-             spi_write_blocking(spi_default, intBuf, 1);
+             spi.write(intBuf, 1);
+             //spi_write_blocking(spi_default, intBuf, 1); 
+             intBuf[0] = 255-(uint8_t)gain; 
+             spi.write(intBuf, 1);              
+           //  spi_write_blocking(spi_default, intBuf, 1);
              decoder.activePort(port_None); 
              intBuf[0] = (uint8_t)gain;
              break;
       case BB:
              decoder.activePort(port_Gain_Ampl);
+             spi.setProperties(8,spi_cpol, spi_cpha,spi_order);
           //   Spi::setProperties(8,spi_cpol, spi_cpha);
              intBuf[0] = 0;
-             spi_write_blocking(spi_default, intBuf, 1); 
+             spi.write(intBuf, 1); 
+           //  spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = (uint8_t)gain;
-             spi_write_blocking(spi_default, intBuf, 1);
+             spi.write(intBuf, 1);
+            // spi_write_blocking(spi_default, intBuf, 1);
              decoder.activePort(port_None);
              break;       
   case BBFPGA:
              decoder.activePort(port_Gain_Ampl);
+             spi.setProperties(8,spi_cpol, spi_cpha,spi_order); 
          //    Spi::setProperties(8,spi_cpol, spi_cpha);
              intBuf[0] = 0;
-             spi_write_blocking(spi_default, intBuf, 1); 
+             spi.write(intBuf, 1);
+            // spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = (uint8_t)gain;
-             spi_write_blocking(spi_default, intBuf, 1);
+             spi.write(intBuf, 1);
+             //spi_write_blocking(spi_default, intBuf, 1);
              decoder.activePort(port_None);
              break;
      }
@@ -1273,10 +1317,13 @@ void HARDWARE::set_GainPIDCorrection(uint32_t gain)
        uint8_t intBuf[1]; 
        decoder.activePort(port_Gain_LOOP);
     //   Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
+       spi.setProperties(8,spi_cpol, spi_cpha,spi_order); 
        intBuf[0] = 0;
-       spi_write_blocking(spi_default, intBuf, 1); 
+       spi.write( intBuf, 1);
+      // spi_write_blocking(spi_default, intBuf, 1); 
        intBuf[0] = tiadd;
-       spi_write_blocking(spi_default, intBuf, 1); 
+       spi.write( intBuf, 1);
+      // spi_write_blocking(spi_default, intBuf, 1); 
        decoder.activePort(port_None);
       }
       if (flgDebug)  
@@ -1309,11 +1356,14 @@ void HARDWARE::set_GainPID(uint32_t gain)
        uint8_t intBuf[1]; 
        decoder.activePort(port_Gain_LOOP); //?????? 251022
     //   Spi::setProperties(8,spi_cpol, spi_cpha); //0,0
-       dacspt->setProperties(); //0,0
+       spi.setProperties(8,spi_cpol, spi_cpha,spi_order); //251022
        intBuf[0] = 0;
-       spi_write_blocking(spi_default, intBuf, 1); 
+       spi.write(intBuf, 1);
+      //spi_write_blocking(spi_default, intBuf, 1); 
        intBuf[0] = tiadd;
-       spi_write_blocking(spi_default, intBuf, 1); 
+       spi.write(intBuf, 1);
+     //  sleep_us(2);
+      // spi_write_blocking(spi_default, intBuf, 1); 
        decoder.activePort(port_None);
       }
       if (flgDebug)  
@@ -1338,13 +1388,15 @@ void HARDWARE::set_GainPID(uint32_t gain)
         uint8_t intBuf[1]; 
         decoder.activePort(port_Gain_LOOP);
         //Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
-        dacspt->setProperties();
+        spi.setProperties(8,spi_cpol, spi_cpha,spi_order); //251022
         intBuf[0] = 0;
-       // spi_write_blocking(spi_default, intBuf, 1); 
+        spi.write(intBuf, 1);
+        // spi_write_blocking(spi_default, intBuf, 1); 
         intBuf[0] = ti;
-       // spi_write_blocking(spi_default, intBuf, 1); 
-        decoder.activePort(port_None);  
-        sleep_ms(10);
+        spi.write(intBuf, 1); 
+     //   sleep_ms(10); //????
+         // spi_write_blocking(spi_default, intBuf, 1); 
+        decoder.activePort(port_None);     
        }
       }
       else
@@ -1355,13 +1407,15 @@ void HARDWARE::set_GainPID(uint32_t gain)
          uint8_t intBuf[1]; 
          decoder.activePort(port_Gain_LOOP);
        //  Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
-         dacspt->setProperties(); 
+         spi.setProperties(8,spi_cpol, spi_cpha,spi_order); //251022
          intBuf[0] = 0;
-         spi_write_blocking(spi_default, intBuf, 1); 
+         spi.write(intBuf, 1);
+   //      spi_write_blocking(spi_default, intBuf, 1); 
          intBuf[0] = ti;
-         spi_write_blocking(spi_default, intBuf, 1); 
-         decoder.activePort(port_None);
-          sleep_ms(10);  
+         spi.write(intBuf, 1);  
+   //    spi_write_blocking(spi_default, intBuf, 1); 
+     //    sleep_ms(10);  
+         decoder.activePort(port_None);       
         }
       }
       }
@@ -1591,7 +1645,7 @@ void HARDWARE::set_DACZero()
 }
 void HARDWARE::set_DACXY(uint8_t channel, uint16_t value) 
 {
-  dacxy->setProperties(); 
+ // dacxy->setProperties(); //????  251022
   if (channel == 0)  dacxy->writeA(value);
   if (channel == 1)  dacxy->writeB(value);
   sleep_us(2);
@@ -1602,12 +1656,12 @@ void HARDWARE::set_DACZ(int16_t value)
     switch (HARDWAREVERSION)
   {
    case WB:
-       dacz->setProperties(); 
+      // dacz->setProperties(); 
        dacz->writeB(int32_t(value)+ShiftDac);
        sleep_us(2);
        break;
    case BB: 
-       dacz->setProperties(); 
+      // dacz->setProperties(); 
        dacz->writeA(int32_t(value)+ShiftDac);
        sleep_us(2);
        break;

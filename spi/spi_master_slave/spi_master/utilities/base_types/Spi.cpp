@@ -2,12 +2,13 @@
 #include "pico/stdlib.h"
 #include <cstdio>
 #include <string>
-Spi::Spi(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val, spi_order_t first)
+Spi::Spi( uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val, spi_order_t first)
 {
   _pol_val= pol_val;
   _pha_val= pha_val;
   _databitsval=databitsval;
   _first=first;
+ /* 251022
   stdio_init_all();
   stdio_usb_init();
 #if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
@@ -19,15 +20,14 @@ Spi::Spi(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val, spi_order_t f
   gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
-//  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
-//  spi_set_format(spi_default, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);//8  251008
-  spi_set_format(spi_default,_databitsval, _pol_val, _pha_val, SPI_MSB_FIRST);//8  251008
 #endif
+ */ 
+//  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
+  spi_set_format(spi_default,_databitsval, _pol_val, _pha_val, SPI_MSB_FIRST);//8  251008
 }
-void Spi::setProperties(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first)
+void Spi::setProperties( uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first)
 {
-  spi_set_format(spi_default,databitsval, pol_val,
-                  pha_val, first);
+  spi_set_format(spi_default,databitsval, pol_val, pha_val, first);
 }
 
 void Spi::setProperties()
