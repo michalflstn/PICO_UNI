@@ -5,6 +5,7 @@
 #include "../transceiver/rx_core.hpp"
 #include "../utilities/debug_logger.hpp"
 #include "hardcoded_functions.hpp"
+#include "../loop/common_data/device_variables.hpp"
 
 volatile bool spi_dma_done = false;
 
@@ -47,10 +48,10 @@ void readADC(uint gpio, uint32_t events)
   }  
 HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
 {
-       dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
-        dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
-         dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
+       dacspt=new DAC8563(confighardware.DACSetPointMode,8,spi_cpol,spi_cpha,spi_order); //set mode DAC BIAS,SetPoint
+        dacbv=new DAC8563(confighardware.DACBiasVMode,8,spi_cpol,spi_cpha,spi_order);    //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode,8,spi_cpol,spi_cpha,spi_order);       //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode,8,spi_cpol,spi_cpha,spi_order);        //set mode DAC Z  
      adcSPIbusyport=new InputPort(confighardware.ADCSPIBUSYPort);
    adcSPI=new OutputPort(confighardware.ADCSPI);  //conversation port
           dec=new OutputPort(confighardware.DEC);
@@ -68,10 +69,10 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
 }
 HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
 {
-       dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
-        dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
-         dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
+       dacspt=new DAC8563(confighardware.DACSetPointMode,8,spi_cpol,spi_cpha,spi_order); //set mode DAC BIAS,SetPoint
+        dacbv=new DAC8563(confighardware.DACBiasVMode,8,spi_cpol,spi_cpha,spi_order);    //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode,8,spi_cpol,spi_cpha,spi_order);       //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode,8,spi_cpol,spi_cpha,spi_order);        //set mode DAC Z  
  adcSPIbusyport=new InputPort(confighardware.ADCSPIBUSYPort);
 adcSPI=new OutputPort(confighardware.ADCSPI);
           dec=new OutputPort(confighardware.DEC);
@@ -89,10 +90,10 @@ adcSPI=new OutputPort(confighardware.ADCSPI);
 }
 HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
 {
-       dacspt=new DAC8563(confighardware.DACSetPointMode); //set mode DAC BIAS,SetPoint
-        dacbv=new DAC8563(confighardware.DACBiasVMode);    //set mode DAC BIAS,SetPoint
-        dacxy=new DAC8563(confighardware.DACXYMode);       //set mode DAC X,Y
-         dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
+       dacspt=new DAC8563(confighardware.DACSetPointMode,8,spi_cpol,spi_cpha,spi_order); //set mode DAC BIAS,SetPoint
+        dacbv=new DAC8563(confighardware.DACBiasVMode,8,spi_cpol,spi_cpha,spi_order);    //set mode DAC BIAS,SetPoint
+        dacxy=new DAC8563(confighardware.DACXYMode,8,spi_cpol,spi_cpha,spi_order);       //set mode DAC X,Y
+         dacz=new DAC8563(confighardware.DACZMode,8,spi_cpol,spi_cpha,spi_order);        //set mode DAC Z  
   adcSPIbusyport=new InputPort(confighardware.ADCSPIBUSYPort);
        adcSPI= new OutputPort(confighardware.ADCSPI);
           dec=new OutputPort(confighardware.DEC);
@@ -502,12 +503,15 @@ void HARDWARE::set_Freq(uint32_t freq)
 
   decoder.activePort(port_Freq);
   sleep_us(1);   // 240411 add
-  Spi::setProperties(8, spi_cpol, spi_cpha); //1,1
-  spi_write_blocking(spi_default, buf, 2);
+  spi.setProperties(8, spi_cpol, spi_cpha,spi_order); //1,1
+  spi.write(buf, 2);
+ // spi_write_blocking(spi_default, buf, 2);
   sleep_us(1); // 240411 add
-  spi_write_blocking(spi_default, buf + 2, 2);
+  spi.write(buf+2, 2);
+ // spi_write_blocking(spi_default, buf + 2, 2);
   sleep_us(1); // 240411 add
-  spi_write_blocking(spi_default, buf + 4, 2);
+  spi.write(buf+4, 2);
+ // spi_write_blocking(spi_default, buf + 4, 2);
   sleep_us(1);
   decoder.activePort(port_None); //240411  add
 }
@@ -516,7 +520,8 @@ void HARDWARE::get_result_from_adc()
 {
   decoder.activePort(port_ADC); // ADC_AD7606
  // gpio_put(PICO_DEFAULT_SPI_SCK_PIN, true);
-  Spi::setProperties(16,spi_cpol, spi_cpha); //1,0
+ // spi.setProperties(16,spi_cpol, spi_cpha); //1,0
+  spi.setProperties(); //1,0
   ADC_IS_READY_TO_READ = false;
   adcSPI->disable();
   sleep_us(10);
@@ -527,7 +532,8 @@ void HARDWARE::set_BiasV(int32_t BiasV)
 //   code  22 , 2, 8, 0, 1, 1, value 
   if (!flgVirtual)
   { 
-    dacbv->setSpiProps(); //add 251021
+   // decoder.activePort(port_SetPointBiasV); //add 251022
+    dacbv->setProperties(); //add 251021
    switch (HARDWAREVERSION)
       {
       case WB:
@@ -540,6 +546,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
               dacbv->writeB(BiasV+ShiftDac); //+
               break;       
       }
+    dacbv->deActivate();   //add 251022
   }    
 /*
  if  (flgDebug)
@@ -785,7 +792,7 @@ case SICMDC: setLoopSign(SignalDecrease);
 void HARDWARE::init_SPI( uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4 )
 {
  decoder.activePort(port);
- Spi::setProperties(v2, v3, v4);
+ //Spi::setProperties(v2, v3, v4);
 }
 
 void HARDWARE::init_DACSetPoint(uint8_t spiport) //  4 для подставки
@@ -799,7 +806,7 @@ void HARDWARE::init_DACBiasV(uint8_t spiport) //  4 для подставки
 void HARDWARE::init_DACXY(uint8_t spiport) //spi port
 {
   dacxy->initialize(spiport); //code 27
-  dacxy->setSpiProps();
+  dacxy->setProperties();
   dacxy->writeA(0);
   dacxy->writeB(0);
 }
@@ -807,7 +814,7 @@ void HARDWARE::init_DACXY(uint8_t spiport) //spi port
 void HARDWARE::init_DACZ(uint8_t spiport)
 {
   dacz->initialize(spiport); //code 27
-  dacz->setSpiProps();  // 241214
+  dacz->setProperties();  // 241214
 }
 void HARDWARE::move_scannerX(int x)
 {
@@ -1158,12 +1165,16 @@ void HARDWARE::set_SetPoint( int32_t SetPoint)
       switch (HARDWAREVERSION)
       {
       case WB:
-              dacspt->setSpiProps(); //251021
+              dacspt->setProperties(); //251021
               dacspt->writeA(SetPoint+ShiftDac); 
+              sleep_us(2);
+              dacspt->deActivate(); //add 251022
               break;
       case BB:
-              dacspt->setSpiProps(); //251021
+              dacspt->setProperties(); //251021
               dacspt->writeA(SetPoint+ShiftDac);
+              sleep_us(2);
+              dacspt->deActivate(); //add 251022
               break;       
   case BBFPGA:
               FPGAWriteData writedata;
@@ -1209,7 +1220,8 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
       {
       case WB:
              decoder.activePort(port_Gain_Ampl);
-             Spi::setProperties(8, spi_cpol, spi_cpha);//0,0
+           //  Spi::setProperties(8, spi_cpol, spi_cpha);//0,0
+             
              intBuf[0] = 0;
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = 255-(uint8_t)gain;               
@@ -1219,7 +1231,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
              break;
       case BB:
              decoder.activePort(port_Gain_Ampl);
-             Spi::setProperties(8,spi_cpol, spi_cpha);
+          //   Spi::setProperties(8,spi_cpol, spi_cpha);
              intBuf[0] = 0;
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = (uint8_t)gain;
@@ -1228,7 +1240,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
              break;       
   case BBFPGA:
              decoder.activePort(port_Gain_Ampl);
-             Spi::setProperties(8,spi_cpol, spi_cpha);
+         //    Spi::setProperties(8,spi_cpol, spi_cpha);
              intBuf[0] = 0;
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = (uint8_t)gain;
@@ -1260,7 +1272,7 @@ void HARDWARE::set_GainPIDCorrection(uint32_t gain)
        binary[0] == '1' ? gainPID2->enable() : gainPID2->disable();
        uint8_t intBuf[1]; 
        decoder.activePort(port_Gain_LOOP);
-       Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
+    //   Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
        intBuf[0] = 0;
        spi_write_blocking(spi_default, intBuf, 1); 
        intBuf[0] = tiadd;
@@ -1295,8 +1307,9 @@ void HARDWARE::set_GainPID(uint32_t gain)
        binary[1] == '1' ? gainPID1->enable() : gainPID1->disable();
        binary[0] == '1' ? gainPID2->enable() : gainPID2->disable();
        uint8_t intBuf[1]; 
-       decoder.activePort(port_Gain_LOOP);
-       Spi::setProperties(8,spi_cpol, spi_cpha); //0,0
+       decoder.activePort(port_Gain_LOOP); //?????? 251022
+    //   Spi::setProperties(8,spi_cpol, spi_cpha); //0,0
+       dacspt->setProperties(); //0,0
        intBuf[0] = 0;
        spi_write_blocking(spi_default, intBuf, 1); 
        intBuf[0] = tiadd;
@@ -1324,11 +1337,12 @@ void HARDWARE::set_GainPID(uint32_t gain)
         ti=(uint8_t)i;
         uint8_t intBuf[1]; 
         decoder.activePort(port_Gain_LOOP);
-        Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
+        //Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
+        dacspt->setProperties();
         intBuf[0] = 0;
-        spi_write_blocking(spi_default, intBuf, 1); 
+       // spi_write_blocking(spi_default, intBuf, 1); 
         intBuf[0] = ti;
-        spi_write_blocking(spi_default, intBuf, 1); 
+       // spi_write_blocking(spi_default, intBuf, 1); 
         decoder.activePort(port_None);  
         sleep_ms(10);
        }
@@ -1340,7 +1354,8 @@ void HARDWARE::set_GainPID(uint32_t gain)
          ti=(uint8_t)i;
          uint8_t intBuf[1]; 
          decoder.activePort(port_Gain_LOOP);
-         Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
+       //  Spi::setProperties(8,spi_cpol, spi_cpha);//0,0
+         dacspt->setProperties(); 
          intBuf[0] = 0;
          spi_write_blocking(spi_default, intBuf, 1); 
          intBuf[0] = ti;
@@ -1563,7 +1578,7 @@ void HARDWARE::set_GainPID(uint16_t gain)
 void HARDWARE::set_clock_enable()
 {
   uint8_t intBuf[1];
-  Spi::setProperties(8, spi_cpol, spi_cpha); //1,1
+  //Spi::setProperties(8, spi_cpol, spi_cpha); //1,1   //251022
   decoder.activePort(port_None);
   spi_write_blocking(spi_default, intBuf, 1);
 }
@@ -1576,7 +1591,7 @@ void HARDWARE::set_DACZero()
 }
 void HARDWARE::set_DACXY(uint8_t channel, uint16_t value) 
 {
-  dacxy->setSpiProps(); 
+  dacxy->setProperties(); 
   if (channel == 0)  dacxy->writeA(value);
   if (channel == 1)  dacxy->writeB(value);
   sleep_us(2);
@@ -1587,12 +1602,12 @@ void HARDWARE::set_DACZ(int16_t value)
     switch (HARDWAREVERSION)
   {
    case WB:
-       dacz->setSpiProps(); 
+       dacz->setProperties(); 
        dacz->writeB(int32_t(value)+ShiftDac);
        sleep_us(2);
        break;
    case BB: 
-       dacz->setSpiProps(); 
+       dacz->setProperties(); 
        dacz->writeA(int32_t(value)+ShiftDac);
        sleep_us(2);
        break;

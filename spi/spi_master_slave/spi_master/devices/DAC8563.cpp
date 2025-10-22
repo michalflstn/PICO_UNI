@@ -3,14 +3,18 @@
 #include "../utilities/base_types/Spi.hpp"
 #include "../loop/common_data/device_variables.hpp"
 
-DAC8563::DAC8563(int modeA1B1)
+DAC8563::DAC8563(int modeA1B1,uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first)
 {
   mode = modeA1B1;
+  _pol_val= pol_val;
+  _pha_val= pha_val;
+  _databitsval=databitsval;
+  _first=first;
 }
 
 void DAC8563::DAC_WR_REG(uint8_t cmd_byte, uint16_t data_byte)
 {
-  Spi::setProperties(8,spi_cpol, spi_cpha);
+  setProperties();
   uint8_t array[] = {cmd_byte, (uint8_t) (data_byte >> 8), (uint8_t) ((data_byte << 8) >> 8)};
   decoder.activePort(port_);
   spi_write_blocking(spi_default, array, 3);
@@ -43,9 +47,9 @@ void DAC8563::writeB(int input)
 void DAC8563::writeValue(uint8_t cmd_byte, uint8_t mid, uint8_t last)
 {
   uint8_t array[] = {cmd_byte, mid, last};
-  setSpiProps();
+  setProperties();
   spi_write_blocking(spi_default, array, 3);
-  decoder.activePort(7);
+  decoder.activePort(port_None);
 }
 
 void DAC8563::initialize(int port)  //DAC
@@ -67,8 +71,13 @@ void DAC8563::initialize(int port)  //DAC
   DAC_WR_REG(CMD_LDAC_DIS, DATA_LDAC_DIS);          // update the caches
 }
 
-void DAC8563::setSpiProps()
+void DAC8563::setProperties()
 {
   decoder.activePort(port_);
-  Spi::setProperties(8,spi_cpol, spi_cpha); //0,1
+  //Spi::setProperties(8,spi_cpol, spi_cpha); //0,1
+  spi_set_format(spi_default,_databitsval, _pol_val, _pha_val,_first);
+}
+void DAC8563::deActivate()
+{
+ decoder.activePort(port_None);
 }

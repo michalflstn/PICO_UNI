@@ -11,6 +11,7 @@
 #include "../physical_devices/LinearDriver.hpp"  //240505
 #include "../loop/common_data/device_variables.hpp"
 #include "../loop/common_data/common_variables.hpp"
+#include "../utilities/base_types/Spi.hpp"
 
 
 #define portx                    0 //порты сканнера! пьезодвижетеля ?

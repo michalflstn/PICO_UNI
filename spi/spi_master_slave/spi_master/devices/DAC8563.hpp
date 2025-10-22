@@ -3,6 +3,8 @@
 #define PICO_EXAMPLES_DAC8563_HPP
 
 #include <cstdint>
+#include "hardware/spi.h"
+#include "../loop/common_data/device_variables.hpp"
 
 #define CMD_SETA_UPDATEA          0x18  // 00 | 011 | 000
 #define CMD_SETB_UPDATEB          0x19  // 00 010 011
@@ -34,12 +36,17 @@ class DAC8563  // DAC
 private:
   int mode;
   int port_;
+ spi_cpol_t  _pol_val;
+ spi_cpha_t  _pha_val;  
+ uint8_t _databitsval;
+ spi_order_t   _first;
 public:
-  DAC8563(int mode);
+  DAC8563(int mode,uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first);
   void initialize(int port);
   void writeA(int input);
   void writeB(int input);
-  void setSpiProps();
+  void setProperties();
+  void deActivate();
 private:
   void DAC_WR_REG(uint8_t cmd_byte, uint16_t data_byte );
   void outPutValue(uint8_t cmd_byte,uint16_t input);

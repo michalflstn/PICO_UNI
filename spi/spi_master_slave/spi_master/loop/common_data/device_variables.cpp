@@ -40,7 +40,7 @@ uint8_t                    nloop=0; //add  250409 N LOOP choose arrModule_N=  ar
 uint16_t     spiBuf[NmbADCSignals];
 
  
-Spi                  spi;
+Spi                  spi(16,spi_cpol,spi_cpha,spi_order);
 Decoder              decoder(4, 5, 6); 
  
 ConfigHardWareBB     confighardwareBB

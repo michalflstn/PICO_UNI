@@ -8,12 +8,19 @@
 
 class Spi
 {
+private:
+ spi_cpol_t _pol_val;
+ spi_cpha_t _pha_val;  
+ uint8_t _databitsval;
+ spi_order_t   _first;
 public:
   //static uint dma_chan; 
  // static const uint CS_PIN = 1; // Chip Select pin
-  Spi();
+  Spi(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t  first);
 
-  static void setProperties(int, int, int, int first = static_cast<spi_order_t>(1));
+  void setProperties();
+
+  void setProperties(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first);
 
   static int  write(const uint8_t *, size_t length);
 

@@ -37,14 +37,17 @@ control registers
 11  0x0841002C  not use   
 */
 
-#define port_ADC       0     //Analog Device   AD7606
-#define port_Freq      1  
-#define port_Gain_Ampl 5
-#define port_Gain_LOOP 6
-#define port_None      7 
-
+#define port_ADC           0 //Analog Device   AD7606
+#define port_Freq          1  
+#define port_Gain_Ampl     5
+#define port_Gain_LOOP     6
+#define port_None          7 
+#define port_SetPointBiasV 4 //1 setpoint mode
+//xy  3
+//z   2 
 #define spi_cpol  SPI_CPOL_1    
-#define spi_cpha  SPI_CPHA_0   
+#define spi_cpha  SPI_CPHA_0  
+#define spi_order SPI_MSB_FIRST
 //  add 250409
 extern uint8_t device;
 extern uint8_t sensor;
