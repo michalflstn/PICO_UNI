@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_HARDCODED_FUNCTIONS_HPP
 #define PICO_EXAMPLES_HARDCODED_FUNCTIONS_HPP
 #include <vector>
@@ -31,13 +32,19 @@ extern int32_t dma_chan;
 class HARDWARE
 {
 // WARNING HARDCODED FUNCTIONS
+public:
+    Spi    *spiADC;
 private:
  DAC8563    *dacspt;  // DAC BIAS,SetPoint
  DAC8563    *dacbv;   // DAC BIAS
  DAC8563    *dacxy;   // DAC X,Y
  DAC8563    *dacz;    // DAC Z
- InputPort  *adcSPIbusyport;// FIXME TEMP!!!
- OutputPort *adcSPI;    // 
+ Spi        *spiFreq;
+ Spi        *spiGainAmpl;
+ Spi        *spiGainLoop;
+ Spi        *spiBiasV;
+ InputPort  *spiBusyport;// FIXME TEMP!!!
+ //OutputPort *adcSPI;    // 
  OutputPort *dec;
  OutputPort *resetport; // FIXME TEMP
  OutputPort *ledPort;
@@ -88,6 +95,7 @@ private:
 
 public:
    int32_t LOOPGain;
+
    LinearDriverBase  *linearDriver;
 
    HARDWARE(ConfigHardWareBB confighardware);

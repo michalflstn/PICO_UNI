@@ -2,39 +2,38 @@
 #include "pico/stdlib.h"
 #include <cstdio>
 #include <string>
-Spi::Spi( uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val, spi_order_t first)
+#include "../../utilities/base_types/decoder.hpp"
+#include "../../loop/common_data/device_variables.hpp"
+
+Spi::Spi(uint8_t port, uint8_t databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val, spi_order_t first)
 {
+  _port=port;
   _pol_val= pol_val;
   _pha_val= pha_val;
   _databitsval=databitsval;
   _first=first;
- /* 251022
-  stdio_init_all();
-  stdio_usb_init();
-#if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
-#warning spi/spi_master example requires a board with SPI pins
-  puts("Default SPI pins were not defined");
-#else  // printf("SPI master example\n");
-  spi_init(spi_default, 1000 * 1000);
-  gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
-  gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
-  gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
-  gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
-#endif
- */ 
 //  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
   spi_set_format(spi_default,_databitsval, _pol_val, _pha_val, SPI_MSB_FIRST);//8  251008
 }
-void Spi::setProperties( uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first)
+ void Spi::SetSpiPinCS_N(int8_t level)
 {
-  spi_set_format(spi_default,databitsval, pol_val, pha_val, first);
+  gpio_put(PICO_DEFAULT_SPI_CSN_PIN, level);
 }
-
-void Spi::setProperties()
+void Spi::reSet()
 {
+  gpio_put(_port, false);
+  sleep_us(1);
+  gpio_put(_port, true);
+}  
+void Spi::Activate()
+{
+  decoder.activePort(_port);
   spi_set_format(spi_default,_databitsval,_pol_val,_pha_val,_first);
 }
-
+void Spi::deActivate()
+{
+  decoder.activePort(port_None);
+}
 int Spi::write(const uint8_t *buf, size_t length)
 {
   return spi_write_blocking(spi_default, buf, length);
@@ -42,7 +41,10 @@ int Spi::write(const uint8_t *buf, size_t length)
 
 int Spi::read(const uint8_t *inB, uint8_t *buf, size_t length)
 {
-
+  while ( !spi_is_readable(spi_default)) //?????   251022
+  { 
+   tight_loop_contents();
+  }
   if (spi_is_readable(spi_default))
   {
     spi_write_read_blocking(spi_default, inB, buf, length);

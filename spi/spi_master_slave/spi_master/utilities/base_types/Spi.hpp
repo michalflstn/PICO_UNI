@@ -6,21 +6,28 @@
 #include "hardware/dma.h"
 #include "pico/stdlib.h"
 
+
 class Spi
 {
 private:
+ uint8_t       _port;
  spi_cpol_t _pol_val;
  spi_cpha_t _pha_val;  
  uint8_t _databitsval;
  spi_order_t   _first;
+
+ void SetSpiPinCS_N(int8_t level);
+
 public:
   //static uint dma_chan; 
  // static const uint CS_PIN = 1; // Chip Select pin
-  Spi(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t  first);
+  Spi(uint8_t port, uint8_t databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t  first);
 
-  void setProperties();
+  void Activate();
 
-  void setProperties(uint databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t first);
+  void deActivate();
+  
+  void reSet();
 
   static int  write(const uint8_t *, size_t length);
 

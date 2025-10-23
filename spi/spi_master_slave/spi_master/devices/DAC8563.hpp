@@ -35,7 +35,7 @@ class DAC8563  // DAC
 {
 private:
   int mode;
-  int port_;
+  int _port;
  spi_cpol_t  _pol_val;
  spi_cpha_t  _pha_val;  
  uint8_t _databitsval;
@@ -45,7 +45,6 @@ public:
   void initialize(int port);
   void writeA(int input);
   void writeB(int input);
-  //void setProperties();
   void Activate();
   void deActivate();
 private:
