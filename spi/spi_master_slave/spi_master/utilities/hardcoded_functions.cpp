@@ -1698,12 +1698,11 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
    spi_read_dma(dma_chan, spi_default,1, spiBuf,  dummy_bytes, NmbADCSignals) ;
  */
     get_result_from_adc();
-   /*while (!ADC_IS_READY_TO_READ )
+    while (!ADC_IS_READY_TO_READ )
     {
       sleep_us(10);
     }
     ADC_IS_READY_TO_READ=false;
-  */
   }
   else
   {
