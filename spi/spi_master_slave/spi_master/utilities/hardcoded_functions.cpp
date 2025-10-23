@@ -445,11 +445,14 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 // irq_set_enabled(DMA_IRQ_0, true);
    dec->enable();
   adcSPI->enable(); // add 251022 ?
-   gpio_set_irq_enabled_with_callback(spiBusyport->getPort(),   // номер пина
+ /*
+  gpio_set_irq_enabled_with_callback(spiBusyport->getPort(),   // номер пина
                                       GPIO_IRQ_EDGE_FALL,
     // GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, // тип события
                                       true,                     // включить
                                       &readADC);                // функция-обработчик  
+ */                                     
+   gpio_set_irq_enabled_with_callback(spiBusyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
 
    resetport->disable();
    gpio_pull_down(resetport->getPort());
@@ -567,6 +570,14 @@ void HARDWARE::get_result_from_adc()
   adcSPI->disable();
   sleep_us(10);
   adcSPI->enable();
+       {
+      afc.clear();
+      afc = code+std::to_string(DEBUG)+"try  read 2 port="+std::to_string(adcSPI->getPort());
+      afc += endln;
+      std::cout << afc;
+      afc.clear();
+      sleep_ms(100);
+     }  
 }
 void HARDWARE::set_BiasV(int32_t BiasV)
 {
@@ -1697,12 +1708,21 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
    uint16_t dummy_bytes[NmbADCSignals] = {0};
    spi_read_dma(dma_chan, spi_default,1, spiBuf,  dummy_bytes, NmbADCSignals) ;
  */
+  if (flgDebug)  
+     {
+      afc.clear();
+      afc = code+std::to_string(DEBUG)+"try  read ";
+      afc += endln;
+      std::cout << afc;
+      afc.clear();
+      sleep_ms(100);
+     }  
     get_result_from_adc();
     while (!ADC_IS_READY_TO_READ )
     {
       sleep_us(10);
     }
-    ADC_IS_READY_TO_READ=false;
+   // ADC_IS_READY_TO_READ=true;
   }
   else
   {

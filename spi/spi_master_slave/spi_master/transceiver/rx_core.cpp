@@ -20,6 +20,14 @@ void RX_core::comReceiveISR(uint a, uint32_t b)
   //  logger("ADC read recursion\n");
     return;
   }
+       {
+      afc.clear();
+      afc = code+std::to_string(DEBUG)+" read ";
+      afc += endln;
+      std::cout << afc;
+      afc.clear();
+      sleep_ms(10);
+     }  
   spi_read16_blocking(spi_default, 0, spiBuf, 8); 
 //  scanner->hardware->spiADC->Activate();
 /*  if (Z_STATE) 
@@ -30,6 +38,7 @@ void RX_core::comReceiveISR(uint a, uint32_t b)
   } 
 */  
   ADC_IS_READY_TO_READ = true;
+  scanner->hardware->spiADC->deActivate();
 }
 void RX_core::launchOnCore1()
 { 
