@@ -33,7 +33,8 @@ class HARDWARE
 {
 // WARNING HARDCODED FUNCTIONS
 public:
-    Spi    *spiADC;
+       Spi    *spiADC;
+
 private:
  DAC8563    *dacspt;  // DAC BIAS,SetPoint
  DAC8563    *dacbv;   // DAC BIAS
@@ -44,7 +45,7 @@ private:
  Spi        *spiGainLoop;
  Spi        *spiBiasV;
  InputPort  *spiBusyport;// FIXME TEMP!!!
- OutputPort *adcSPI;    // 
+ OutputPort *adcSPI;   // 
  OutputPort *dec;
  OutputPort *resetport; // FIXME TEMP
  OutputPort *ledPort;

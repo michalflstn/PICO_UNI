@@ -19,12 +19,7 @@ Spi::Spi(uint8_t port, uint8_t databitsval, spi_cpol_t pol_val, spi_cpha_t pha_v
 {
   gpio_put(PICO_DEFAULT_SPI_CSN_PIN, level);
 }
-void Spi::reSet()
-{
-  gpio_put(_port, false);
-  sleep_us(1);
-  gpio_put(_port, true);
-}  
+ 
 void Spi::Activate()
 {
   decoder.activePort(_port);

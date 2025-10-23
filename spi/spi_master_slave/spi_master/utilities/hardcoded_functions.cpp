@@ -58,7 +58,7 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
   spiGainLoop=new Spi(port_Gain_LOOP ,8,spi_cpol,spi_cpha,spi_order);
      spiBiasV=new Spi(port_SetPointBiasV ,8,spi_cpol,spi_cpha,spi_order);
   spiBusyport=new InputPort(confighardware.ADCSPIBUSYPort);
-//   adcSPI=new OutputPort(confighardware.ADCSPI);  //conversation port
+       adcSPI=new OutputPort(confighardware.ADCSPI);  //conversation port
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -84,7 +84,7 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
   spiGainLoop=new Spi(port_Gain_LOOP ,8,spi_cpol,spi_cpha,spi_order);
      spiBiasV=new Spi(port_SetPointBiasV ,8,spi_cpol,spi_cpha,spi_order);
   spiBusyport=new InputPort(confighardware.ADCSPIBUSYPort);
-//adcSPI=new OutputPort(confighardware.ADCSPI);
+       adcSPI=new OutputPort(confighardware.ADCSPI);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -110,7 +110,7 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
   spiGainLoop=new Spi(port_Gain_LOOP ,8,spi_cpol,spi_cpha,spi_order);
      spiBiasV=new Spi(port_SetPointBiasV ,8,spi_cpol,spi_cpha,spi_order);
   spiBusyport=new InputPort(confighardware.ADCSPIBUSYPort);
-    //   adcSPI= new OutputPort(confighardware.ADCSPI);
+       adcSPI=new OutputPort(confighardware.ADCSPI);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -367,8 +367,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  
    gpio_pull_down(resetport->getPort()); 
    dec->enable();
-   //adcSPI->enable();
-   spiADC->reSet(); // add 251022 ?
+   adcSPI->enable();
    resetport->disable();
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
@@ -445,7 +444,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 // irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
 // irq_set_enabled(DMA_IRQ_0, true);
    dec->enable();
-   spiADC->reSet(); // add 251022 ?
+  adcSPI->enable(); // add 251022 ?
    gpio_set_irq_enabled_with_callback(spiBusyport->getPort(),   // номер пина
                                       GPIO_IRQ_EDGE_FALL,
     // GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, // тип события
@@ -492,8 +491,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 
   dec->enable();
- // adcSPI->enable();
-  spiADC->reSet(); // add 251022 ?
+  adcSPI->enable();
+ // spiADC->reSet(); // add 251022 ?
   resetport->disable();
   gpio_pull_down(resetport->getPort());
   ledPort->enable();
@@ -565,12 +564,9 @@ void HARDWARE::get_result_from_adc()
  // spi.setProperties(16,spi_cpol, spi_cpha); //1,0
   spiADC->Activate(); //1,0
   ADC_IS_READY_TO_READ = false;
-  spiADC->reSet();
-  /*
-  conv->disable();
+  adcSPI->disable();
   sleep_us(10);
-  conv->enable();
-  */
+  adcSPI->enable();
 }
 void HARDWARE::set_BiasV(int32_t BiasV)
 {
