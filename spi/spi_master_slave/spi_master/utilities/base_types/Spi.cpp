@@ -13,7 +13,7 @@ Spi::Spi(uint8_t port, uint8_t databitsval, spi_cpol_t pol_val, spi_cpha_t pha_v
   _databitsval=databitsval;
   _first=first;
 //  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
-  spi_set_format(spi_default,_databitsval, _pol_val, _pha_val, SPI_MSB_FIRST);//8  251008
+  spi_set_format(spi_default,_databitsval, _pol_val, _pha_val,_first);// SPI_MSB_FIRST);//8  251008
 }
  void Spi::SetSpiPinCS_N(int8_t level)
 {

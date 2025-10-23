@@ -20,7 +20,7 @@ void RX_core::comReceiveISR(uint a, uint32_t b)
   //  logger("ADC read recursion\n");
     return;
   }
-  scanner->hardware->spiADC->Activate();
+//  scanner->hardware->spiADC->Activate();
 /*  if (Z_STATE) 
   {
     Z_STATE = false;
