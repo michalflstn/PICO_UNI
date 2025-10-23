@@ -566,6 +566,11 @@ void HARDWARE::get_result_from_adc()
   spiADC->Activate(); //1,0
   ADC_IS_READY_TO_READ = false;
   spiADC->reSet();
+  /*
+  conv->disable();
+  sleep_us(10);
+  conv->enable();
+  */
 }
 void HARDWARE::set_BiasV(int32_t BiasV)
 {

@@ -44,7 +44,7 @@ private:
  Spi        *spiGainLoop;
  Spi        *spiBiasV;
  InputPort  *spiBusyport;// FIXME TEMP!!!
- //OutputPort *adcSPI;    // 
+ OutputPort *adcSPI;    // 
  OutputPort *dec;
  OutputPort *resetport; // FIXME TEMP
  OutputPort *ledPort;

@@ -21,6 +21,7 @@ private:
 public:
   //static uint dma_chan; 
  // static const uint CS_PIN = 1; // Chip Select pin
+ static 
   Spi(uint8_t port, uint8_t databitsval, spi_cpol_t pol_val, spi_cpha_t pha_val,spi_order_t  first);
 
   void Activate();
