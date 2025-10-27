@@ -6,7 +6,7 @@ InputPort::InputPort(uint8_t port) : port_(port)
   gpio_set_dir(port, GPIO_IN);
 }
 
-bool InputPort::getLevel() const
+bool InputPort::getState() const
 {
   return gpio_get(port_);
 }

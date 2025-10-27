@@ -10,7 +10,7 @@ class InputPort
 public:
   explicit InputPort(uint8_t port);
 
-  bool getLevel() const;
+  bool getState() const;
 
   uint8_t getPort();
 

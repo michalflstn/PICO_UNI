@@ -396,7 +396,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
   //add 251022
   stdio_init_all();
   stdio_usb_init();
-if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
+#if (!defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN))
 #warning spi/spi_master example requires a board with SPI pins
   puts("Default SPI pins were not defined");
 #else  // printf("SPI master example\n");
