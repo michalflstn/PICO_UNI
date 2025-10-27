@@ -69,6 +69,8 @@ private:
  
  void SetLOOPParams(float kp,float ki, float kd,int32_t gainscale);  
 
+ void spi_read_adc(spi_inst_t* spi, uint32_t cs_pin, const uint16_t* dummy_bytes, size_t length);
+ 
  void get_result_from_adc();  // чтение АЦП
 
  void set_clock_enable();

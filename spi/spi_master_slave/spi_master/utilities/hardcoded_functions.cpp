@@ -172,6 +172,28 @@ void HARDWARE::set_io_value(int port, int value)
   }
 }
 */
+void HARDWARE::spi_read_adc(spi_inst_t* spi, uint32_t cs_pin, const uint16_t* dummy_bytes, size_t length)
+{
+  
+ // uint16_t dummy_bytes[length] = {0}; // Dummy bytes to generate clock   gpio_put(cs_pin, 0); // Select device
+ // Configure DMA transfer for 'length' bytes
+    gpio_put(cs_pin, 0); // Select device
+ // Send dummy bytes to generate SPI clock and read data
+    spi_write16_blocking(spi, dummy_bytes, length);
+ 
+    gpio_put(cs_pin, 1); // Deselect device
+    // rx_buffer now holds received data
+ //  ADC_IS_READY_TO_READ = true;
+   /*
+  std::string afc; 
+  afc.clear();
+  afc = code+std::to_string(DEBUG)+" SPI read adc "+std::to_string(rx_buffer[0]);
+  afc +="\n";
+  std::cout << afc;
+  afc.clear();
+  sleep_ms(100);
+*/
+}
 void HARDWARE::spi_read_dma(uint32_t dma_chan, spi_inst_t* spi, uint32_t cs_pin, uint16_t* rx_buffer, const uint16_t* dummy_bytes, size_t length)
 {
   
