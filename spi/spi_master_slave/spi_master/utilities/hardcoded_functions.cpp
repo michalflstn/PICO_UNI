@@ -58,7 +58,7 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
   spiGainLoop=new Spi(port_Gain_LOOP ,8,spi_cpol,spi_cpha,spi_order);
      spiBiasV=new Spi(port_SetPointBiasV ,8,spi_cpol,spi_cpha,spi_order);
   spiBusyport=new InputPort(confighardware.ADCSPIBUSYPort);
-       adcSPI=new OutputPort(confighardware.ADCSPI);  //conversation port
+         conv=new OutputPort(confighardware.ConvPort);  //conversation port
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -84,7 +84,7 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
   spiGainLoop=new Spi(port_Gain_LOOP ,8,spi_cpol,spi_cpha,spi_order);
      spiBiasV=new Spi(port_SetPointBiasV ,8,spi_cpol,spi_cpha,spi_order);
   spiBusyport=new InputPort(confighardware.ADCSPIBUSYPort);
-       adcSPI=new OutputPort(confighardware.ADCSPI);
+         conv=new OutputPort(confighardware.ConvPort);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -110,7 +110,7 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
   spiGainLoop=new Spi(port_Gain_LOOP ,8,spi_cpol,spi_cpha,spi_order);
      spiBiasV=new Spi(port_SetPointBiasV ,8,spi_cpol,spi_cpha,spi_order);
   spiBusyport=new InputPort(confighardware.ADCSPIBUSYPort);
-       adcSPI=new OutputPort(confighardware.ADCSPI);
+         conv=new OutputPort(confighardware.ConvPort);
           dec=new OutputPort(confighardware.DEC);
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
@@ -138,6 +138,7 @@ HARDWARE::~HARDWARE()
     delete(dacxy);
     delete(dacz);
     delete(spiBusyport);
+    delete(conv);
     delete(dec);
     delete(resetport);
     delete(ledPort);
@@ -338,7 +339,6 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
   gpio_set_function(PICO_DEFAULT_SPI_TX_PIN,  GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
  #endif
-
  // BASIC SETTINGS
  // uart_init(uart1, 115200); //????
  // uart_init(USB_UART_ID, 115200); //????
@@ -367,7 +367,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
  
    gpio_pull_down(resetport->getPort()); 
    dec->enable();
-   adcSPI->enable();
+   conv->enable();
    resetport->disable();
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
@@ -396,7 +396,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
   //add 251022
   stdio_init_all();
   stdio_usb_init();
-#if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
+if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
 #warning spi/spi_master example requires a board with SPI pins
   puts("Default SPI pins were not defined");
 #else  // printf("SPI master example\n");
@@ -413,7 +413,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    gpio_set_function(1, GPIO_FUNC_UART);
  */
  //  setvbuf(stdout, my_stdout_buf, _IOFBF, MY_STDOUT_BUF_SIZE);
-   gpio_pull_down(resetport->getPort());
+
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
@@ -443,8 +443,9 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 // dma_channel_set_irq0_enabled(dma_chan, true);
 // irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
 // irq_set_enabled(DMA_IRQ_0, true);
-   dec->enable();
-  adcSPI->enable(); // add 251022 ?
+  gpio_pull_down(resetport->getPort());  
+  dec->enable();
+  conv->enable(); // add 251022 ?
  /*
   gpio_set_irq_enabled_with_callback(spiBusyport->getPort(),   // номер пина
                                       GPIO_IRQ_EDGE_FALL,
@@ -494,7 +495,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB
  // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 
   dec->enable();
-  adcSPI->enable();
+  conv->enable();
  // spiADC->reSet(); // add 251022 ?
   resetport->disable();
   gpio_pull_down(resetport->getPort());
@@ -567,17 +568,16 @@ void HARDWARE::get_result_from_adc()
  // spi.setProperties(16,spi_cpol, spi_cpha); //1,0
   spiADC->Activate(); //1,0
   ADC_IS_READY_TO_READ = false;
-  adcSPI->disable();
+  conv->disable();
   sleep_us(10);
-  adcSPI->enable();
-       {
-      afc.clear();
-      afc = code+std::to_string(DEBUG)+"try  read 2 port="+std::to_string(adcSPI->getPort());
-      afc += endln;
-      std::cout << afc;
-      afc.clear();
-      sleep_ms(100);
-     }  
+  conv->enable();
+    
+  afc.clear();
+  afc = code+std::to_string(DEBUG)+"try  read 2 port="+std::to_string(conv->getPort());
+  afc += endln;
+  std::cout << afc;
+  afc.clear();
+  sleep_ms(100); 
 }
 void HARDWARE::set_BiasV(int32_t BiasV)
 {
@@ -680,7 +680,7 @@ case BBFPGA:
        break;
       } 
 case  BB:
-         break;
+       break;
 case  WB:
         // SignLoop=value;// debug
          //втянуть
@@ -1711,7 +1711,7 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
   if (flgDebug)  
      {
       afc.clear();
-      afc = code+std::to_string(DEBUG)+"try  read ";
+      afc = code+std::to_string(DEBUG)+"try  read "+std::to_string(ADC_IS_READY_TO_READ);
       afc += endln;
       std::cout << afc;
       afc.clear();

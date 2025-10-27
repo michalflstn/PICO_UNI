@@ -100,7 +100,7 @@ struct ConfigHardWareBB //BB
   uint8_t DACZPort;         //4 dac8563_3  Z
   uint8_t DACZMode;         //1 
   uint8_t ADCSPIBUSYPort;   //16
-  uint8_t ADCSPI;           //7
+  uint8_t ConvPort;           //7
   uint8_t DEC;          //10
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
@@ -125,7 +125,7 @@ struct ConfigHardWareBBFPGA // BBFPGA
   uint8_t DACZPort;         //4 dac8563_3  Z
   uint8_t DACZMode;         //1 
   uint8_t ADCSPIBUSYPort;   //16
-  uint8_t ADCSPI;           //7
+  uint8_t ConvPort;           //7
   uint8_t DEC;          //10
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
@@ -149,7 +149,7 @@ struct ConfigHardWareWB  //WB
   uint8_t DACZPort;        //4 dac8563_3  Z
   uint8_t DACZMode;        //1 
   uint8_t ADCSPIBUSYPort;  //16
-  uint8_t ADCSPI;          //7
+  uint8_t ConvPort;          //7
   uint8_t DEC;          //10
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
