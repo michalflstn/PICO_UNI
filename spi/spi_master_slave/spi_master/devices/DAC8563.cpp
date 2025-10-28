@@ -44,7 +44,10 @@ void DAC8563::writeValue(uint8_t cmd_byte, uint8_t mid, uint8_t last)
 {
   uint8_t array[] = {cmd_byte, mid, last};
   setSpiProps();
+  //
   spi_write_blocking(spi_default, array, 3);
+  //
+
   decoder.activePort(7);
 }
 
