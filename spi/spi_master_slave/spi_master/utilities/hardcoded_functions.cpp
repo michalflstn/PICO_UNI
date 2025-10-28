@@ -11,6 +11,8 @@ volatile bool spi_dma_done = false;
 
 int32_t dma_chan;
 
+const uint16_t tx_dummy[NmbADCSignals] = {0}; // Обычный dummy-байт
+
 void dma_handler()
 {
   dma_hw->ints0 = 1u << 0; // Clear interrupt for channel 0
@@ -172,17 +174,12 @@ void HARDWARE::set_io_value(int port, int value)
   }
 }
 */
-void HARDWARE::spi_read_adc(spi_inst_t* spi, uint32_t cs_pin, const uint16_t* dummy_bytes, size_t length)
+void HARDWARE::spi_read_adc()
 {
-  
- // uint16_t dummy_bytes[length] = {0}; // Dummy bytes to generate clock   gpio_put(cs_pin, 0); // Select device
- // Configure DMA transfer for 'length' bytes
-    gpio_put(cs_pin, 0); // Select device
- // Send dummy bytes to generate SPI clock and read data
-    spi_write16_blocking(spi, dummy_bytes, length);
- 
-    gpio_put(cs_pin, 1); // Deselect device
-    // rx_buffer now holds received data
+ gpio_put(PICO_DEFAULT_SPI_CSN_PIN, 0); // Выбор ведомого
+ spi_write16_read16_blocking(spi_default, tx_dummy,spiBuf, sizeof(spiBuf)); // Передача и чтение
+ gpio_put(PICO_DEFAULT_SPI_CSN_PIN, 1); // Снятие выбора
+ // rx_buffer now holds received data
  //  ADC_IS_READY_TO_READ = true;
    /*
   std::string afc; 
@@ -196,7 +193,6 @@ void HARDWARE::spi_read_adc(spi_inst_t* spi, uint32_t cs_pin, const uint16_t* du
 }
 void HARDWARE::spi_read_dma(uint32_t dma_chan, spi_inst_t* spi, uint32_t cs_pin, uint16_t* rx_buffer, const uint16_t* dummy_bytes, size_t length)
 {
-  
  // uint16_t dummy_bytes[length] = {0}; // Dummy bytes to generate clock   gpio_put(cs_pin, 0); // Select device
  // Configure DMA transfer for 'length' bytes
     gpio_put(cs_pin, 0); // Select device

@@ -24,6 +24,8 @@
 
 #define MY_STDOUT_BUF_SIZE 1024
 
+//int16_t tx_dummy[NmbADCSignals];
+
 static char my_stdout_buf[MY_STDOUT_BUF_SIZE];
 
 extern int32_t dma_chan;
@@ -68,9 +70,9 @@ private:
  //int32_t dma_chan;// add 251006 
  
  void SetLOOPParams(float kp,float ki, float kd,int32_t gainscale);  
-
- void spi_read_adc(spi_inst_t* spi, uint32_t cs_pin, const uint16_t* dummy_bytes, size_t length);
  
+ void spi_read_adc();
+
  void get_result_from_adc();  // чтение АЦП
 
  void set_clock_enable();
