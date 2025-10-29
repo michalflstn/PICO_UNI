@@ -14,7 +14,7 @@ void DAC8563::DAC_WR_REG(uint8_t cmd_byte, uint16_t data_byte)
   uint8_t array[] = {cmd_byte, (uint8_t) (data_byte >> 8), (uint8_t) ((data_byte << 8) >> 8)};
   decoder.activePort(port_);
   spi_write_blocking(spi_default, array, 3);
-  decoder.activePort(7);
+  decoder.activePort(port_None);
 }
 
 void DAC8563::outPutValue(uint8_t cmd_byte, uint16_t input)
@@ -48,7 +48,7 @@ void DAC8563::writeValue(uint8_t cmd_byte, uint8_t mid, uint8_t last)
   spi_write_blocking(spi_default, array, 3);
   //
 
-  decoder.activePort(7);
+  decoder.activePort(port_None);
 }
 
 void DAC8563::initialize(int port)  //DAC

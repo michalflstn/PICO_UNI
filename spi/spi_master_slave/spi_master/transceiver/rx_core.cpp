@@ -19,8 +19,8 @@ void RX_core::comReceiveISR(uint a, uint32_t b)
   //  logger("ADC read recursion\n");
     return;
   }
-  decoder.activePort(0);
-  Spi::setProperties(16, spi_cpol,spi_cpha); //1,0
+  decoder.activePort(port_ADC);
+  Spi::setProperties(16, spi_cpol,spi_cpha);      //1,0
   spi_read16_blocking(spi_default, 0, spiBuf, 8); //8????  
 /*  if (Z_STATE) 
   {
