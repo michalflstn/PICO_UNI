@@ -20,6 +20,17 @@
 #define FPGA_UART_ID    uart1
 #define FPGA_BAUD_RATE  115200 //400000?
 #define NmbADCSignals   8 //3  FPGA 250924 // 250710 Z,Ampl,I  11 //кроме timestamp_us // 250709  12 // 8 // ADC + control было 8 до FPGA
+
+#define spi_cpol  SPI_CPOL_1    
+#define spi_cpha  SPI_CPHA_0  
+#define spi_order SPI_MSB_FIRST
+
+#define port_ADC           0 //Analog Device   AD7606
+#define port_Freq          1  
+#define port_Gain_Ampl     5
+#define port_Gain_LOOP     6
+#define port_None          7 
+#define port_SetPointBiasV 4 //1 setpoint mode
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
