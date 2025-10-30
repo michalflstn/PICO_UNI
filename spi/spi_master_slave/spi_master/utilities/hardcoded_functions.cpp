@@ -1455,7 +1455,7 @@ void HARDWARE::set_GainPID(uint16_t gain)
 void HARDWARE::set_clock_enable()
 {
   uint8_t intBuf[1];
-  Spi::setProperties(8, 0,0); //0,0  //1,1
+  Spi::setProperties(8,0,0); //0,0  //1,1
   decoder.activePort(port_None);
   spi_write_blocking(spi_default, intBuf, 1);
 }
@@ -1479,16 +1479,16 @@ void HARDWARE::set_DACZ(int16_t value)
     switch (HARDWAREVERSION)
   {
    case WB:
-       dacz->setSpiProps(); 
-       dacz->writeB(int32_t(value)+ShiftDac);
-       sleep_us(2);
-       break;
+        dacz->setSpiProps(); 
+        dacz->writeB(int32_t(value)+ShiftDac);
+        sleep_us(2);
+        break;
    case BB: 
-       dacz->setSpiProps(); 
-       dacz->writeA(int32_t(value)+ShiftDac);
-       sleep_us(2);
-       break;
-   case BBFPGA:
+        dacz->setSpiProps(); 
+        dacz->writeA(int32_t(value)+ShiftDac);
+        sleep_us(2);
+        break;
+  case BBFPGA:
         FPGAWriteData writedata;
         writedata.addr=arrLoopModule.wbOutShift;
         writedata.data=(int32_t)value;//+ShiftDac); 
@@ -1511,7 +1511,7 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
   if (HARDWAREVERSION!=BBFPGA)
   {  
    repeatTwoTimes();
-   repeatTwoTimes(); //241215 delete!!
+ //  repeatTwoTimes(); //241215 delete!!
   }
   else
   {

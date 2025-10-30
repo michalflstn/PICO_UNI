@@ -17,25 +17,25 @@ uint8_t IPin    = 2; // ток
 uint8_t SignalIncrease=1; // Loop  follow increase signal
 uint8_t SignalDecrease=0; 
 //ADCData adcdata;
-uint8_t         FPGADELIM=0x0A; //0xAA?
+uint8_t         FPGADELIM=0x0A; // 0xAA?
 uint8_t        FPGACRCPAR=0xBB;
 uint8_t          FPGAREAD=0x00;
 uint8_t        FPGAREADOK=0x80; // если выполнена команда чтения и ОК
 uint8_t         FPGAWRITE=0x01;
 uint8_t           FPGAASC=0x80;
-uint8_t       FPGAWRITEOK=0x81; //0x80+cmd?
-uint8_t      FPGAREADADCM=0x40;   //read array
+uint8_t       FPGAWRITEOK=0x81; // 0x80+cmd?
+uint8_t      FPGAREADADCM=0x40; // read array
 uint8_t   FPGAASCREADMAll=FPGAASC+FPGAREADADCM;// 0xCC; //  ACK(0x80) + READM(0x40 + COUNT(0x0C)) ответ на чтение 12 регистров
-uint8_t   FPGAREADADCMALL=0x40;//C; // 0x40 + 0x0C  read array 12 registers
+uint8_t   FPGAREADADCMALL=0x40; //C; // 0x40 + 0x0C  read array 12 registers
 
 uint32_t    ZAdress=0x08410004;
 uint32_t AmplAdress=0x08410008;
 uint32_t    IAdress=0x0841000C;
 
-uint8_t         channelcurrent=IPin;    //add  250409 channel current into LOOP
-uint8_t            channelampl=AmplPin; //    channel amplitude into LOOP
+uint8_t         channelcurrent=IPin;    // add 250409 channel current into LOOP
+uint8_t            channelampl=AmplPin; // channel amplitude into LOOP
 
-uint8_t                    nloop=0; //add  250409 N LOOP choose arrModule_N=  arrModule_1
+uint8_t                    nloop=0;     // add 250409 N LOOP choose arrModule_N=  arrModule_1
 
 uint16_t     spiBuf[NmbADCSignals];
 

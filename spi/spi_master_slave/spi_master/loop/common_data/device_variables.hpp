@@ -5,24 +5,24 @@
 #include "../../utilities/base_types/Spi.hpp"
 #include "../../utilities/base_types/decoder.hpp"
 
-#define maxint16_t               32767
-#define minint16_t              -32768
+#define maxint16_t      32767
+#define minint16_t     -32768
 // We are using pins 0 and 1, but see the GPIO function select table in the
 // datasheet for information on which other pins can be used.
-//#define UART_TX_PIN 16 //240703
-//#define UART_RX_PIN 17 //240703
+//#define UART_TX_PIN     16 //240703
+//#define UART_RX_PIN     17 //240703
 //#define USB_UART_ID     uart1//240703
 //#define USBUART_TX_PIN  8
 //#define USBUART_RX_PIN  9
-#define FPGAUART_TX_PIN 8 //!
-#define FPGAUART_RX_PIN 9 //!
-#define FPGA_UART_ID0   uart0
-#define FPGA_UART_ID    uart1
-#define FPGA_BAUD_RATE  115200 //400000?
-#define NmbADCSignals   8 //3  FPGA 250924 // 250710 Z,Ampl,I  11 //кроме timestamp_us // 250709  12 // 8 // ADC + control было 8 до FPGA
+#define FPGAUART_TX_PIN    8 //!
+#define FPGAUART_RX_PIN    9 //!
+#define FPGA_UART_ID0      uart0
+#define FPGA_UART_ID       uart1
+#define FPGA_BAUD_RATE     115200 //400000?
+#define NmbADCSignals      8 //3  FPGA 250924 // 250710 Z,Ampl,I  11 //кроме timestamp_us // 250709  12 // 8 // ADC + control было 8 до FPGA
 
-#define spi_cpol  SPI_CPOL_1    
-#define spi_cpha  SPI_CPHA_0  
+#define spi_cpol           SPI_CPOL_1    
+#define spi_cpha           SPI_CPHA_0  
 
 #define spi_cpol_gainloop  SPI_CPOL_0    
 #define spi_cpha_gainloop  SPI_CPHA_0  
@@ -32,15 +32,16 @@
 
 #define spi_cpol_freq      SPI_CPOL_1    
 #define spi_cpha_freq      SPI_CPHA_1  
-  
-#define spi_order SPI_MSB_FIRST
+
+#define spi_order          SPI_MSB_FIRST
 
 #define port_ADC           0 //Analog Device   AD7606
 #define port_Freq          1  
+#define port_SetPointBiasV 4 //1 setpoint mode
 #define port_Gain_Ampl     5
 #define port_Gain_LOOP     6
 #define port_None          7 
-#define port_SetPointBiasV 4 //1 setpoint mode
+
 /*
 register map!!!!!!!!!!!!
 0-timestamp_us
@@ -162,8 +163,8 @@ struct ConfigHardWareWB  //WB
   uint8_t ResetPort;    //17
   uint8_t LEDPort;      //PICO_DEFAULT_LED_PIN
   uint8_t RDBPort;      //23
- // uint8_t IO1_0;        //11
- // uint8_t IO1_1;        //12
+ // uint8_t IO1_0;      //11
+ // uint8_t IO1_1;      //12
   uint8_t GainPID0;     //13 
   uint8_t GainPID1;     //14
   uint8_t GainPID2;     //15
@@ -181,7 +182,7 @@ struct FPGALOOPCTRAdress
 {
  uint32_t wbKx[3];
  uint32_t wbInMulKoef;
- uint32_t wbInSetup;//wbInShift; в младших 8 битах указывается количество разрядов после запятой в коэффициентах// 250623
+ uint32_t wbInSetup;  //wbInShift; в младших 8 битах указывается количество разрядов после запятой в коэффициентах// 250623
  uint32_t wbOutMulKoef;
  uint32_t wbOutShift; //DACZ
  uint32_t wbSetpoint;

@@ -5,13 +5,13 @@
 //int8_t       HARDWAREVERSION=WB;
 int8_t       HARDWAREVERSION=BB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SoftHARDWAREVERSION="25.10.30.04 ";
+std::string  SoftHARDWAREVERSION="25.10.30.02 ";
 std::string  SoftVERSION="25.10.06.01 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
 //int8_t       HARDWAREVERSION_I=-1;
-int32_t  vectorSize;
-std::string afc;  //dataout string
+int32_t               vectorSize;
+std::string           afc;                // dataout string
 std::vector<int32_t>  Vector;
 std::vector<int32_t>  Vupdateparams;
 std::atomic<int16_t>  ALGCODE;
@@ -45,7 +45,6 @@ bool ADC_READ_FOREVER = false;
 bool    ADC_GET_VALUE = false;
 //************************************************
 bool    flgDebugSynchronize=false;//true;//false;
-
 bool    flgUseTUD=false;
 bool    flgParamsUpdated=false;
 bool    flgСritical_section=true;
@@ -53,7 +52,7 @@ uint8_t flgDebugLevel = 3;      // уровень отладки
 bool    flgUseUART = false;     // использовать UART для передачи данных
 bool    flgLocalDebug=false;    // локальная отладка
 bool    flgTiming=false;        // рассчет времени выполнения блока
-bool    flgSendString=true;          //send data string to PC
+bool    flgSendString=true;     // send data string to PC
  //данные для симуляции 
 /* 250409 перенос to dev var
 uint8_t SignLoop;
@@ -63,7 +62,6 @@ int16_t ZMaxValue      = maxint16_t;
 int16_t SignalMaxValue = maxint16_t; //add 240710
 int32_t ShiftDac       = 32768; // =32768 SHIFT 0 (-10V)  32767 - (0V); 65565 (+10V)
 int8_t  SetPointScale  = 1;  ///??????
-
 uint8_t ZPin    = 0; // Z
 uint8_t AmplPin = 1; // амплитуда
 uint8_t IPin    = 2; // ток  
@@ -72,7 +70,6 @@ uint8_t IPin    = 2; // ток
 bool Z_STATE = false; //???
 
 critical_section_t criticalSection;
-
 
 void SendDataSynchro(bool flg, std::string str)
 {
