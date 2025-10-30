@@ -433,7 +433,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
               break;       
       }
   }    
-/*
+
  if  (flgDebug)
  {
   afc.clear();
@@ -443,7 +443,7 @@ void HARDWARE::set_BiasV(int32_t BiasV)
   afc.clear();
   sleep_ms(100);
  }
-*/
+
 }   
 void HARDWARE::setLoopSign_BiasV(int32_t BiasV,int32_t flg,int32_t SignLoopValue,int32_t SetPointValue)
 {
@@ -1099,7 +1099,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
       {
       case WB:
              decoder.activePort(port_Gain_Ampl);
-             Spi::setProperties(8,spi_cpol,spi_cpha); //0,0
+             Spi::setProperties(8,spi_cpol_gainampl,spi_cpha_gainampl); //0,0
              intBuf[0] = 0;
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = 255-(uint8_t)gain;               
@@ -1109,7 +1109,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
              break;
       case BB:
              decoder.activePort(port_Gain_Ampl);
-             Spi::setProperties(8, spi_cpol,spi_cpha); //0,0
+             Spi::setProperties(8,spi_cpol_gainampl,spi_cpha_gainampl); //0,0
              intBuf[0] = 0;
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = (uint8_t)gain;
@@ -1118,7 +1118,7 @@ void HARDWARE::set_GainApmlMod(uint8_t gain)
              break;       
   case BBFPGA:
              decoder.activePort(port_Gain_Ampl);
-             Spi::setProperties(8,spi_cpol,spi_cpha); //0,0
+             Spi::setProperties(8,spi_cpol_gainampl,spi_cpha_gainampl); //0,0
              intBuf[0] = 0;
              spi_write_blocking(spi_default, intBuf, 1); 
              intBuf[0] = (uint8_t)gain;
@@ -1150,7 +1150,7 @@ void HARDWARE::set_GainPIDCorrection(uint32_t gain)
        binary[0] == '1' ? gainPID2->enable() : gainPID2->disable();
        uint8_t intBuf[1]; 
        decoder.activePort(port_Gain_LOOP);
-       Spi::setProperties(8, spi_cpol,spi_cpha); //0,0
+       Spi::setProperties(8, spi_cpol_gainloop,spi_cpha_gainloop); //0,0
        intBuf[0] = 0;
        spi_write_blocking(spi_default, intBuf, 1); 
        intBuf[0] = tiadd;
@@ -1187,7 +1187,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
        binary[0] == '1' ? gainPID2->enable() : gainPID2->disable();
        uint8_t intBuf[1]; 
        decoder.activePort(port_Gain_LOOP);
-       Spi::setProperties(8,  spi_cpol,spi_cpha); //0,0
+       Spi::setProperties(8,spi_cpol_gainloop,spi_cpha_gainloop); //0,0
        intBuf[0] = 0;
        spi_write_blocking(spi_default, intBuf, 1); 
        intBuf[0] = tiadd;
@@ -1216,7 +1216,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
         ti=(uint8_t)i;
         uint8_t intBuf[1]; 
         decoder.activePort(port_Gain_LOOP);
-        Spi::setProperties(8, spi_cpol,spi_cpha); //0,0
+        Spi::setProperties(8,spi_cpol_gainloop,spi_cpha_gainloop); //0,0
         intBuf[0] = 0;
         spi_write_blocking(spi_default, intBuf, 1); 
         intBuf[0] = ti;
@@ -1232,7 +1232,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
          ti=(uint8_t)i;
          uint8_t intBuf[1]; 
          decoder.activePort(port_Gain_LOOP);
-         Spi::setProperties(8,  spi_cpol,spi_cpha); //0,0
+         Spi::setProperties(8,spi_cpol_gainloop,spi_cpha_gainloop); //0,0
          intBuf[0] = 0;
          spi_write_blocking(spi_default, intBuf, 1); 
          intBuf[0] = ti;
@@ -1455,7 +1455,7 @@ void HARDWARE::set_GainPID(uint16_t gain)
 void HARDWARE::set_clock_enable()
 {
   uint8_t intBuf[1];
-  Spi::setProperties(8, spi_cpol,spi_cpha); //0,0  //1,1
+  Spi::setProperties(8, 0,0); //0,0  //1,1
   decoder.activePort(port_None);
   spi_write_blocking(spi_default, intBuf, 1);
 }

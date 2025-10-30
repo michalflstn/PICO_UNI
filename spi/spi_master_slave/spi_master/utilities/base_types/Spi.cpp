@@ -12,10 +12,15 @@ Spi::Spi()
 #else 
   printf("SPI master example\n");
   spi_init(spi_default, 1000 * 1000);
-  gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
+ /* gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
+  */
+  gpio_set_function(PDSPI_RX_PIN,  GPIO_FUNC_SPI);
+  gpio_set_function(PDSPI_TX_PIN,  GPIO_FUNC_SPI); 
+  gpio_set_function(PDSPI_SCK_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(PDSPI_CSN_PIN, GPIO_FUNC_SPI);
 //  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
   spi_set_format(spi_default, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 #endif
