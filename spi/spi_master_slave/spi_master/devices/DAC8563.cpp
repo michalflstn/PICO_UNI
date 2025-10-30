@@ -73,5 +73,5 @@ void DAC8563::initialize(int port)  //DAC
 void DAC8563::setSpiProps()
 {
   decoder.activePort(port_);
-  Spi::setProperties(8,spi_cpol,spi_cpha); //0,1;
+  Spi::setProperties(8,spi_cpol_DAC8563,spi_cpha_DAC8563); //0,1;
 }

@@ -1510,8 +1510,8 @@ void HARDWARE::getValuesFromAdc()  // чтение АЦП
 {
   if (HARDWAREVERSION!=BBFPGA)
   {  
-   repeatTwoTimes();
- //  repeatTwoTimes(); //241215 delete!!
+    repeatTwoTimes();
+ // repeatTwoTimes(); //241215 delete!!
   }
   else
   {
