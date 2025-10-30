@@ -396,9 +396,9 @@ void HARDWARE::set_Freq(uint32_t freq)
 
   //logger(buf, 6);
 
-  decoder.activePort(1);
+  decoder.activePort(port_Freq);
   sleep_us(1);   // 240411 add
-  Spi::setProperties(8, spi_cpol,spi_cpha); //0,1); //1,1
+  Spi::setProperties(8, spi_cpol_freq,spi_cpha_freq);  //1,1
   spi_write_blocking(spi_default, buf, 2);
   sleep_us(1); // 240411 add
   spi_write_blocking(spi_default, buf + 2, 2);
