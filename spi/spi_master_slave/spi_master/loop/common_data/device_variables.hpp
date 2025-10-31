@@ -24,14 +24,14 @@
 #define spi_cpol           SPI_CPOL_1    
 #define spi_cpha           SPI_CPHA_0  
 
-#define spi_cpol_gainloop  SPI_CPOL_0    
+#define spi_cpol_gainloop  SPI_CPOL_0    //0,0  -> 0,1
 #define spi_cpha_gainloop  SPI_CPHA_0  
 
 #define spi_cpol_gainampl  SPI_CPOL_0    
 #define spi_cpha_gainampl  SPI_CPHA_0  
 
-#define spi_cpol_DAC8563   SPI_CPOL_0    
-#define spi_cpha_DAC8563   SPI_CPHA_0  
+#define spi_cpol_DAC8563   SPI_CPOL_0    //0,0 -;0,1
+#define spi_cpha_DAC8563   SPI_CPHA_1  
 
 #define spi_cpol_freq      SPI_CPOL_1    
 #define spi_cpha_freq      SPI_CPHA_1  
