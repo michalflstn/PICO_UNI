@@ -683,10 +683,12 @@ void HARDWARE::init_SPI( uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4 )
 void HARDWARE::init_DACSetPoint(uint8_t spiport) //  4 для подставки
 {
   dacspt->initialize(spiport); //code 23
+  dacz->setSpiProps();  //add 253101
 }
 void HARDWARE::init_DACBiasV(uint8_t spiport) //  4 для подставки
 {
   dacbv->initialize(spiport); //code 23
+   dacz->setSpiProps(); //add 253101
 }
 void HARDWARE::init_DACXY(uint8_t spiport) //spi port
 {
