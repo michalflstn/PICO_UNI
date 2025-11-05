@@ -14,7 +14,7 @@ HARDWARE::HARDWARE(ConfigHardWareBB confighardware)   // BB  mother BB+FPGA
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
          conv=new OutputPort(confighardware.CONV);  //conversation port
-          dec=new OutputPort(confighardware.DEC);
+          dec=new OutputPort(confighardware.DEC);  //manual chip select
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
        rdbLed=new OutputPort(confighardware.RDBPort); 
@@ -35,7 +35,7 @@ HARDWARE::HARDWARE(ConfigHardWareBBFPGA confighardware)   // BB  mother BB+FPGA
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
          conv=new OutputPort(confighardware.CONV);
-          dec=new OutputPort(confighardware.DEC);
+          dec=new OutputPort(confighardware.DEC);  //manual chip select
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
        rdbLed=new OutputPort(confighardware.RDBPort); 
@@ -56,7 +56,7 @@ HARDWARE::HARDWARE(ConfigHardWareWB confighardware) // WB
          dacz=new DAC8563(confighardware.DACZMode);        //set mode DAC Z  
      busyport=new InputPort(confighardware.BUSYPort);
          conv=new OutputPort(confighardware.CONV);
-          dec=new OutputPort(confighardware.DEC);
+          dec=new OutputPort(confighardware.DEC); //manual chip select
     resetport=new OutputPort(confighardware.ResetPort); 
       ledPort=new OutputPort(PICO_DEFAULT_LED_PIN);
        rdbLed=new OutputPort(confighardware.RDBPort); 
@@ -271,8 +271,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
 // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
  
    gpio_pull_down(resetport->getPort()); 
-   dec->enable();
-   conv->enable();
+ //  dec->enable();
+
    resetport->disable();
    gpio_pull_down(resetport->getPort());
    ledPort->enable();
@@ -302,31 +302,39 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    uart_init(uart0, 115200); // or your desired baud rate
    gpio_set_function(0, GPIO_FUNC_UART); // TX
    gpio_set_function(1, GPIO_FUNC_UART);
+
  */
- //  setvbuf(stdout, my_stdout_buf, _IOFBF, MY_STDOUT_BUF_SIZE);
-   gpio_pull_down(resetport->getPort());
+// setvbuf(stdout, my_stdout_buf, _IOFBF, MY_STDOUT_BUF_SIZE);
 // #warning should be undeleted
 // RX_core rxCore;
 // fixme mb should add & before isr
    gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
 // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
-   dec->enable();
+// dec->enable();
+   dec->disable(); //251105
+/*
    conv->enable();
+   sleep_us(10);
+   conv->enable();
+*/
+   gpio_pull_down(resetport->getPort()); 
    resetport->disable();
-   gpio_pull_down(resetport->getPort());
+  // gpio_pull_down(resetport->getPort());
    ledPort->enable();
    dark();
-   init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
-   init_DACBiasV(confighardwarev.DACBiasVPort);         //инициирование ЦАП1  BIAS
-   init_DACXY(confighardwarev.DACXYPort);               //инициирование ЦАП2  DACXY
+  // 251105
+  // init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
+  // init_DACBiasV(confighardwarev.DACBiasVPort);         //инициирование ЦАП1  BIAS
+  // init_DACXY(confighardwarev.DACXYPort);               //инициирование ЦАП2  DACXY
    uint32_t gain;
    uint32_t gain0=7;
    gain=(gain0<<8)+100; 
    LOOPGain=gain;
-   set_GainPID(gain);                    // not virtual; not debug!
-   retract();                            // втянуть    
-   init_DACZ(confighardwarev.DACZPort); // инициирование ЦАП3  DACZ
-   set_DACZ(0); 
+ //  251105  
+ //  set_GainPID(gain);                    // not virtual; not debug!
+ //  retract();                            // втянуть    
+ //  init_DACZ(confighardwarev.DACZPort); // инициирование ЦАП3  DACZ
+//   set_DACZ(0); 
 }
 void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB  
 {
@@ -1243,7 +1251,7 @@ void HARDWARE::set_GainPID(uint32_t gain)
           sleep_ms(10);  
         }
       }
-      }
+     }
      if (flgDebug)  
      {
        afc.clear();
@@ -1543,7 +1551,7 @@ void HARDWARE::retract() //втянуть
   int32_t gain=255+1792;//(int32_t)(7<<8);
    if (HARDWAREVERSION==BB) set_GainPIDCorrection(gain);
  //
-}
+ }
  else
  {
      PID_ENA=1;

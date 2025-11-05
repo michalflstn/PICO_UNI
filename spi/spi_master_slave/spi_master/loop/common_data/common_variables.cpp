@@ -5,7 +5,7 @@
 //int8_t       HARDWAREVERSION=WB;
 int8_t       HARDWAREVERSION=BB;  
 //int8_t       HARDWAREVERSION=BBFPGA;
-std::string  SoftHARDWAREVERSION="25.10.31.03 ";
+std::string  SoftHARDWAREVERSION="25.11.05.04 ";
 std::string  SoftVERSION="25.10.06.01 "+std::to_string(HARDWAREVERSION);
 //std::string  SOFTVERSION="25.04.16.1 BBFPGA 12_LOOP";
 //std::string  SOFTVERSION="25.04.04.1 WB";
@@ -49,7 +49,7 @@ bool    flgUseTUD=false;
 bool    flgParamsUpdated=false;
 bool    flgСritical_section=true;
 uint8_t flgDebugLevel = 3;      // уровень отладки
-bool    flgUseUART = false;     // использовать UART для передачи данных
+bool    flgUseUART=false;       // использовать UART для передачи данных
 bool    flgLocalDebug=false;    // локальная отладка
 bool    flgTiming=false;        // рассчет времени выполнения блока
 bool    flgSendString=true;     // send data string to PC
@@ -71,7 +71,7 @@ bool Z_STATE = false; //???
 
 critical_section_t criticalSection;
 
-void SendDataSynchro(bool flg, std::string str)
+void SendDataSynchro(bool flg, std::string str) // синхронизация последовательной посылки дебаг инфо 
 {
   if (flg)
   {
