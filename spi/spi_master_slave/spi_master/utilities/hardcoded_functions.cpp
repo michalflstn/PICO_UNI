@@ -298,11 +298,11 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBBFPGA  confighardwarev)  //BBFP
 void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 {
   // 250910
-/*  stdio_init_all();
+/* 
+   stdio_init_all();
    uart_init(uart0, 115200); // or your desired baud rate
    gpio_set_function(0, GPIO_FUNC_UART); // TX
    gpio_set_function(1, GPIO_FUNC_UART);
-
  */
 // setvbuf(stdout, my_stdout_buf, _IOFBF, MY_STDOUT_BUF_SIZE);
 // #warning should be undeleted
@@ -525,9 +525,9 @@ case  BB:
          break;
 case  WB:
         // SignLoop=value;// debug
-         //втянуть
-       //  retract(); 
-       //  sleep_ms(50);
+        //  втянуть
+        //  retract(); 
+        //  sleep_ms(50);
          switch (value)
         {
          case 0:{signloopport->disable(); break;} // +
@@ -547,9 +547,7 @@ case  WB:
   sleep_ms(100);
  */
 }
-void  HARDWARE::
-
-ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
+void  HARDWARE::ChooseLoopChannelInputFPGA(uint8_t dev, uint8_t nloop)
 {
   //FPGA only!
   uint8_t channel;
@@ -691,7 +689,7 @@ void HARDWARE::init_SPI( uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4 )
 void HARDWARE::init_DACSetPoint(uint8_t spiport) //  4 для подставки
 {
   dacspt->initialize(spiport); //code 23
-  dacz->setSpiProps();  //add 253101
+    dacz->setSpiProps();  //add 253101
 }
 void HARDWARE::init_DACBiasV(uint8_t spiport) //  4 для подставки
 {

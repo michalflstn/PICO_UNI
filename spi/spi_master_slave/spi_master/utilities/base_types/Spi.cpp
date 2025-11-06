@@ -12,11 +12,12 @@ Spi::Spi()
 #else 
   printf("SPI master example\n");
   spi_init(spi_default, 1000 * 1000);
- /* gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
+ /*
+  gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PICO_DEFAULT_SPI_CSN_PIN, GPIO_FUNC_SPI);
-  */
+ */
   gpio_set_function(PDSPI_RX_PIN,  GPIO_FUNC_SPI);
   gpio_set_function(PDSPI_TX_PIN,  GPIO_FUNC_SPI); 
   gpio_set_function(PDSPI_SCK_PIN, GPIO_FUNC_SPI);
@@ -39,8 +40,7 @@ int Spi::write(const uint8_t *buf, size_t length)
 
 int Spi::read(const uint8_t *inB, uint8_t *buf, size_t length)
 {
-
-  if (spi_is_readable(spi_default))
+ if (spi_is_readable(spi_default))
   {
     spi_write_read_blocking(spi_default, inB, buf, length);
   }
