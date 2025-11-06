@@ -311,7 +311,7 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
 // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
 // dec->enable();
-   dec->disable(); //251105
+   dec->disable(); //251105 set manual choose chip false
 /*
    conv->enable();
    sleep_us(10);
@@ -323,18 +323,22 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
    ledPort->enable();
    dark();
   // 251105
-  // init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
-  // init_DACBiasV(confighardwarev.DACBiasVPort);         //инициирование ЦАП1  BIAS
-  // init_DACXY(confighardwarev.DACXYPort);               //инициирование ЦАП2  DACXY
+  /*
+   init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
+   init_DACBiasV(confighardwarev.DACBiasVPort);         //инициирование ЦАП1  BIAS
+   init_DACXY(confighardwarev.DACXYPort);               //инициирование ЦАП2  DACXY
+  */ 
    uint32_t gain;
    uint32_t gain0=7;
    gain=(gain0<<8)+100; 
    LOOPGain=gain;
- //  251105  
- //  set_GainPID(gain);                    // not virtual; not debug!
- //  retract();                            // втянуть    
- //  init_DACZ(confighardwarev.DACZPort); // инициирование ЦАП3  DACZ
-//   set_DACZ(0); 
+ //  251105   
+ /* 
+   set_GainPID(gain);                    // not virtual; not debug!
+   retract();                            // втянуть    
+   init_DACZ(confighardwarev.DACZPort); // инициирование ЦАП3  DACZ
+   set_DACZ(0); 
+ */
 }
 void HARDWARE::setDefaultSettings(ConfigHardWareWB  confighardwarev) //WB  
 {
