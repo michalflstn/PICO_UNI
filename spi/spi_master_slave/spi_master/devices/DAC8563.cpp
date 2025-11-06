@@ -1,6 +1,6 @@
 //#include <cstring> //240503
 #include "DAC8563.hpp"
-#include "../utilities/base_types/Spi.hpp"
+//#include "../utilities/base_types/Spi.hpp"
 #include "../loop/common_data/device_variables.hpp"
 
 DAC8563::DAC8563(int modeA1B1)
@@ -11,7 +11,8 @@ DAC8563::DAC8563(int modeA1B1)
 void DAC8563::DAC_WR_REG(uint8_t cmd_byte, uint16_t data_byte)
 {
  // Spi::setProperties(8,spi_cpol,spi_cpha); //0,1
-  Spi::setProperties(8,spi_cpol_DAC8563,spi_cpha_DAC8563); //0,1
+  //Spi::setProperties(8,spi_cpol_DAC8563,spi_cpha_DAC8563); //0,1
+  spi_set_format(spi_default, 8,spi_cpol_DAC8563,spi_cpha_DAC8563, SPI_MSB_FIRST);
   uint8_t array[] = {cmd_byte, (uint8_t) (data_byte >> 8), (uint8_t) ((data_byte << 8) >> 8)};
   decoder.activePort(port_);
   spi_write_blocking(spi_default, array, 3);
@@ -73,5 +74,6 @@ void DAC8563::initialize(int port)  //DAC
 void DAC8563::setSpiProps()
 {
   decoder.activePort(port_);
-  Spi::setProperties(8,spi_cpol_DAC8563,spi_cpha_DAC8563); //0,1;
+  //Spi::setProperties(8,spi_cpol_DAC8563,spi_cpha_DAC8563); //0,1; //
+  spi_set_format(spi_default, 8,spi_cpol_DAC8563,spi_cpha_DAC8563, SPI_MSB_FIRST);
 }

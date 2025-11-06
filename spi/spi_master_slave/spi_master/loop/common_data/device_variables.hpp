@@ -1,8 +1,9 @@
+#pragma once
 #ifndef PICO_EXAMPLES_DEVICE_VARIABLES_HPP
 #define PICO_EXAMPLES_DEVICE_VARIABLES_HPP
 #pragma  pack(push, 1) //  240702 выравнивание структуры на границе byte
 #include <pico.h>
-#include "../../utilities/base_types/Spi.hpp"
+//#include "../../utilities/base_types/Spi.hpp"
 #include "../../utilities/base_types/decoder.hpp"
 
 #define maxint16_t      32767
@@ -286,7 +287,7 @@ struct ConfigLinearDriveWB
   uint8_t ZTurn_on_Port;        
 };
 
-extern Spi                  spi;
+//extern Spi                  spi;
 extern Decoder              decoder;
 extern ConfigHardWareBB     confighardwareBB; //v0
 extern ConfigHardWareBBFPGA confighardwareBBFPGA; //v0

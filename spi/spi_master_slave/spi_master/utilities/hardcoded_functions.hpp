@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_HARDCODED_FUNCTIONS_HPP
 #define PICO_EXAMPLES_HARDCODED_FUNCTIONS_HPP
 #include <vector>
@@ -5,6 +6,7 @@
 #include <cstdint>
 #include <iostream> 
 #include <hardware/clocks.h>
+#include "hardware/spi.h"
 
 #include "../utilities/base_types/io_ports.h"
 #include "../devices/DAC8563.hpp"
@@ -13,8 +15,14 @@
 #include "../loop/common_data/common_variables.hpp"
 
 
-#define portx                    0 //порты сканнера! пьезодвижетеля ?
-#define porty                    1
+#define portx                 0 //порты сканнера! пьезодвижетеля ?
+#define porty                 1
+
+#define PDSPI                 PICO_DEFAULT_SPI 
+#define PDSPI_SCK_PIN         2
+#define PDSPI_TX_PIN          3
+#define PDSPI_RX_PIN          0
+#define PDSPI_CSN_PIN         1
 
 #define MY_STDOUT_BUF_SIZE 1024
 static char my_stdout_buf[MY_STDOUT_BUF_SIZE];
@@ -121,7 +129,7 @@ public:
 
  void init_Commutation(int8_t sensor ,uint8_t dev);
 
- void init_SPI(uint8_t port ,uint8_t v2 ,uint8_t v3, uint8_t v4); //инициирование SPI
+ void init_SPI(uint8_t port ,spi_cpol_t v2 ,spi_cpha_t v3, spi_order_t v4); //инициирование SPI
 
  void init_LOOP(uint8_t device);
 

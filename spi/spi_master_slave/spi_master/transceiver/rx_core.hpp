@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_RX_CORE_HPP
 #define PICO_EXAMPLES_RX_CORE_HPP
 

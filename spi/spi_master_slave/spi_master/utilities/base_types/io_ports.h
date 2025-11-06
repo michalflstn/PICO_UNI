@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PICO_EXAMPLES_IO_PORTS_H
 #define PICO_EXAMPLES_IO_PORTS_H
 

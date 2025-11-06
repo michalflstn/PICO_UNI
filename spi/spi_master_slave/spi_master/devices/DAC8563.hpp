@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include "hardware/spi.h"
+
 #define CMD_SETA_UPDATEA          0x18  // 00 | 011 | 000
 #define CMD_SETB_UPDATEB          0x19  // 00 010 011
 #define CMD_SET_ALL_UPDATE_ALL    0x17  // 0001 | 0111

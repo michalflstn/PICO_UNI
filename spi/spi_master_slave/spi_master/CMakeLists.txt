@@ -1,6 +1,6 @@
 
-add_executable(spi_master spi_master.cpp transceiver/rx_utils/parser.hpp utilities/base_types/Spi.cpp
-        utilities/base_types/Spi.hpp utilities/base_types/Decoder.cpp utilities/base_types/Decoder.hpp
+add_executable(spi_master spi_master.cpp transceiver/rx_utils/parser.hpp 
+        utilities/base_types/Decoder.cpp utilities/base_types/Decoder.hpp
         transceiver/rx_core.hpp transceiver/rx_core.cpp
         physical_devices/LinearDriver.cpp physical_devices/LinearDriver.hpp
         utilities/base_types/io_ports.cpp utilities/base_types/io_ports.h 
