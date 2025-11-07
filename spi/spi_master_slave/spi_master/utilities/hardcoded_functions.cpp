@@ -316,7 +316,8 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
   gpio_set_function(PDSPI_SCK_PIN, GPIO_FUNC_SPI);
   gpio_set_function(PDSPI_CSN_PIN, GPIO_FUNC_SPI);
 //  bi_decl(bi_4pins_with_func(PICO_DEFAULT_SPI_RX_PIN, PICO_DEFAULT_SPI_TX_PIN, PICO_DEFAULT_SPI_SCK_PIN,
-  spi_set_format(spi_default, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
+ 
+  spi_set_format(spi_default, 16, spi_cpol,spi_cpha, SPI_MSB_FIRST);
 #endif
   // 250910
 /* 
@@ -331,25 +332,27 @@ void HARDWARE::setDefaultSettings(ConfigHardWareBB  confighardwarev)  // BB
 // fixme mb should add & before isr
    gpio_set_irq_enabled_with_callback(busyport->getPort(), GPIO_IRQ_EDGE_FALL, true, RX_core::comReceiveISR);
 // multicore_launch_core1(RX_core::launchOnCore1); // 240508 ??
-// dec->enable();
-   dec->disable(); //251105 set manual choose chip false
+ dec->enable();
+ //  dec->disable(); //251105 set manual choose chip false
 /*
    conv->enable();
    sleep_us(10);
    conv->enable();
 */
-   gpio_pull_down(resetport->getPort()); 
-   resetport->disable();
-   ledPort->enable();
-   dark();
+ //  gpio_pull_down(resetport->getPort()); 
+ //  resetport->disable();
+  // ledPort->enable();
+  // dark();
   // 251105
-   init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
+  /*
+  init_DACSetPoint(confighardwarev.DACSetPointPort);   //инициирование ЦАП1  SetPoint
    init_DACBiasV(confighardwarev.DACBiasVPort);         //инициирование ЦАП1  BIAS
    init_DACXY(confighardwarev.DACXYPort);               //инициирование ЦАП2  DACXY
    uint32_t gain;
    uint32_t gain0=7;
    gain=(gain0<<8)+100; 
    LOOPGain=gain;
+ */  
  //  251105   
  /* 
    set_GainPID(gain);                    // not virtual; not debug!
